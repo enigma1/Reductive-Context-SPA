@@ -1,0 +1,10 @@
+@layer components {
+  .code-range {
+    background-color: var(--color-srf-elevated);
+  }
+
+  .code-range-gutter {
+    background-color: var(--color-srf-dim);
+    width: 3px;
+  }
+}

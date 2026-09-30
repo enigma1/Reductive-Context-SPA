@@ -9,32 +9,8 @@ import { ListRestartIcon, CombineIcon } from 'lucide-react';
 import { routes } from '>/config';
 import { useCodeStore, messageStoreActions } from '>/services/stores';
 import { useReadFile } from '>/services/queryHooks';
+import { useEditorSelection } from '>/services/hooks';
 import { ScreenLoader } from '>/modules';
-
-const getMonacoLanguage = (filename: string) => {
-  const extension = filename.split('.').pop()?.toLowerCase();
-
-  switch (extension) {
-    case 'ts':
-    case 'tsx':
-      return 'typescript';
-    case 'js':
-    case 'jsx':
-      return 'javascript';
-    case 'json':
-      return 'json';
-    case 'css':
-      return 'css';
-    case 'html':
-      return 'html';
-    case 'md':
-      return 'markdown';
-    case 'py':
-      return 'python';
-    default:
-      return 'plaintext';
-  }
-};
 
 export const Reader = () => {
   const navigate = useNavigate();
@@ -71,6 +47,8 @@ export const Reader = () => {
       navigate(routes.front.filesView, { replace: true });
     }
   }, [code, activeFile, navigate]);
+
+  const { onMount, getSelection, language } = useEditorSelection(activeFile);
 
   // ----------------
   // No-Hooks Section
@@ -112,8 +90,9 @@ export const Reader = () => {
       </div>
       <div className='page-content'>
         <Editor
+          onMount={onMount}
           value={code}
-          language={getMonacoLanguage(activeFile.name)}
+          language={language}
           theme='vs-dark'
           options={{
             readOnly: true,
