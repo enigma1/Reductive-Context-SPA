@@ -1,0 +1,27 @@
+@layer components {
+  .card-container {
+    @apply flex flex-col rounded-2xl;
+    background-color: var(--color-srf-elevated);
+  }
+
+  .card-title {
+    @apply flex flex-row border-t;
+    background-color: var(--color-srf-peak);
+    color: var(--color-text-peak);
+    border-color: var(--color-border);
+  }
+
+  .card-controls {
+    @apply flex flex-row border-b;
+    background-color: var(--color-srf-peak);
+    color: var(--color-text-peak);
+    border-color: var(--color-border);
+  }
+
+  .card-content {
+    @apply flex flex-col border-t border-b;
+    background-color: var(--color-srf-peak);
+    color: var(--color-text-peak);
+    border-color: var(--color-border);
+  }
+}

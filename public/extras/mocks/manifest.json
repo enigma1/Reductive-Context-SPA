@@ -1,0 +1,9 @@
+{
+  "ping": "/extras/mocks/ping.json",
+  "checkSession": "/extras/mocks/checkSession.json",
+  "getTableData": "/extras/mocks/getTableData.json",
+  "getPaths": "/extras/mocks/getPaths.json",
+  "readFile": "/extras/mocks/readFile.json",
+  "saveSettings": "/extras/mocks/saveSettings.json",
+  "loadSettings": "/extras/mocks/loadSettings.json"
+}

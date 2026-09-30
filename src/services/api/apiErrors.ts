@@ -1,0 +1,69 @@
+import axios from 'axios';
+import { queryClientTsx } from '</src/services/queryHooks';
+import { hasObjectProps, hasStringPropValue } from '>/services/utils';
+
+export const isNetworkError = (error: unknown): boolean =>
+  hasStringPropValue(error, 'type', 'network');
+
+export const createNetworkError = (reason: string) => ({
+  code: 'ERR_OFFLINE',
+  error: 'Network is down',
+  message: reason,
+});
+
+export const createCancelError = (reason: string) => ({
+  code: 'ERR_CANCELED',
+  error: 'Request Cancelled',
+  message: reason,
+});
+
+export const createAuthError = (reason: string) => ({
+  code: 'ERR_UNAUTHORIZED',
+  error: 'Unauthorized',
+  message: reason,
+});
+
+export const createUnknownError = (response: Record<string, unknown>) => ({
+  code: response?.code ?? 'ERR_UNKNOWN',
+  error: response?.error ?? 'Unknown Error',
+  message: response?.message ?? 'Unknown response received from server',
+  details: response?.details ?? [],
+});
+
+const authError = async () => {
+  await queryClientTsx.cancelQueries();
+  throw createAuthError('Login required to access this');
+};
+
+export const apiErrorResolver = async (e: unknown) => {
+  if (axios.isAxiosError(e) && e.code === axios.AxiosError.ERR_CANCELED) {
+    const cancelError = createCancelError(
+      e.message ?? 'unknown cancellation reason',
+    );
+    throw cancelError;
+  }
+  if (
+    axios.isAxiosError(e) &&
+    (e.code === axios.AxiosError.ERR_NETWORK ||
+      e.code === axios.AxiosError.ECONNABORTED ||
+      e.code === axios.AxiosError.ETIMEDOUT)
+  ) {
+    const networkError = createNetworkError(e.message);
+    throw networkError;
+  }
+  if (hasObjectProps(e, ['response'])) {
+    const axiosError = e as any;
+
+    const status = axiosError.response?.status;
+    const data = axiosError.response?.data;
+
+    if (status === 401) {
+      await authError();
+    }
+    throw createUnknownError({ ...data, code: status });
+  }
+  if (e instanceof Error) {
+    throw e;
+  }
+  throw new Error(String(e));
+};

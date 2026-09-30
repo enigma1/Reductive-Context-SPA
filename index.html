@@ -1,0 +1,33 @@
+<!doctype html>
+<html lang="en" data-theme="clean-slate">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Reductive Context Workspace SPA</title>
+    <script type-="javascript">
+      window.APP_CONFIG = {
+        userPrefs: {
+          backPort: 5080,
+          frontPort: 5190,
+          theme: 'clean-slate',
+          layout: {
+            showHeader: true,
+            showFooter: true,
+            showLeftSide: true,
+            showRightSide: true,
+            showHeaderMenu: true,
+          },
+        },
+        appInfo: {
+          storageVersion: 1,
+          appVersion: 1,
+          buildDate: '2026-09-20',
+        },
+      };
+    </script>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
+</html>

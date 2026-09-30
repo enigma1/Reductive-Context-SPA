@@ -1,0 +1,58 @@
+@layer components {
+  .app {
+    @apply h-screen min-h-screen flex flex-col;
+
+    & footer {
+      @apply items-center;
+      background-color: var(--color-success-bg)
+    }
+  }
+
+  .app-header {
+    @apply flex items-center justify-between border-b;
+    border-color: var(--color-border-separate)
+  }
+
+  .app-content {
+    @apply flex flex-1 min-h-0 overflow-hidden;
+
+    & .left-side {
+      @apply h-full w-[15%];
+      background-color: var(--color-info-bg)
+    }
+
+    & .right-side {
+      @apply h-full w-[15%];
+      background-color: var(--color-warn-bg)
+    }
+
+    >main {
+      @apply flex flex-col flex-1 min-h-0 overflow-hidden;
+    }
+  }
+
+  .wrapper {
+    @apply flex flex-col;
+
+    &.start {
+      align-self: flex-start
+    }
+
+    &.full {
+      @apply w-full h-full;
+    }
+
+    &.max {
+      @apply flex-1;
+    }
+  }
+
+  .inline-wrapper {
+    @apply flex flex-[0_0_auto] flex-wrap gap-1 pr-3
+  }
+
+  label.full {
+    @apply w-full h-full;
+  }
+
+}

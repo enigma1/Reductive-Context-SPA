@@ -1,0 +1,60 @@
+@layer components {
+  .info-list {
+    @apply flex flex-col gap-2 p-4;
+  }
+
+  .info-list-item {
+    @apply flex items-center gap-2 p-3 rounded-lg border;
+    background-color: var(--color-srf-elevated);
+    border-color: var(--color-border);
+  }
+
+  .info-list-item-number {
+    @apply flex-shrink-0 w-6 text-center text-sm font-medium;
+    color: var(--color-text-muted);
+  }
+
+  .info-list-item-text {
+    @apply flex-1 text-sm;
+    color: var(--color-text);
+  }
+
+  .info-list-empty {
+    @apply text-center py-8 text-sm;
+    color: var(--color-text-muted);
+  }
+
+  .selection-list {
+    @apply flex flex-col gap-2;
+  }
+
+  .selection-section {
+    @apply flex items-center p-3 rounded-lg border;
+    background-color: var(--color-srf-elevated);
+    border-color: var(--color-border);
+  }
+
+  .selection-outer {
+    @apply flex flex-col gap-2 font-bold;
+
+    & label {
+      @apply font-semibold;
+      color: var(--color-info);
+    }
+  }
+
+  .selection-group {
+    @apply flex flex-col gap-2 pl-3;
+
+    & label {
+      @apply font-bold;
+      color: var(--color-text-dim);
+    }
+
+  }
+
+  .selection-item {
+    @apply flex items-center;
+  }
+
+}

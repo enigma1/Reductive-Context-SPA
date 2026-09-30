@@ -1,0 +1,9 @@
+{
+  "ok": true,
+  "message": "Paths and Files found",
+  "aiStatus": {
+    "active": true,
+    "model": "some-llm-v-1"
+  },
+  "code": "const greeting = 'Hello from Monaco!';\n\nconst add = (a: number, b: number) => {\n  return a + b;\n};\n\nconsole.log(greeting);\nconsole.log(add(10, 20));"
+}

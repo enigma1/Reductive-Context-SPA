@@ -1,0 +1,77 @@
+@layer components {
+  .menu-container {
+    @apply flex items-center border-b;
+    border-color: var(--color-border-separate);
+  }
+
+  .menu {
+    @apply flex w-full items-center;
+    /* background-color: var(--color-srf-dim); */
+    background: linear-gradient(54deg in oklch, var(--color-srf-dim) 39%, var(--color-action) 100%);
+  }
+
+  .menu-dropdown {
+    @apply relative;
+    color: var(--color-text);
+    border-color: var(--color-border);
+
+    &:hover {
+      background-color: var(--color-srf-muted);
+      color: var(--color-text);
+    }
+  }
+
+  .menu-trigger {
+    @apply px-4 py-2 text-left rounded;
+    color: var(--color-text);
+    transition: background-color 0.15s ease;
+
+    &:hover {
+      background-color: var(--color-srf-elevated);
+      color: var(--color-text);
+    }
+
+    &[data-disabled='true'] {
+      @apply line-through pointer-events-none;
+      color: var(--color-text-muted);
+      background-color: var(--color-srf-dim);
+      cursor: not-allowed;
+    }
+
+  }
+
+  .menu-panel {
+    @apply absolute min-w-48 z-50;
+    color: var(--color-text);
+    background-color: var(--color-srf-dim);
+    box-shadow: var(--shadow-md);
+
+    & .menu-item,
+    & button,
+    & a {
+      @apply block w-full px-4 py-2 text-left items-center border-t border-l border-r last:border-b rounded-t-none last:rounded-b-sm;
+      border-color: var(--color-border-separate);
+      transition: background-color 0.15s ease;
+
+      &:hover {
+        background-color: var(--color-srf-elevated);
+        color: var(--color-text);
+      }
+
+      &[data-disabled='true'] {
+        @apply line-through;
+        color: var(--color-text-muted);
+        background-color: var(--color-srf-dim);
+        cursor: not-allowed;
+
+      }
+    }
+  }
+
+  .menu-separator {
+    @apply mx-2 select-none;
+    color: var(--color-text-muted);
+    opacity: 0.6;
+    user-select: none;
+  }
+}

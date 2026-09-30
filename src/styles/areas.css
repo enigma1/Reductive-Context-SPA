@@ -1,0 +1,94 @@
+@layer components {
+  .area-container {
+    @apply flex flex-col flex-1 min-h-0 w-full h-full;
+  }
+
+  .area-spacer {
+    @apply flex flex-[0_0_auto] gap-2 px-3 py-2 border-b;
+    background: linear-gradient(54deg in oklch, var(--color-srf) 35%, var(--color-srf-dim) 100%);
+    border-color: var(--color-border)
+  }
+
+  .area-title {
+    @apply flex items-center gap-1 text-lg font-medium;
+    color: var(--color-text);
+  }
+
+  .area-actions {
+    @apply flex ml-auto items-center gap-2;
+  }
+
+  .area-listing {
+    @apply flex flex-col flex-1 min-h-0 gap-2 overflow-auto;
+    background-color: var(--color-bg);
+  }
+
+  .area-content {
+    @apply flex flex-col flex-1 min-h-0 gap-2 p-3 overflow-auto;
+    background-color: var(--color-bg);
+  }
+
+  .area-item {
+    @apply flex flex-col px-3 py-2 rounded-sm;
+
+    & .one-line {
+      @apply flex flex-row w-full items-center gap-2 cursor-pointer;
+
+      >:first-child {
+        @apply shrink-0;
+      }
+    }
+
+    &.odd {
+      background-color: var(--color-srf);
+    }
+
+    &.even {
+      background-color: var(--color-bg);
+    }
+
+    &:hover {
+      background-color: var(--color-srf-dim);
+    }
+
+    &.separate {
+      @apply border;
+      border-color: var(--color-border-separate)
+    }
+
+    &.active {
+      @apply border;
+      background: linear-gradient(75deg in oklch, var(--color-srf-muted) 35%, var(--color-success-bg) 100%);
+    }
+  }
+
+  .area-grid {
+    @apply grid grid-cols-[max-content_1fr] gap-x-6 gap-y-3 px-3 py-2;
+    background-color: var(--color-srf-dim);
+
+    & .row-line {
+      @apply contents;
+
+      &.even {
+        background-color: var(--color-bg);
+      }
+
+      &.odd {
+        background-color: var(--color-red-50);
+      }
+
+      &:hover {
+        background-color: var(--color-srf-dim);
+      }
+    }
+
+    & .row-label {
+      @apply font-semibold;
+      color: var(--color-text);
+    }
+
+    & .row-value {
+      color: var(--color-text-muted);
+    }
+  }
+}

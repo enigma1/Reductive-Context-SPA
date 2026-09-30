@@ -1,0 +1,11 @@
+{
+  "ok": true,
+  "message": "got table data",
+  "columnsOrder": ["name", "email", "id"],
+  "rows": [
+    ["John", "test@example.com", 1],
+    ["Jane", "test2@example.com", 2],
+    ["Joe", "test3@example.com", 3],
+    ["George", "test4@example.com", 4]
+  ]
+}

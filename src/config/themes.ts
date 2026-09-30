@@ -1,0 +1,18 @@
+export const themes = [
+  'aegean',
+  'arctic',
+  'black-pearl',
+  'clean-slate',
+  'deep-blue-sea',
+  'frozen-forest',
+  'garden',
+  'cherry-blossom',
+  'lime',
+  'medley',
+  'mint',
+  'neon-lights',
+  'pastel',
+  'sandstorm',
+  'slacken',
+  'sunset-vibes',
+];

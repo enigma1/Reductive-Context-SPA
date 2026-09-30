@@ -1,0 +1,26 @@
+@layer components {
+  .sidebar {
+    @apply flex h-full w-full flex-col items-stretch;
+    background-color: var(--color-srf-elevated);
+
+    & button {
+      @apply block w-full border-t border-l border-r px-4 py-2 text-left;
+      border-color: var(--color-border-separate);
+      transition: background-color 0.15s ease;
+
+      &:first-child {
+        @apply border-t rounded-t-sm;
+        background-color: var(--color-srf);
+      }
+
+      &:last-child {
+        @apply border-b rounded-b-sm;
+      }
+
+      &:hover {
+        background-color: var(--color-srf-dim);
+        color: var(--color-text);
+      }
+    }
+  }
+}

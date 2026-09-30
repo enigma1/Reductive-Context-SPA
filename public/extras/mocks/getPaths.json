@@ -1,0 +1,13 @@
+{
+  "ok": true,
+  "message": "Paths and Files found",
+  "aiStatus": {
+    "active": true,
+    "model": "some-llm-v-1"
+  },
+  "paths": {
+    "src/components": ["Header.tsx", "Footer.tsx"],
+    "src/components/forms": ["Checkbox.tsx", "Dropdown.tsx"],
+    "src/stores": ["codeStore.ts", "userStore.ts"]
+  }
+}

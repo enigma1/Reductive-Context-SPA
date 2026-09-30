@@ -1,0 +1,31 @@
+type Endpoint = Record<string, string>;
+
+export type AllRoutes = {
+  back: Endpoint;
+  front: Endpoint;
+};
+
+export const routes: AllRoutes = {
+  back: {
+    checkSession: '/api/check-session',
+    ping: '/api/ping',
+    abort: '/api/abort',
+    delayed: '/api/delayed',
+    invalid: '/api/invalid',
+    getPaths: '/api/get-paths',
+    readFile: '/api/read-file',
+    getTableData: '/api/get-table-data',
+    loadSettings: '/api/load-settings',
+    saveSettings: '/api/save-settings',
+  },
+  front: {
+    home: '/',
+    pathsView: '/paths-view',
+    readFile: '/read-file',
+    tableData: '/tableData',
+    networkDown: '/network-down',
+  },
+};
+
+export type FrontRoute = keyof typeof routes.front;
+export type BackRoute = keyof typeof routes.back;
