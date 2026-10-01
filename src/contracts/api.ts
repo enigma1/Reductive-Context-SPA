@@ -91,20 +91,20 @@ export const ReadFileContract = {
   responseSchema: ReadFileResponseSchema,
 };
 
-export const BundleFilesRequestSchema = z.object({
+export const BundleDataRequestSchema = z.object({
   paths: z.record(z.string(), z.array(z.string())),
 });
-export type BundleFilesRequest = z.infer<typeof BundleFilesRequestSchema>;
+export type BundleDataRequest = z.infer<typeof BundleDataRequestSchema>;
 
-export const BundleFilesResponseSchema = BasicResponseSchema.extend({
+export const BundleDataResponseSchema = BasicResponseSchema.extend({
   totalTokens: z.number(),
-  bundle: z.record(z.string(), z.array(z.string())),
+  bundle: z.string(),
 });
-export type BundleFilesResponse = z.infer<typeof BundleFilesResponseSchema>;
+export type BundleDataResponse = z.infer<typeof BundleDataResponseSchema>;
 
 export const BundleFilesContract = {
-  requestSchema: BundleFilesRequestSchema,
-  responseSchema: BundleFilesResponseSchema,
+  requestSchema: BundleDataRequestSchema,
+  responseSchema: BundleDataResponseSchema,
 };
 
 export const GetTableDataRequestSchema = z.object({

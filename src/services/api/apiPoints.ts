@@ -16,8 +16,8 @@ import type {
   GetPathsResponse,
   ReadFileRequest,
   ReadFileResponse,
-  BundleFilesRequest,
-  BundleFilesResponse,
+  BundleDataRequest,
+  BundleDataResponse,
 } from '>/contracts';
 
 import type {
@@ -68,8 +68,8 @@ const getPaths = (data: GetPathsRequest) =>
 const readFile = (data: ReadFileRequest) =>
   apiCall<ReadFileResponse>(() => apiClient.post(routes.back.readFile, data));
 
-const bundleFiles = (data: BundleFilesRequest) =>
-  apiCall<BundleFilesResponse>(() =>
+const bundleData = (data: BundleDataRequest) =>
+  apiCall<BundleDataResponse>(() =>
     apiClient.post(routes.back.bundleFiles, data, BundleFilesContract),
   );
 
@@ -90,7 +90,7 @@ export const apiPoints = {
   delayed,
   getPaths,
   readFile,
-  bundleFiles,
+  bundleData,
   getTableData,
   saveSettings,
   loadSettings,

@@ -1,4 +1,3 @@
-import { Fragment } from 'react/jsx-runtime';
 import { useNavigate } from 'react-router';
 import { FilePenIcon, DeleteIcon } from 'lucide-react';
 import { routes } from '>/config';
@@ -72,6 +71,7 @@ export const FileSelector = ({ filesByFolder }: FileSelectorProps) => {
             path: folder,
             name,
             ranges: selectedFile?.ranges,
+            mode: 'code',
           };
         });
 

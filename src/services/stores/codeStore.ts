@@ -39,6 +39,7 @@ type StoreState = {
   selectedFiles: FileNode[];
   currentPaths: FolderPath[];
   activeFile?: ActiveFile;
+  currentPrompt: string;
 };
 
 export type CodeStoreActions = {
@@ -61,6 +62,7 @@ export type CodeStore = StoreState & CodeStoreActions;
 const initialState: StoreState = {
   selectedFiles: [],
   currentPaths: [],
+  currentPrompt: '',
 };
 
 const baseStore = makeState<StoreState>(() => ({ ...initialState }));

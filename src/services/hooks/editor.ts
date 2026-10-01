@@ -85,7 +85,7 @@ export const useEditorSelection = (file?: FileNode) => {
     if (!file) {
       return;
     }
-    console.log('onMount', file);
+
     const initialSelections = (file.ranges ?? []).map((range) => {
       const endColumn = editor.getModel()?.getLineMaxColumn(range.endLine) ?? 1;
 

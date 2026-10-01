@@ -9,7 +9,7 @@ export const LeftSide = () => {
       <div className='left-side'>
         <div className='page-heading'>
           <div className='page-spacer'>
-            <div className='page-title'>Optional Left Side</div>
+            <div className='page-title'>Conversations</div>
           </div>
         </div>
         <div className='page-content'>

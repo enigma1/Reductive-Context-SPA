@@ -4,7 +4,7 @@ A human-in-the-loop workspace for per-query, human-curated, segment-scoped conte
 
 The `Reductive Context Workspace` allows developers to explore a codebase and deliberately construct the context associated with an individual LLM request. Rather than providing an entire file tree as context, the developer selects the relevant folders, files, and, where necessary, individual code segments. This creates a reduced, query-specific context before the request is dispatched for inference.
 
-The frontend is a ReactJS SPA focused on the interactive context-curation workflow, using wizard-based configuration, file and folder selection, and code inspection. The developer remains responsible for confirming which parts of the codebase should be included in the context.
+The frontend is a ReactJS SPA focused on the interactive context-curation workflow, using wizard-based configuration, file and folder selection, and code inspection. The developer remains responsible for confirming which parts of the codebase should be included in the context. The bundle mechanism is effectively a context compiler where the user can specify signature mode and lines of codes to be included with the bundle as well as a final bundle editing before submission to the LLM.
 
 The frontend does not directly access the filesystem or communicate with the LLM. Filesystem traversal, code analysis, tree-sitter extraction, token counting, context assembly, and model communication are handled by the `Reductive Context Workspace Server`.
 

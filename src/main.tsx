@@ -11,6 +11,7 @@ import {
   App,
   Home,
   NetworkDown,
+  BundleView,
   PathsView,
   Reader,
   DataTable,
@@ -39,11 +40,14 @@ export const browserRouter = createBrowserRouter([
         element: <PathsView />,
       },
       {
+        path: routes.front.bundleView,
+        element: <BundleView />,
+      },
+      {
         path: routes.front.readFile,
         loader: readFileLoader,
         element: <Reader />,
       },
-
       {
         path: routes.front.tableData,
         element: <DataTable />,
