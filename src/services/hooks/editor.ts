@@ -2,9 +2,38 @@
   Identifies file language
   Implements an editor hook to set line ranges
 */
-import { useRef } from 'react';
+import isEqual from 'lodash-es/isEqual';
+import { useState, useRef } from 'react';
 import type { OnMount } from '@monaco-editor/react';
 import { CodeRange, FileNode } from '>/types';
+
+type CodeRangesComparison = {
+  original: CodeRange[];
+  modified: CodeRange[];
+};
+
+const mergeRanges = ({ original, modified }: CodeRangesComparison) => {
+  const allRanges = [...original, ...modified].sort(
+    (a, b) => a.startLine - b.startLine,
+  );
+  const merged: CodeRange[] = [];
+
+  for (const range of allRanges) {
+    const last = merged[merged.length - 1];
+    if (last && range.startLine <= last.endLine + 1) {
+      last.endLine = Math.max(last.endLine, range.endLine);
+    } else {
+      merged.push({ ...range });
+    }
+  }
+  return merged;
+};
+
+const areRangesEqual = ({ original, modified }: CodeRangesComparison) =>
+  isEqual(
+    mergeRanges({ original: [], modified: original }),
+    mergeRanges({ original: [], modified: modified }),
+  );
 
 const getMonacoLanguage = (filename: string) => {
   const extension = filename.split('.').pop()?.toLowerCase();
@@ -33,8 +62,22 @@ const getMonacoLanguage = (filename: string) => {
 
 export const useEditorSelection = (file?: FileNode) => {
   const editorRef = useRef<Parameters<OnMount>[0] | null>(null);
+  const [isDirty, setIsDirty] = useState(false);
 
   const language = file ? getMonacoLanguage(file.name) : undefined;
+
+  const getSelections = (): CodeRange[] => {
+    const selections = editorRef.current?.getSelections();
+
+    if (!selections) {
+      return [];
+    }
+
+    return selections.map((selection) => ({
+      startLine: Math.min(selection.startLineNumber, selection.endLineNumber),
+      endLine: Math.max(selection.startLineNumber, selection.endLineNumber),
+    }));
+  };
 
   const onMount: OnMount = (editor, monaco) => {
     editorRef.current = editor;
@@ -42,35 +85,38 @@ export const useEditorSelection = (file?: FileNode) => {
     if (!file) {
       return;
     }
+    console.log('onMount', file);
+    const initialSelections = (file.ranges ?? []).map((range) => {
+      const endColumn = editor.getModel()?.getLineMaxColumn(range.endLine) ?? 1;
 
-    const decorations =
-      file.ranges?.map((range) => ({
-        range: new monaco.Range(range.startLine, 1, range.endLine, 1),
-        options: {
-          isWholeLine: true,
-          className: 'code-range',
-        },
-      })) ?? [];
+      return {
+        selectionStartLineNumber: range.startLine,
+        selectionStartColumn: 1,
+        positionLineNumber: range.endLine,
+        positionColumn: endColumn,
+      };
+    });
 
-    editor.createDecorationsCollection(decorations);
-  };
-
-  const getSelection = (): CodeRange | undefined => {
-    const selection = editorRef.current?.getSelection();
-
-    if (!selection) {
-      return undefined;
+    if (initialSelections.length > 0) {
+      editor.setSelections(initialSelections);
     }
 
-    return {
-      startLine: Math.min(selection.startLineNumber, selection.endLineNumber),
-      endLine: Math.max(selection.startLineNumber, selection.endLineNumber),
-    };
+    editor.onDidChangeCursorSelection(() => {
+      const modified = getSelections();
+      const original = file?.ranges ?? [];
+      setIsDirty(
+        !areRangesEqual({
+          original,
+          modified,
+        }),
+      );
+    });
   };
 
   return {
     onMount,
-    getSelection,
+    getSelections,
+    isDirty,
     language,
   };
 };

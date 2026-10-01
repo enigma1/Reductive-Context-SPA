@@ -1,8 +1,9 @@
-import { useNavigate, NavigateOptions } from 'react-router';
-import { FilePenIcon } from 'lucide-react';
+import { Fragment } from 'react/jsx-runtime';
+import { useNavigate } from 'react-router';
+import { FilePenIcon, DeleteIcon } from 'lucide-react';
 import { routes } from '>/config';
 import { CheckboxField } from '>/modules';
-import type { FilesByFolder, FileNode } from '>/types';
+import type { FilesByFolder, FileNode, CodeRange } from '>/types';
 import { useCodeStore } from '>/services/stores';
 import { FileItem } from './FileItem';
 
@@ -17,11 +18,13 @@ export const FileSelector = ({ filesByFolder }: FileSelectorProps) => {
     addSelectedFiles,
     removeSelectedFiles,
     setActiveFile,
+    addSelectedFile,
   } = useCodeStore(({ state, api }) => ({
     selectedFiles: state.selectedFiles,
     addSelectedFiles: api.addSelectedFiles,
     removeSelectedFiles: api.removeSelectedFiles,
     setActiveFile: api.setActiveFile,
+    addSelectedFile: api.addSelectedFile,
   }));
 
   const getFolderSelectionState = (
@@ -46,13 +49,31 @@ export const FileSelector = ({ filesByFolder }: FileSelectorProps) => {
     navigate(routes.front.readFile);
   };
 
+  const onRangeRemove = (file: FileNode, range: CodeRange) => {
+    const ranges = (file.ranges ?? []).filter(
+      (item) =>
+        item.startLine !== range.startLine || item.endLine !== range.endLine,
+    );
+
+    addSelectedFile({
+      ...file,
+      ranges: ranges.length > 0 ? ranges : undefined,
+    });
+  };
+
   return (
     <div className='selection-list'>
       {Object.entries(filesByFolder).map(([folder, files], idx) => {
-        const folderFiles: FileNode[] = files.map((name) => ({
-          path: folder,
-          name,
-        }));
+        const folderFiles: FileNode[] = files.map((name) => {
+          const selectedFile = selectedFiles.find(
+            (selected) => selected.path === folder && selected.name === name,
+          );
+          return {
+            path: folder,
+            name,
+            ranges: selectedFile?.ranges,
+          };
+        });
 
         const { checked, indeterminate } = getFolderSelectionState(
           folderFiles,
@@ -76,21 +97,43 @@ export const FileSelector = ({ filesByFolder }: FileSelectorProps) => {
                 }}
               />
               <div className='selection-group'>
-                {folderFiles.map((file, idxf) => (
-                  <div
-                    key={`${file.path}-${file.name}-${idxf}`}
-                    className='inline-wrapper'
-                  >
-                    <button
-                      className='btn-square'
-                      onClick={() => onEdit(file)}
-                      title='Edit File'
+                {folderFiles.map((file, idxf) => {
+                  const fileBoxClass = `${file.ranges ? 'light-borders -ml-3' : ''}`;
+                  return (
+                    <div
+                      className={fileBoxClass}
+                      key={`${file.path}-${file.name}-${idxf}`}
                     >
-                      <FilePenIcon size={14} />
-                    </button>
-                    <FileItem name={file.name} path={file.path} />
-                  </div>
-                ))}
+                      <div className='inline-wrapper'>
+                        <button
+                          className='btn-square'
+                          onClick={() => onEdit(file)}
+                          title='View file and select code lines'
+                        >
+                          <FilePenIcon size={14} />
+                        </button>
+                        <FileItem name={file.name} path={file.path} />
+                      </div>
+                      <div className='space-y-1'>
+                        {file.ranges?.map((range, idxl) => (
+                          <div
+                            className='inline-wrapper line-sm'
+                            key={`${file.path}-${file.name}-lines-${idxf}-${idxl}`}
+                          >
+                            <button
+                              title='Remove lines of code from bundle'
+                              className='btn-square error rotate-180'
+                              onClick={() => onRangeRemove(file, range)}
+                            >
+                              <DeleteIcon size={14} />
+                            </button>
+                            <span>{`Lines: [${range.startLine}-${range.endLine}]`}</span>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  );
+                })}
               </div>
             </div>
           </div>

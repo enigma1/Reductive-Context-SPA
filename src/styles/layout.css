@@ -55,4 +55,12 @@
     @apply w-full h-full;
   }
 
+  .light-borders {
+    @apply border rounded-md;
+    border-color: var(--color-border-focus);
+
+    >div {
+      @apply m-3;
+    }
+  }
 }

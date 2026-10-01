@@ -2,21 +2,28 @@
   Reads a code file and shows it's contents
   Can merge code differences
 */
-import { useEffect } from 'react';
 import { useNavigate } from 'react-router';
 import Editor from '@monaco-editor/react';
-import { ListRestartIcon, CombineIcon } from 'lucide-react';
+import {
+  ListRestartIcon,
+  CombineIcon,
+  ArrowLeftToLineIcon,
+} from 'lucide-react';
 import { routes } from '>/config';
-import { useCodeStore, messageStoreActions } from '>/services/stores';
+import { useCodeStore } from '>/services/stores';
 import { useReadFile } from '>/services/queryHooks';
 import { useEditorSelection } from '>/services/hooks';
 import { ScreenLoader } from '>/modules';
 
 export const Reader = () => {
   const navigate = useNavigate();
-  const { activeFile } = useCodeStore(({ state }) => ({
-    activeFile: state.activeFile,
-  }));
+  const { activeFile, addSelectedFile, setActiveFile } = useCodeStore(
+    ({ api }) => ({
+      activeFile: api.getActiveFile(),
+      setActiveFile: api.setActiveFile,
+      addSelectedFile: api.addSelectedFile,
+    }),
+  );
 
   const { code, isFetching, refetch } = useReadFile(
     activeFile,
@@ -27,28 +34,8 @@ export const Reader = () => {
     }),
   );
 
-  useEffect(() => {
-    if (!activeFile) {
-      messageStoreActions.addMessage({
-        content: {
-          text: 'No active file specified',
-          duration: 4000,
-        },
-      });
-      navigate(routes.front.filesView, { replace: true });
-    }
-    if (code.length < 4) {
-      messageStoreActions.addMessage({
-        content: {
-          text: 'File length too small',
-          duration: 4000,
-        },
-      });
-      navigate(routes.front.filesView, { replace: true });
-    }
-  }, [code, activeFile, navigate]);
-
-  const { onMount, getSelection, language } = useEditorSelection(activeFile);
+  const { onMount, getSelections, language, isDirty } =
+    useEditorSelection(activeFile);
 
   // ----------------
   // No-Hooks Section
@@ -56,18 +43,45 @@ export const Reader = () => {
   const isBusy = isFetching;
   if (isBusy || !activeFile) return <ScreenLoader />;
 
+  const onGoBack = () => {
+    navigate(routes.front.pathsView, { replace: true });
+  };
+
   const onRefresh = () => {
     refetch();
   };
 
-  const writeFileChanges = () => {};
-  const hasChanges = false;
+  const updateCodeLines = () => {
+    const selectedLines = getSelections();
+
+    const modifiedFile = {
+      ...activeFile,
+      ranges: [...selectedLines],
+    };
+    addSelectedFile(modifiedFile);
+    setActiveFile();
+    navigate(routes.front.pathsView, { replace: true });
+  };
 
   return (
     <>
       <div className='page-heading'>
         <div className='page-toolbar'>
-          <div className='page-title'>Select Code Lines</div>
+          <div className='inline-wrapper'>
+            <button
+              className='btn-micro'
+              title='Back to the File List'
+              onClick={onGoBack}
+            >
+              <ArrowLeftToLineIcon size={18} />
+            </button>
+            <div
+              className='page-title'
+              title={`${activeFile.path}/${activeFile.name}`}
+            >
+              Viewing: {activeFile.name}
+            </div>
+          </div>
           <div className='page-actions'>
             <button
               className='btn-secondary'
@@ -76,15 +90,14 @@ export const Reader = () => {
             >
               <ListRestartIcon size={24} />
             </button>
-            {hasChanges && (
-              <button
-                className='btn'
-                onClick={writeFileChanges}
-                title='Accept File Changes'
-              >
-                <CombineIcon size={24} />
-              </button>
-            )}
+            <button
+              className='btn'
+              onClick={updateCodeLines}
+              title='Include Selected Code Lines'
+              data-status={!isDirty ? 'disabled' : undefined}
+            >
+              <CombineIcon size={24} />
+            </button>
           </div>
         </div>
       </div>

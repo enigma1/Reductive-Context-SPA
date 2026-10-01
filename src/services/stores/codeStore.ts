@@ -2,52 +2,27 @@
     store service for paths and file selections
 */
 import { makeState } from './estate';
-import { FileNode, CodeRange } from '>/types';
+import { FileNode } from '>/types';
 import type { FolderPath } from '>/contracts';
 
-type MergeRangesProps = {
-  original: CodeRange[];
-  modified: CodeRange[];
-};
-const mergeRanges = ({ original, modified }: MergeRangesProps) => {
-  const allRanges = [...original, ...modified].sort(
-    (a, b) => a.startLine - b.startLine,
-  );
-  const merged: CodeRange[] = [];
-
-  for (const range of allRanges) {
-    const last = merged[merged.length - 1];
-    if (last && range.startLine <= last.endLine + 1) {
-      last.endLine = Math.max(last.endLine, range.endLine);
-    } else {
-      merged.push({ ...range });
-    }
-  }
-  return merged;
-};
+type ActiveFile = Pick<FileNode, 'path' | 'name'>;
 
 const addSelectedFile = (allFiles: FileNode[], file: FileNode) => {
   const inListIndex = allFiles.findIndex(
     (item) => item.path === file.path && item.name === file.name,
   );
+
   if (inListIndex === -1) {
     return [...allFiles, file];
   }
-  const existing = allFiles[inListIndex];
-  if (!existing.ranges && !file.ranges) return allFiles;
 
-  if (!existing.ranges || !file.ranges) {
-    return allFiles.map((item, idx) =>
-      idx === inListIndex ? { ...item, ranges: undefined } : item,
-    );
-  }
-
-  const mergedRanges = mergeRanges({
-    original: existing.ranges,
-    modified: file.ranges,
-  });
   return allFiles.map((item, index) =>
-    index === inListIndex ? { ...item, ranges: mergedRanges } : item,
+    index === inListIndex
+      ? {
+          ...item,
+          ranges: file.ranges,
+        }
+      : item,
   );
 };
 
@@ -63,7 +38,7 @@ const removeSelectedFile = (
 type StoreState = {
   selectedFiles: FileNode[];
   currentPaths: FolderPath[];
-  activeFile?: FileNode;
+  activeFile?: ActiveFile;
 };
 
 export type CodeStoreActions = {
@@ -145,10 +120,41 @@ export const codeStoreActions: CodeStoreActions = {
   },
 
   getActiveFile: () => {
-    return get().activeFile;
+    const { activeFile, selectedFiles } = get();
+
+    if (!activeFile) {
+      return undefined;
+    }
+
+    return selectedFiles.find(
+      (file) => file.path === activeFile.path && file.name === activeFile.name,
+    );
   },
+
   setActiveFile: (file) => {
-    setAuto({ activeFile: file });
+    if (!file) {
+      setAuto({ activeFile: undefined });
+      return;
+    }
+
+    setAuto((state) => {
+      const exists = state.selectedFiles.some(
+        (selected) =>
+          selected.path === file.path && selected.name === file.name,
+      );
+
+      return {
+        activeFile: {
+          path: file.path,
+          name: file.name,
+        },
+        ...(exists
+          ? {}
+          : {
+              selectedFiles: [...state.selectedFiles, file],
+            }),
+      };
+    });
   },
 };
 

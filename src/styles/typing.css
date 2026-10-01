@@ -1,0 +1,7 @@
+@layer components {
+  .line-sm {
+    @apply font-semibold;
+    color: var(--color-text-muted);
+  }
+
+}

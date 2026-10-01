@@ -164,6 +164,14 @@
     color: var(--color-action);
     transition: background-color 0.2s ease;
 
+    &.warn {
+      color: var(--color-warn);
+    }
+
+    &.error {
+      color: var(--color-error);
+    }
+
     &:hover {
       background-color: var(--state-flash);
       color: var(--color-text-high);
