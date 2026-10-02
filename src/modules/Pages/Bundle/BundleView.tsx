@@ -7,20 +7,25 @@ import {
   SavePlusIcon,
   FileSlidersIcon,
 } from 'lucide-react';
-import { useCodeStore } from '>/services/stores';
+import { useCodeStore, messageStoreActions } from '>/services/stores';
 import { routes } from '>/config';
 import { useEditorBundle } from '>/services/hooks';
-import { useGetBundle } from '>/services/queryHooks';
+import {
+  useGetBundle,
+  useSetBundle,
+  useSubmitBundle,
+} from '>/services/queryHooks';
 import { ScreenLoader } from '>/modules';
+import { SetBundleResponse, SubmitBundleResponse } from '</src/contracts';
 
 export const BundleView = () => {
   const navigate = useNavigate();
-  const { bundleId } = useCodeStore(({ state }) => ({
+  const { bundleId = 0 } = useCodeStore(({ state }) => ({
     bundleId: state.activeBundleId,
   }));
 
   const { bundleContent, isFetching, refetch } = useGetBundle(
-    { bundleId: bundleId ?? 0 },
+    { bundleId: bundleId },
     ({ state, query }) => ({
       bundleContent: state.bundleContent,
       isFetching: query.isFetching,
@@ -29,6 +34,19 @@ export const BundleView = () => {
   );
 
   const { onMount, isDirty } = useEditorBundle();
+  const { mutate: setBundle, isPending: isSetting } = useSetBundle(
+    ({ query, api }) => ({
+      isPending: query.isPending,
+      mutate: api.mutate,
+    }),
+  );
+
+  const { mutate: submitBundle, isPending: isSubmitting } = useSubmitBundle(
+    ({ query, api }) => ({
+      isPending: query.isPending,
+      mutate: api.mutate,
+    }),
+  );
 
   // effect for invalid bundle
   useEffect(() => {
@@ -45,9 +63,49 @@ export const BundleView = () => {
     return <ScreenLoader />;
   }
 
-  const onSetBundle = () => {};
+  const setCallbacks = {
+    onSuccess: (data: SetBundleResponse) => {
+      if (data.ok) {
+        // navigate(routes.front.bundleView);
+      } else {
+        // Show error dialog
+      }
+    },
+    onError: () => {
+      messageStoreActions.addMessage({
+        content: {
+          text: 'Updating the bundle failed',
+          duration: 8000,
+        },
+      });
+    },
+  };
 
-  const onSubmitBundle = () => {};
+  const onSetBundle = () => {
+    setBundle({ bundleId, bundleContent }, setCallbacks);
+  };
+
+  const submitCallbacks = {
+    onSuccess: (data: SubmitBundleResponse) => {
+      if (data.ok) {
+        // navigate(routes.front.bundleView);
+      } else {
+        // Show error dialog
+      }
+    },
+    onError: () => {
+      messageStoreActions.addMessage({
+        content: {
+          text: 'Processing the Bundle failed',
+          duration: 8000,
+        },
+      });
+    },
+  };
+
+  const onSubmitBundle = () => {
+    submitBundle({ bundleId, bundleContent }, submitCallbacks);
+  };
 
   const onGoBack = () => {
     navigate(routes.front.pathsView, { replace: true });
@@ -56,6 +114,8 @@ export const BundleView = () => {
   const onRefresh = () => {
     refetch();
   };
+
+  const isProcessingBundle = isSubmitting || isSetting;
 
   return (
     <>
@@ -78,6 +138,7 @@ export const BundleView = () => {
               className='btn'
               onClick={onSubmitBundle}
               title='Submit Bundle'
+              data-status={isProcessingBundle}
             >
               <FileSlidersIcon size={24} />
             </button>
@@ -86,14 +147,16 @@ export const BundleView = () => {
               className='btn'
               onClick={onSetBundle}
               title='Update Bundle'
-              data-status={!isDirty ? 'disabled' : undefined}
+              data-status={
+                !isDirty || isProcessingBundle ? 'disabled' : undefined
+              }
             >
               <SavePlusIcon size={24} />
             </button>
             <button
               className='btn-secondary'
               onClick={onRefresh}
-              title='Refresh Paths'
+              title='Restore Bundle'
             >
               <ListRestartIcon size={24} />
             </button>

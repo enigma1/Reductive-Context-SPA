@@ -1,6 +1,6 @@
 import { useNavigate } from 'react-router';
 import { ListRestartIcon, FolderDotIcon, CirclePileIcon } from 'lucide-react';
-import { useGetPaths, useBundleData } from '>/services/queryHooks';
+import { useGetPaths, useCreateBundle } from '>/services/queryHooks';
 import {
   useCodeStore,
   dialogStoreActions,
@@ -8,7 +8,7 @@ import {
 } from '>/services/stores';
 import { routes } from '>/config';
 import { ScreenLoader, dialogFactories } from '>/modules';
-import type { BundleDataRequest, BundleDataResponse } from '>/contracts';
+import type { CreateBundleRequest, CreateBundleResponse } from '>/contracts';
 import { FileSelector } from './FileSelector';
 
 export const PathsView = () => {
@@ -31,7 +31,7 @@ export const PathsView = () => {
     }),
   );
 
-  const { mutate } = useBundleData(({ api }) => ({
+  const { mutate } = useCreateBundle(({ api }) => ({
     mutate: api.mutate,
   }));
 
@@ -44,7 +44,7 @@ export const PathsView = () => {
   }
 
   const callbacks = {
-    onSuccess: (data: BundleDataResponse) => {
+    onSuccess: (data: CreateBundleResponse) => {
       if (data.ok) {
         setActiveBundleId(data.bundleId);
         navigate(routes.front.bundleView);
@@ -57,15 +57,15 @@ export const PathsView = () => {
       setActiveBundleId();
       messageStoreActions.addMessage({
         content: {
-          text: 'Login failed. Please check endpoint and your credentials and try again.',
+          text: 'Bundle Creation failed. Please check endpoint and try again.',
           duration: 8000,
         },
       });
     },
   };
 
-  const onBundleData = () => {
-    const paths = getSelectedFiles().reduce<BundleDataRequest['paths']>(
+  const onCreateBundle = () => {
+    const paths = getSelectedFiles().reduce<CreateBundleRequest['paths']>(
       (filesByPath, file) => ({
         ...filesByPath,
         [file.path]: [...(filesByPath[file.path] ?? []), file.name],
@@ -95,7 +95,7 @@ export const PathsView = () => {
           <div className='page-actions'>
             <button
               className='btn'
-              onClick={onBundleData}
+              onClick={onCreateBundle}
               title='Request a bundle from the given selected bundles'
               data-status={selectedFiles.length === 0 ? 'disabled' : undefined}
             >

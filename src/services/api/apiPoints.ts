@@ -6,9 +6,10 @@ import { routes } from '>/config';
 import {
   GetTableDataSchema,
   GetPathsContract,
-  BundleDataContract,
+  CreateBundleContract,
   GetBundleContract,
   SetBundleContract,
+  SubmitBundleContract,
 } from '>/contracts';
 import type {
   BasicResponse,
@@ -18,12 +19,14 @@ import type {
   GetPathsResponse,
   ReadFileRequest,
   ReadFileResponse,
-  BundleDataRequest,
-  BundleDataResponse,
+  CreateBundleRequest,
+  CreateBundleResponse,
   GetBundleRequest,
   GetBundleResponse,
   SetBundleRequest,
   SetBundleResponse,
+  SubmitBundleRequest,
+  SubmitBundleResponse,
 } from '>/contracts';
 
 import type {
@@ -74,9 +77,9 @@ const getPaths = (data: GetPathsRequest) =>
 const readFile = (data: ReadFileRequest) =>
   apiCall<ReadFileResponse>(() => apiClient.post(routes.back.readFile, data));
 
-const bundleData = (data: BundleDataRequest) =>
-  apiCall<BundleDataResponse>(() =>
-    apiClient.post(routes.back.bundleData, data, BundleDataContract),
+const createBundle = (data: CreateBundleRequest) =>
+  apiCall<CreateBundleResponse>(() =>
+    apiClient.post(routes.back.createBundle, data, CreateBundleContract),
   );
 
 const getBundle = (data: GetBundleRequest) =>
@@ -87,6 +90,11 @@ const getBundle = (data: GetBundleRequest) =>
 const setBundle = (data: SetBundleRequest) =>
   apiCall<SetBundleResponse>(() =>
     apiClient.post(routes.back.setBundle, data, SetBundleContract),
+  );
+
+const submitBundle = (data: SubmitBundleRequest) =>
+  apiCall<SubmitBundleResponse>(() =>
+    apiClient.post(routes.back.submitBundle, data, SubmitBundleContract),
   );
 
 const getTableData = (data: GetTableDataRequest) =>
@@ -106,9 +114,10 @@ export const apiPoints = {
   delayed,
   getPaths,
   readFile,
-  bundleData,
+  createBundle,
   getBundle,
   setBundle,
+  submitBundle,
   getTableData,
   saveSettings,
   loadSettings,

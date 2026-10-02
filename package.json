@@ -1,7 +1,7 @@
 {
   "author": "Mark Samios",
   "name": "Reductive-Context-SPA",
-  "version": "0.0.6",
+  "version": "0.0.7",
   "license": "GPL-3.0",
   "description": "Human-in-the-loop workspace for curating and reducing code context for LLMs",
   "keywords": [
@@ -75,7 +75,8 @@
     "build": "vite build",
     "preview": "vite preview",
     "build:single": "vite build --config vite.single.config.ts",
-    "lint": "eslint ."
+    "lint": "eslint .",
+    "tsc": "tsc --noEmit"
   },
   "browserslist": {
     "production": [

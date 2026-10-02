@@ -3,24 +3,26 @@ import { createMutationHook } from './mutationBuilder';
 import { apiPoints } from '>/services/api';
 import { defaultResponse } from '>/config';
 import type {
-  BundleDataRequest,
-  BundleDataResponse,
+  CreateBundleRequest,
+  CreateBundleResponse,
   SetBundleRequest,
   SetBundleResponse,
+  SubmitBundleRequest,
+  SubmitBundleResponse,
 } from '>/contracts';
 
-const defaultBundleData = {
+const defaultCreateBundle = {
   totalTokens: 0,
   bundleId: 0,
 };
 
-export const useBundleData = createMutationHook<
-  MutationFunction<BundleDataResponse, BundleDataRequest>
+export const useCreateBundle = createMutationHook<
+  MutationFunction<CreateBundleResponse, CreateBundleRequest>
 >({
-  fn: apiPoints.bundleData,
+  fn: apiPoints.createBundle,
   state: {
     ...defaultResponse,
-    ...defaultBundleData,
+    ...defaultCreateBundle,
   },
 });
 
@@ -31,6 +33,16 @@ const defaultSetBundle = {
 
 export const useSetBundle = createMutationHook<
   MutationFunction<SetBundleResponse, SetBundleRequest>
+>({
+  fn: apiPoints.setBundle,
+  state: {
+    ...defaultResponse,
+    ...defaultSetBundle,
+  },
+});
+
+export const useSubmitBundle = createMutationHook<
+  MutationFunction<SubmitBundleResponse, SubmitBundleRequest>
 >({
   fn: apiPoints.setBundle,
   state: {

@@ -9,7 +9,13 @@ import {
   codeStoreActions,
   formsStoreActions,
 } from '>/services/stores';
-import { InputField, DialogContent, ErrorDetails, ComboField } from '>/modules';
+import {
+  InputField,
+  DialogContent,
+  ErrorDetails,
+  ComboField,
+  TextAreaField,
+} from '>/modules';
 import type { FolderPath } from '>/contracts';
 import type { CommonDialogHandlers } from '>/types';
 
@@ -33,25 +39,14 @@ export const FilePathsForm = ({ formHandlers }: FilePathsFormProps) => {
   const navigate = useNavigate();
   const location = useLocation();
 
-  // const [request, setRequest] = useState<GetPathsRequest | null>(null);
-
-  // const form = useSimpleForm({ paths: [blankPath()] }, { autoTouch: true });
   const form = useSimpleForm(
-    { paths: getFormInitialPaths() },
+    {
+      paths: getFormInitialPaths(),
+      prompt: codeStoreActions.getActivePrompt(),
+    },
     { autoTouch: true },
   );
   const { setButtonStatus } = useModal();
-
-  // const { refetch, paths, isFetching, isSuccess } = useGetPaths(
-  //   request ?? { paths: [] },
-  //   ({ state, query }) => ({
-  //     refetch: query.refetch,
-  //     paths: state.paths,
-  //     isFetching: query.isFetching,
-  //     isSuccess: query.isSuccess,
-  //   }),
-  // );
-
   const { errorResponse, clearError } = useDialogStore(({ state, api }) => ({
     errorResponse: state.response,
     clearError: api.clearError,
@@ -75,6 +70,7 @@ export const FilePathsForm = ({ formHandlers }: FilePathsFormProps) => {
   const onConfirm = async () => {
     form.saveProfile();
     codeStoreActions.setCurrentPaths(form.values.paths);
+    codeStoreActions.setActivePrompt(form.values.prompt);
 
     if (location.pathname !== routes.front.pathsView) {
       navigate(routes.front.pathsView);
@@ -179,6 +175,14 @@ export const FilePathsForm = ({ formHandlers }: FilePathsFormProps) => {
           </div>
         </div>
         <div className='area-content'>
+          <div>
+            <TextAreaField
+              label='Prompt:'
+              value={form.values.prompt}
+              className='text-dialog-area input border'
+              onValueChange={(value) => form.setValue('prompt', value)}
+            />
+          </div>
           {form.values.paths.map((entry, idx) => {
             const showError = pathsChanged && !entry.path.trim();
             const invalid = !entry.path.trim();

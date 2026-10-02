@@ -4,9 +4,10 @@
   "getTableData": "/extras/mocks/getTableData.json",
   "getPaths": "/extras/mocks/getPaths.json",
   "readFile": "/extras/mocks/readFile.json",
-  "bundleData": "/extras/mocks/bundleData.json",
+  "createBundle": "/extras/mocks/createBundle.json",
   "getBundle": "/extras/mocks/getBundle.json",
   "setBundle": "/extras/mocks/setBundle.json",
+  "submitBundle": "/extras/mocks/submitBundle.json",
   "saveSettings": "/extras/mocks/saveSettings.json",
   "loadSettings": "/extras/mocks/loadSettings.json"
 }

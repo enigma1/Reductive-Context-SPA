@@ -86,7 +86,7 @@ export const Reader = () => {
             <button
               className='btn-secondary'
               onClick={onRefresh}
-              title='Refresh Paths'
+              title={`Refetch ${activeFile.name}`}
             >
               <ListRestartIcon size={24} />
             </button>

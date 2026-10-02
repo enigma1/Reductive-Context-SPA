@@ -11,7 +11,7 @@ export type FileNode = {
   path: string;
   name: string;
   ranges?: CodeRange[];
-  mode: FileMode;
+  mode?: FileMode;
 };
 
 export type FilesByFolder = Record<string, string[]>;

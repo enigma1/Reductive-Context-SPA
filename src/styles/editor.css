@@ -1,4 +1,11 @@
 @layer components {
+  .field {
+    & textarea {
+      @apply resize-y min-h-[3lh];
+      background-color: var(--color-srf);
+    }
+  }
+
   .code-range {
     background-color: var(--color-srf-elevated);
   }

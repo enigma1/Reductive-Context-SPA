@@ -7,6 +7,7 @@ export type TextAreaProps =
     notice?: string;
     status?: 'error' | 'success';
     wrapClass?: string;
+    onValueChange?: (value: string) => void;
   };
 
 export const TextAreaField = ({
@@ -15,6 +16,8 @@ export const TextAreaField = ({
   notice,
   status,
   wrapClass,
+  onChange,
+  onValueChange,
   ...props
 }: TextAreaProps) => {
   return (
@@ -25,7 +28,13 @@ export const TextAreaField = ({
       $status={status}
       htmlFor={htmlFor ?? props.id}
     >
-      <textarea {...props} />
+      <textarea
+        {...props}
+        onChange={(e) => {
+          onChange?.(e);
+          onValueChange?.(e.currentTarget.value);
+        }}
+      />
     </FormFieldWrapper>
   );
 };

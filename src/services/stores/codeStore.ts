@@ -57,6 +57,8 @@ export type CodeStoreActions = {
   setActiveFile: (file?: FileNode) => void;
   getActiveFile: () => FileNode | undefined;
 
+  setActivePrompt: (prompt: string) => void;
+  getActivePrompt: () => string;
   setActiveBundleId: (bundleId?: number) => void;
 };
 
@@ -164,6 +166,14 @@ export const codeStoreActions: CodeStoreActions = {
 
   setActiveBundleId: (bundleId = 0) => {
     setAuto({ activeBundleId: bundleId });
+  },
+
+  getActivePrompt: () => {
+    return get().activePrompt;
+  },
+
+  setActivePrompt: (prompt) => {
+    setAuto({ activePrompt: prompt });
   },
 };
 

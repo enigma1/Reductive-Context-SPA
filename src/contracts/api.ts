@@ -94,20 +94,20 @@ export const ReadFileContract = {
   responseSchema: ReadFileResponseSchema,
 };
 
-export const BundleDataRequestSchema = z.object({
+export const CreateBundleRequestSchema = z.object({
   paths: z.record(z.string(), z.array(z.string())),
 });
-export type BundleDataRequest = z.infer<typeof BundleDataRequestSchema>;
+export type CreateBundleRequest = z.infer<typeof CreateBundleRequestSchema>;
 
-export const BundleDataResponseSchema = BasicResponseSchema.extend({
+export const CreateBundleResponseSchema = BasicResponseSchema.extend({
   totalTokens: z.number(),
   bundleId: z.number(),
 });
-export type BundleDataResponse = z.infer<typeof BundleDataResponseSchema>;
+export type CreateBundleResponse = z.infer<typeof CreateBundleResponseSchema>;
 
-export const BundleDataContract = {
-  requestSchema: BundleDataRequestSchema,
-  responseSchema: BundleDataResponseSchema,
+export const CreateBundleContract = {
+  requestSchema: CreateBundleRequestSchema,
+  responseSchema: CreateBundleResponseSchema,
 };
 
 export const GetBundleRequestSchema = z.object({
@@ -142,6 +142,23 @@ export type SetBundleResponse = z.infer<typeof SetBundleResponseSchema>;
 export const SetBundleContract = {
   requestSchema: SetBundleRequestSchema,
   responseSchema: SetBundleResponseSchema,
+};
+
+export const SubmitBundleRequestSchema = z.object({
+  bundleId: z.number(),
+  bundleContent: z.string(),
+});
+export type SubmitBundleRequest = z.infer<typeof SubmitBundleRequestSchema>;
+
+export const SubmitBundleResponseSchema = BasicResponseSchema.extend({
+  totalTokens: z.number(),
+  bundleId: z.number(),
+});
+export type SubmitBundleResponse = z.infer<typeof SubmitBundleResponseSchema>;
+
+export const SubmitBundleContract = {
+  requestSchema: SubmitBundleRequestSchema,
+  responseSchema: SubmitBundleResponseSchema,
 };
 
 export const GetTableDataRequestSchema = z.object({
