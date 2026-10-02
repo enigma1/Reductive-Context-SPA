@@ -5,7 +5,7 @@
 import isEqual from 'lodash-es/isEqual';
 import { useState, useRef } from 'react';
 import type { OnMount } from '@monaco-editor/react';
-import { CodeRange, FileNode } from '>/types';
+import { CodeRange, FileNode } from '>/contracts';
 
 type CodeRangesComparison = {
   original: CodeRange[];

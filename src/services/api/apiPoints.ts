@@ -4,7 +4,7 @@ import { apiClient } from './client';
 import { routes } from '>/config';
 
 import {
-  GetTableDataSchema,
+  GetTableDataContract,
   GetPathsContract,
   CreateBundleContract,
   GetBundleContract,
@@ -99,7 +99,7 @@ const submitBundle = (data: SubmitBundleRequest) =>
 
 const getTableData = (data: GetTableDataRequest) =>
   apiCall<GetTableDataResponse>(() =>
-    apiClient.post(routes.back.getTableData, data, GetTableDataSchema),
+    apiClient.post(routes.back.getTableData, data, GetTableDataContract),
   );
 
 const saveSettings = (data: SaveSettingsRequest) =>

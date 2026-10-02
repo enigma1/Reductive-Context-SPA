@@ -2,8 +2,7 @@
     store service for paths and file selections
 */
 import { makeState } from './estate';
-import { FileNode } from '>/types';
-import type { FolderPath } from '>/contracts';
+import type { FolderPath, FileNode } from '>/contracts';
 
 type ActiveFile = Pick<FileNode, 'path' | 'name'>;
 

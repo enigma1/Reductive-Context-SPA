@@ -74,8 +74,8 @@ export const BundleView = () => {
     onError: () => {
       messageStoreActions.addMessage({
         content: {
-          text: 'Updating the bundle failed',
-          duration: 8000,
+          text: 'Updating the bundle failed - Check if LLM is active',
+          duration: 5000,
         },
       });
     },
@@ -89,6 +89,13 @@ export const BundleView = () => {
     onSuccess: (data: SubmitBundleResponse) => {
       if (data.ok) {
         // navigate(routes.front.bundleView);
+        messageStoreActions.addMessage({
+          type: 'success',
+          content: {
+            text: 'Bundle In progress',
+            duration: 5000,
+          },
+        });
       } else {
         // Show error dialog
       }
@@ -97,7 +104,7 @@ export const BundleView = () => {
       messageStoreActions.addMessage({
         content: {
           text: 'Processing the Bundle failed',
-          duration: 8000,
+          duration: 5000,
         },
       });
     },

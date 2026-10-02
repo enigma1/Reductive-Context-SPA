@@ -79,7 +79,8 @@ export const FilePathsForm = ({ formHandlers }: FilePathsFormProps) => {
 
   useEffect(() => {
     const allFilled = form.values.paths.every((p) => p.path.trim() !== '');
-    const disabled = errorResponse || !allFilled;
+    const promptValid = form.values.prompt.trim().length >= 10;
+    const disabled = errorResponse || !allFilled || !promptValid;
     const incomplete = false;
     setButtonStatus(
       'confirm',
@@ -126,6 +127,8 @@ export const FilePathsForm = ({ formHandlers }: FilePathsFormProps) => {
       paths.map(({ path }) => blankPath(path)),
     );
   };
+
+  const invalidPrompt = form.values.prompt.length < 10;
 
   return (
     <div className='area-container'>
@@ -181,6 +184,10 @@ export const FilePathsForm = ({ formHandlers }: FilePathsFormProps) => {
               value={form.values.prompt}
               className='text-dialog-area input border'
               onValueChange={(value) => form.setValue('prompt', value)}
+              status={
+                form.submitAttempted && invalidPrompt ? 'error' : undefined
+              }
+              notice={invalidPrompt ? 'Required' : undefined}
             />
           </div>
           {form.values.paths.map((entry, idx) => {

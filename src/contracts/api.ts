@@ -94,8 +94,26 @@ export const ReadFileContract = {
   responseSchema: ReadFileResponseSchema,
 };
 
+const codeMode = ['code', 'signature'] as const;
+export type FileMode = (typeof codeMode)[number];
+
+const CodeRangeSchema = z.object({
+  startLine: z.number().int().min(1),
+  endLine: z.number().int().min(1),
+});
+export type CodeRange = z.infer<typeof CodeRangeSchema>;
+
+export const FileNodeSchema = z.object({
+  path: z.string(),
+  name: z.string(),
+  mode: z.enum(codeMode).optional(),
+  ranges: z.array(CodeRangeSchema).optional(),
+});
+export type FileNode = z.infer<typeof FileNodeSchema>;
+
 export const CreateBundleRequestSchema = z.object({
-  paths: z.record(z.string(), z.array(z.string())),
+  paths: z.array(FileNodeSchema),
+  prompt: z.string().min(10),
 });
 export type CreateBundleRequest = z.infer<typeof CreateBundleRequestSchema>;
 
@@ -172,7 +190,7 @@ export const GetTableDataResponseSchema = z.object({
 });
 export type GetTableDataResponse = z.infer<typeof GetTableDataResponseSchema>;
 
-export const GetTableDataSchema = {
+export const GetTableDataContract = {
   requestSchema: GetTableDataRequestSchema,
   responseSchema: GetTableDataResponseSchema,
 };

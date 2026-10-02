@@ -1,9 +1,10 @@
 import { useNavigate } from 'react-router';
 import { FilePenIcon, DeleteIcon } from 'lucide-react';
+import { useCodeStore } from '>/services/stores';
 import { routes } from '>/config';
 import { CheckboxField } from '>/modules';
-import type { FilesByFolder, FileNode, CodeRange } from '>/types';
-import { useCodeStore } from '>/services/stores';
+import type { FileNode, CodeRange } from '>/contracts';
+import type { FilesByFolder } from '>/types';
 import { FileItem } from './FileItem';
 
 type FileSelectorProps = {

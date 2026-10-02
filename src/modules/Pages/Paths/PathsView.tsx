@@ -8,19 +8,29 @@ import {
 } from '>/services/stores';
 import { routes } from '>/config';
 import { ScreenLoader, dialogFactories } from '>/modules';
-import type { CreateBundleRequest, CreateBundleResponse } from '>/contracts';
+import type {
+  FileNode,
+  CreateBundleRequest,
+  CreateBundleResponse,
+} from '>/contracts';
 import { FileSelector } from './FileSelector';
 
 export const PathsView = () => {
   const navigate = useNavigate();
 
-  const { currentPaths, selectedFiles, getSelectedFiles, setActiveBundleId } =
-    useCodeStore(({ state, api }) => ({
-      selectedFiles: state.selectedFiles,
-      currentPaths: state.activePaths,
-      getSelectedFiles: api.getAllSelectedFiles,
-      setActiveBundleId: api.setActiveBundleId,
-    }));
+  const {
+    currentPaths,
+    selectedFiles,
+    getSelectedFiles,
+    setActiveBundleId,
+    getActivePrompt,
+  } = useCodeStore(({ state, api }) => ({
+    selectedFiles: state.selectedFiles,
+    currentPaths: state.activePaths,
+    getSelectedFiles: api.getAllSelectedFiles,
+    setActiveBundleId: api.setActiveBundleId,
+    getActivePrompt: api.getActivePrompt,
+  }));
 
   const { paths, isFetching, refetch } = useGetPaths(
     { paths: currentPaths },
@@ -65,14 +75,8 @@ export const PathsView = () => {
   };
 
   const onCreateBundle = () => {
-    const paths = getSelectedFiles().reduce<CreateBundleRequest['paths']>(
-      (filesByPath, file) => ({
-        ...filesByPath,
-        [file.path]: [...(filesByPath[file.path] ?? []), file.name],
-      }),
-      {},
-    );
-    mutate({ paths }, callbacks);
+    const prompt = getActivePrompt();
+    mutate({ paths: getSelectedFiles(), prompt }, callbacks);
   };
 
   const onRefresh = () => {
