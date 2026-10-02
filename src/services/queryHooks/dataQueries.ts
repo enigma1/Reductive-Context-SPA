@@ -5,6 +5,8 @@ import type {
   GetTableDataResponse,
   ReadFileRequest,
   ReadFileResponse,
+  GetBundleRequest,
+  GetBundleResponse,
 } from '>/contracts';
 import { apiPoints } from '>/services/api';
 import { defaultResponse, defaultListResponse } from '>/config';
@@ -22,7 +24,7 @@ export const useGetTableData = createDataQueryHook<
       table: req.table,
     });
   },
-  initialData: (req) => ({
+  initialData: () => ({
     ...defaultResponse,
     ...defaultListResponse,
   }),
@@ -62,11 +64,30 @@ export const useReadFile = createDataQueryHook<
     const response = await apiPoints.readFile(fileNode!);
     return response;
   },
-  initialData: (fileNode) => ({
+  initialData: () => ({
     ...defaultResponse,
     code: '',
   }),
   enabled: (fileNode) => !!fileNode,
+});
+
+export const useGetBundle = createDataQueryHook<
+  GetBundleResponse,
+  GetBundleRequest,
+  {}
+>({
+  queryKey: (req) => queryKeys.getBundle(req),
+  queryFn: async (req) => {
+    const rsp = await apiPoints.getBundle(req);
+    return rsp;
+  },
+  initialData: (req) => ({
+    ...defaultResponse,
+    bundleContent: '',
+    bundleId: req.bundleId,
+    totalTokens: 0,
+  }),
+  enabled: (req) => !!req.bundleId,
 });
 
 // // Call site — same signature as before

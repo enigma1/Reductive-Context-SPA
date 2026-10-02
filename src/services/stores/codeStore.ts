@@ -37,9 +37,10 @@ const removeSelectedFile = (
 
 type StoreState = {
   selectedFiles: FileNode[];
-  currentPaths: FolderPath[];
+  activePaths: FolderPath[];
+  activePrompt: string;
+  activeBundleId?: number;
   activeFile?: ActiveFile;
-  currentPrompt: string;
 };
 
 export type CodeStoreActions = {
@@ -55,14 +56,16 @@ export type CodeStoreActions = {
   setCurrentPaths: (paths?: FolderPath[]) => void;
   setActiveFile: (file?: FileNode) => void;
   getActiveFile: () => FileNode | undefined;
+
+  setActiveBundleId: (bundleId?: number) => void;
 };
 
 export type CodeStore = StoreState & CodeStoreActions;
 
 const initialState: StoreState = {
   selectedFiles: [],
-  currentPaths: [],
-  currentPrompt: '',
+  activePaths: [],
+  activePrompt: '',
 };
 
 const baseStore = makeState<StoreState>(() => ({ ...initialState }));
@@ -115,10 +118,10 @@ export const codeStoreActions: CodeStoreActions = {
   },
 
   getCurrentPaths: () => {
-    return get().currentPaths;
+    return get().activePaths;
   },
   setCurrentPaths: (paths) => {
-    setAuto({ currentPaths: paths ?? [] });
+    setAuto({ activePaths: paths ?? [] });
   },
 
   getActiveFile: () => {
@@ -157,6 +160,10 @@ export const codeStoreActions: CodeStoreActions = {
             }),
       };
     });
+  },
+
+  setActiveBundleId: (bundleId = 0) => {
+    setAuto({ activeBundleId: bundleId });
   },
 };
 

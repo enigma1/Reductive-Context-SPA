@@ -60,7 +60,7 @@ const getMonacoLanguage = (filename: string) => {
   }
 };
 
-export const useEditorSelection = (file?: FileNode) => {
+export const useViewerSelection = (file?: FileNode) => {
   const editorRef = useRef<Parameters<OnMount>[0] | null>(null);
   const [isDirty, setIsDirty] = useState(false);
 
@@ -118,5 +118,19 @@ export const useEditorSelection = (file?: FileNode) => {
     getSelections,
     isDirty,
     language,
+  };
+};
+
+export const useEditorBundle = () => {
+  const editorRef = useRef<Parameters<OnMount>[0] | null>(null);
+  const [isDirty, setIsDirty] = useState(false);
+
+  const onMount: OnMount = (editor, monaco) => {
+    editorRef.current = editor;
+  };
+
+  return {
+    onMount,
+    isDirty,
   };
 };

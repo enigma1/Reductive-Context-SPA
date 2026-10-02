@@ -6,7 +6,7 @@ import type { BundleDataRequest, BundleDataResponse } from '>/contracts';
 
 const defaultBundleData = {
   totalTokens: 0,
-  bundle: '',
+  bundleId: 0,
 };
 
 export const useBundleData = createMutationHook<

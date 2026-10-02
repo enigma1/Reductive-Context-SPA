@@ -12,7 +12,7 @@ import {
 import {
   GetPathsRequest,
   ReadFileRequest,
-  BundleDataRequest,
+  GetBundleRequest,
 } from '>/contracts';
 import { appStoreActions } from '>/services/stores';
 import { createNetworkError } from '>/services/api/apiErrors';
@@ -106,7 +106,7 @@ export const queryKeys = {
   getTableData: (table: string) => ['get-table-data', table],
   getPaths: (paths: GetPathsRequest) => ['get-paths', { ...paths }],
   readFile: (req: ReadFileRequest) => ['read-file', { ...req }],
-  bundleData: (req: BundleDataRequest) => ['bundle-data', { ...req }],
+  getBundle: (req: GetBundleRequest) => ['get-bundle', { ...req }],
 };
 
 export const getMutationResult = <TData = any, TVariables = any>(

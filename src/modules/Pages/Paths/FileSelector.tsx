@@ -45,7 +45,7 @@ export const FileSelector = ({ filesByFolder }: FileSelectorProps) => {
 
   const onEdit = (file: FileNode) => {
     setActiveFile(file);
-    navigate(routes.front.readFile);
+    navigate(routes.front.readFile, { replace: true });
   };
 
   const onRangeRemove = (file: FileNode, range: CodeRange) => {

@@ -12,7 +12,7 @@ import {
 import { routes } from '>/config';
 import { useCodeStore } from '>/services/stores';
 import { useReadFile } from '>/services/queryHooks';
-import { useEditorSelection } from '>/services/hooks';
+import { useViewerSelection } from '>/services/hooks';
 import { ScreenLoader } from '>/modules';
 
 export const Reader = () => {
@@ -35,7 +35,7 @@ export const Reader = () => {
   );
 
   const { onMount, getSelections, language, isDirty } =
-    useEditorSelection(activeFile);
+    useViewerSelection(activeFile);
 
   // ----------------
   // No-Hooks Section

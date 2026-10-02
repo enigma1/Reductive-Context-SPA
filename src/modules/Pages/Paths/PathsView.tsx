@@ -1,18 +1,26 @@
+import { useNavigate } from 'react-router';
 import { ListRestartIcon, FolderDotIcon, CirclePileIcon } from 'lucide-react';
 import { useGetPaths, useBundleData } from '>/services/queryHooks';
-import { useCodeStore, dialogStoreActions } from '>/services/stores';
+import {
+  useCodeStore,
+  dialogStoreActions,
+  messageStoreActions,
+} from '>/services/stores';
+import { routes } from '>/config';
 import { ScreenLoader, dialogFactories } from '>/modules';
-import type { BundleDataRequest } from '>/contracts';
+import type { BundleDataRequest, BundleDataResponse } from '>/contracts';
 import { FileSelector } from './FileSelector';
 
 export const PathsView = () => {
-  const { currentPaths, selectedFiles, getSelectedFiles } = useCodeStore(
-    ({ state, api }) => ({
+  const navigate = useNavigate();
+
+  const { currentPaths, selectedFiles, getSelectedFiles, setActiveBundleId } =
+    useCodeStore(({ state, api }) => ({
       selectedFiles: state.selectedFiles,
-      currentPaths: state.currentPaths,
+      currentPaths: state.activePaths,
       getSelectedFiles: api.getAllSelectedFiles,
-    }),
-  );
+      setActiveBundleId: api.setActiveBundleId,
+    }));
 
   const { paths, isFetching, refetch } = useGetPaths(
     { paths: currentPaths },
@@ -27,6 +35,35 @@ export const PathsView = () => {
     mutate: api.mutate,
   }));
 
+  // ----------------
+  // No-Hooks Section
+  // ----------------
+  const isBusy = isFetching;
+  if (isBusy) {
+    return <ScreenLoader />;
+  }
+
+  const callbacks = {
+    onSuccess: (data: BundleDataResponse) => {
+      if (data.ok) {
+        setActiveBundleId(data.bundleId);
+        navigate(routes.front.bundleView, { replace: true });
+      } else {
+        setActiveBundleId(undefined);
+        // Show error dialog
+      }
+    },
+    onError: () => {
+      setActiveBundleId();
+      messageStoreActions.addMessage({
+        content: {
+          text: 'Login failed. Please check endpoint and your credentials and try again.',
+          duration: 8000,
+        },
+      });
+    },
+  };
+
   const onBundleData = () => {
     const paths = getSelectedFiles().reduce<BundleDataRequest['paths']>(
       (filesByPath, file) => ({
@@ -35,8 +72,7 @@ export const PathsView = () => {
       }),
       {},
     );
-
-    mutate({ paths });
+    mutate({ paths }, callbacks);
   };
 
   const onRefresh = () => {
@@ -48,11 +84,6 @@ export const PathsView = () => {
       payload: dialogFactories.setFilePaths(),
     });
   };
-
-  const isBusy = isFetching;
-  if (isBusy) {
-    return <ScreenLoader />;
-  }
 
   const hasPaths = Object.values(paths).length > 0;
 

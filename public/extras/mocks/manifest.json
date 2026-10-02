@@ -4,6 +4,8 @@
   "getTableData": "/extras/mocks/getTableData.json",
   "getPaths": "/extras/mocks/getPaths.json",
   "readFile": "/extras/mocks/readFile.json",
+  "bundleData": "/extras/mocks/bundleData.json",
+  "getBundle": "/extras/mocks/getBundle.json",
   "saveSettings": "/extras/mocks/saveSettings.json",
   "loadSettings": "/extras/mocks/loadSettings.json"
 }

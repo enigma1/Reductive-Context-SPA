@@ -1,3 +1,6 @@
+/* src/config/contracts/api.ts
+  API contracts on request/response of the back end
+*/
 import { z } from 'zod';
 
 export const AiStatusSchema = z.object({
@@ -50,7 +53,7 @@ export const SaveSettingsRequestSchema = z.object({
 });
 export type SaveSettingsRequest = z.infer<typeof SaveSettingsRequestSchema>;
 
-// Scan Files
+// Scan Folder/Files
 // Request is a list of paths the user requested for this prompt
 // Response is record of strings with a string array
 export const FolderPathSchema = z.object({
@@ -98,13 +101,30 @@ export type BundleDataRequest = z.infer<typeof BundleDataRequestSchema>;
 
 export const BundleDataResponseSchema = BasicResponseSchema.extend({
   totalTokens: z.number(),
-  bundle: z.string(),
+  bundleId: z.number(),
 });
 export type BundleDataResponse = z.infer<typeof BundleDataResponseSchema>;
 
-export const BundleFilesContract = {
+export const BundleDataContract = {
   requestSchema: BundleDataRequestSchema,
   responseSchema: BundleDataResponseSchema,
+};
+
+export const GetBundleRequestSchema = z.object({
+  bundleId: z.number(),
+});
+export type GetBundleRequest = z.infer<typeof GetBundleRequestSchema>;
+
+export const GetBundleResponseSchema = BasicResponseSchema.extend({
+  totalTokens: z.number(),
+  bundleId: z.number(),
+  bundleContent: z.string(),
+});
+export type GetBundleResponse = z.infer<typeof GetBundleResponseSchema>;
+
+export const GetBundleContract = {
+  requestSchema: GetBundleRequestSchema,
+  responseSchema: GetBundleResponseSchema,
 };
 
 export const GetTableDataRequestSchema = z.object({
