@@ -1,0 +1,10 @@
+{
+  "ok": true,
+  "message": "Bundle Updated",
+  "aiStatus": {
+    "active": true,
+    "model": "some-llm-v-1"
+  },
+  "totalTokens": 1418,
+  "bundleId": 123
+}

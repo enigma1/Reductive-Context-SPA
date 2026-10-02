@@ -125,8 +125,12 @@ export const useEditorBundle = () => {
   const editorRef = useRef<Parameters<OnMount>[0] | null>(null);
   const [isDirty, setIsDirty] = useState(false);
 
-  const onMount: OnMount = (editor, monaco) => {
+  const onMount: OnMount = (editor) => {
     editorRef.current = editor;
+
+    editor.onDidChangeModelContent(() => {
+      setIsDirty(true);
+    });
   };
 
   return {

@@ -127,6 +127,23 @@ export const GetBundleContract = {
   responseSchema: GetBundleResponseSchema,
 };
 
+export const SetBundleRequestSchema = z.object({
+  bundleId: z.number(),
+  bundleContent: z.string(),
+});
+export type SetBundleRequest = z.infer<typeof SetBundleRequestSchema>;
+
+export const SetBundleResponseSchema = BasicResponseSchema.extend({
+  totalTokens: z.number(),
+  bundleId: z.number(),
+});
+export type SetBundleResponse = z.infer<typeof SetBundleResponseSchema>;
+
+export const SetBundleContract = {
+  requestSchema: SetBundleRequestSchema,
+  responseSchema: SetBundleResponseSchema,
+};
+
 export const GetTableDataRequestSchema = z.object({
   table: z.string(),
 });

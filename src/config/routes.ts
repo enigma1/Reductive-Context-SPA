@@ -16,6 +16,7 @@ export const routes: AllRoutes = {
     readFile: '/api/read-file',
     bundleData: '/api/bundle-data',
     getBundle: '/api/get-bundle',
+    setBundle: '/api/set-bundle',
     getTableData: '/api/get-table-data',
     loadSettings: '/api/load-settings',
     saveSettings: '/api/save-settings',

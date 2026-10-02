@@ -47,7 +47,7 @@ export const PathsView = () => {
     onSuccess: (data: BundleDataResponse) => {
       if (data.ok) {
         setActiveBundleId(data.bundleId);
-        navigate(routes.front.bundleView, { replace: true });
+        navigate(routes.front.bundleView);
       } else {
         setActiveBundleId(undefined);
         // Show error dialog
