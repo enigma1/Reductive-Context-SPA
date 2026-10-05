@@ -1,8 +1,8 @@
 import { useNavigate } from 'react-router';
-import { FilePenIcon, DeleteIcon } from 'lucide-react';
+import { DeleteIcon, ViewIcon } from 'lucide-react';
 import { useCodeStore } from '>/services/stores';
 import { routes } from '>/config';
-import { CheckboxField } from '>/modules';
+import { CheckboxField, TextAreaField } from '>/modules';
 import type { FileNode, CodeRange } from '>/contracts';
 import type { FilesByFolder } from '>/types';
 import { FileItem } from './FileItem';
@@ -19,12 +19,16 @@ export const FileSelector = ({ filesByFolder }: FileSelectorProps) => {
     removeSelectedFiles,
     setActiveFile,
     addSelectedFile,
+    setActivePrompt,
+    activePrompt,
   } = useCodeStore(({ state, api }) => ({
+    activePrompt: state.activePrompt,
     selectedFiles: state.selectedFiles,
     addSelectedFiles: api.addSelectedFiles,
     removeSelectedFiles: api.removeSelectedFiles,
     setActiveFile: api.setActiveFile,
     addSelectedFile: api.addSelectedFile,
+    setActivePrompt: api.setActivePrompt,
   }));
 
   const getFolderSelectionState = (
@@ -62,84 +66,96 @@ export const FileSelector = ({ filesByFolder }: FileSelectorProps) => {
   };
 
   return (
-    <div className='selection-list'>
-      {Object.entries(filesByFolder).map(([folder, files], idx) => {
-        const folderFiles: FileNode[] = files.map((name) => {
-          const selectedFile = selectedFiles.find(
-            (selected) => selected.path === folder && selected.name === name,
+    <>
+      <div className='my-2'>
+        <TextAreaField
+          id='prompt-field'
+          label='Prompt:'
+          value={activePrompt}
+          className='text-dialog-area input border'
+          onValueChange={(value) => setActivePrompt(value)}
+          placeholder='Enter your prompt'
+        />
+      </div>
+      <div className='selection-list'>
+        {Object.entries(filesByFolder).map(([folder, files], idx) => {
+          const folderFiles: FileNode[] = files.map((name) => {
+            const selectedFile = selectedFiles.find(
+              (selected) => selected.path === folder && selected.name === name,
+            );
+            return {
+              path: folder,
+              name,
+              ranges: selectedFile?.ranges,
+              mode: 'code',
+            };
+          });
+
+          const { checked, indeterminate } = getFolderSelectionState(
+            folderFiles,
+            selectedFiles,
           );
-          return {
-            path: folder,
-            name,
-            ranges: selectedFile?.ranges,
-            mode: 'code',
-          };
-        });
 
-        const { checked, indeterminate } = getFolderSelectionState(
-          folderFiles,
-          selectedFiles,
-        );
-
-        return (
-          <div className='selection-section' key={folder}>
-            <div className='selection-outer space-y-1'>
-              <CheckboxField
-                id={`${folder}-${idx}`}
-                label={folder}
-                checked={checked}
-                indeterminate={indeterminate}
-                onChange={(checked) => {
-                  if (checked) {
-                    addSelectedFiles(folderFiles);
-                  } else {
-                    removeSelectedFiles(folderFiles);
-                  }
-                }}
-              />
-              <div className='selection-group'>
-                {folderFiles.map((file, idxf) => {
-                  const fileBoxClass = `${file.ranges ? 'light-borders -ml-3' : ''}`;
-                  return (
-                    <div
-                      className={fileBoxClass}
-                      key={`${file.path}-${file.name}-${idxf}`}
-                    >
-                      <div className='inline-wrapper'>
-                        <button
-                          className='btn-square'
-                          onClick={() => onEdit(file)}
-                          title='View file and select code lines'
-                        >
-                          <FilePenIcon size={14} />
-                        </button>
-                        <FileItem name={file.name} path={file.path} />
-                      </div>
-                      <div className='space-y-1'>
-                        {file.ranges?.map((range, idxl) => (
-                          <div
-                            className='inline-wrapper line-sm'
-                            key={`${file.path}-${file.name}-lines-${idxf}-${idxl}`}
+          return (
+            <div className='selection-section' key={folder}>
+              <div className='selection-outer space-y-1'>
+                <CheckboxField
+                  id={`${folder}-${idx}`}
+                  label={folder}
+                  checked={checked}
+                  indeterminate={indeterminate}
+                  onChange={(checked) => {
+                    if (checked) {
+                      addSelectedFiles(folderFiles);
+                    } else {
+                      removeSelectedFiles(folderFiles);
+                    }
+                  }}
+                />
+                <div className='selection-group'>
+                  {folderFiles.map((file, idxf) => {
+                    const fileBoxClass = `${file.ranges ? 'light-borders -ml-3' : ''}`;
+                    return (
+                      <div
+                        className={fileBoxClass}
+                        key={`${file.path}-${file.name}-${idxf}`}
+                      >
+                        <div className='inline-wrapper'>
+                          <button
+                            className='btn-square'
+                            onClick={() => onEdit(file)}
+                            title='View file and select code lines'
                           >
-                            <button
-                              title='Remove lines of code from bundle'
-                              className='btn-square error rotate-180'
-                              onClick={() => onRangeRemove(file, range)}
+                            <ViewIcon size={14} />
+                          </button>
+                          <FileItem name={file.name} path={file.path} />
+                        </div>
+                        <div className='space-y-1'>
+                          {file.ranges?.map((range, idxl) => (
+                            <div
+                              className='inline-wrapper line-sm'
+                              key={`${file.path}-${file.name}-lines-${idxf}-${idxl}`}
                             >
-                              <DeleteIcon size={14} />
-                            </button>
-                            <span>{`Lines: [${range.startLine}-${range.endLine}]`}</span>
-                          </div>
-                        ))}
+                              <button
+                                title='Remove lines of code from bundle'
+                                className='btn-square error rotate-180'
+                                onClick={() => onRangeRemove(file, range)}
+                              >
+                                <DeleteIcon size={14} />
+                              </button>
+                              <span>{`Lines: [${range.startLine}-${range.endLine}]`}</span>
+                            </div>
+                          ))}
+                        </div>
                       </div>
-                    </div>
-                  );
-                })}
+                    );
+                  })}
+                </div>
               </div>
             </div>
-          </div>
-        );
-      })}
-    </div>
+          );
+        })}
+      </div>
+    </>
   );
 };

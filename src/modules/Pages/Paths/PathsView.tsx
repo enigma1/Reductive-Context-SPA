@@ -19,12 +19,14 @@ export const PathsView = () => {
   const navigate = useNavigate();
 
   const {
+    activePrompt,
     currentPaths,
     selectedFiles,
     getSelectedFiles,
     setActiveBundleId,
     getActivePrompt,
   } = useCodeStore(({ state, api }) => ({
+    activePrompt: state.activePrompt,
     selectedFiles: state.selectedFiles,
     currentPaths: state.activePaths,
     getSelectedFiles: api.getAllSelectedFiles,
@@ -101,7 +103,11 @@ export const PathsView = () => {
               className='btn'
               onClick={onCreateBundle}
               title='Request a bundle from the given selected bundles'
-              data-status={selectedFiles.length === 0 ? 'disabled' : undefined}
+              data-status={
+                selectedFiles.length === 0 || activePrompt.length < 10
+                  ? 'disabled'
+                  : undefined
+              }
             >
               <CirclePileIcon size={24} />
             </button>
@@ -125,9 +131,9 @@ export const PathsView = () => {
           {hasPaths ? (
             <>
               <p>
-                Along with he prmopt, select the files to create a bundle, from
-                the list below. You can also select lines of code from each
-                selected file
+                Enter the prmopt and select the files to create a bundle. You
+                can also select multiple sets of lines of code by viewing each
+                selected file.
               </p>
               <FileSelector filesByFolder={paths} />
             </>

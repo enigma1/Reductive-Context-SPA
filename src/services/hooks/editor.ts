@@ -41,6 +41,7 @@ const getMonacoLanguage = (filename: string) => {
   switch (extension) {
     case 'ts':
     case 'tsx':
+    case 'astro':
       return 'typescript';
     case 'js':
     case 'jsx':

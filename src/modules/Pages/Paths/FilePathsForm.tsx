@@ -9,13 +9,7 @@ import {
   codeStoreActions,
   formsStoreActions,
 } from '>/services/stores';
-import {
-  InputField,
-  DialogContent,
-  ErrorDetails,
-  ComboField,
-  TextAreaField,
-} from '>/modules';
+import { InputField, DialogContent, ErrorDetails, ComboField } from '>/modules';
 import type { FolderPath } from '>/contracts';
 import type { CommonDialogHandlers } from '>/types';
 
@@ -42,7 +36,6 @@ export const FilePathsForm = ({ formHandlers }: FilePathsFormProps) => {
   const form = useSimpleForm(
     {
       paths: getFormInitialPaths(),
-      prompt: codeStoreActions.getActivePrompt(),
     },
     { autoTouch: true },
   );
@@ -70,7 +63,6 @@ export const FilePathsForm = ({ formHandlers }: FilePathsFormProps) => {
   const onConfirm = async () => {
     form.saveProfile();
     codeStoreActions.setCurrentPaths(form.values.paths);
-    codeStoreActions.setActivePrompt(form.values.prompt);
 
     if (location.pathname !== routes.front.pathsView) {
       navigate(routes.front.pathsView);
@@ -79,8 +71,7 @@ export const FilePathsForm = ({ formHandlers }: FilePathsFormProps) => {
 
   useEffect(() => {
     const allFilled = form.values.paths.every((p) => p.path.trim() !== '');
-    const promptValid = form.values.prompt.trim().length >= 10;
-    const disabled = errorResponse || !allFilled || !promptValid;
+    const disabled = errorResponse || !allFilled;
     const incomplete = false;
     setButtonStatus(
       'confirm',
@@ -127,8 +118,6 @@ export const FilePathsForm = ({ formHandlers }: FilePathsFormProps) => {
       paths.map(({ path }) => blankPath(path)),
     );
   };
-
-  const invalidPrompt = form.values.prompt.length < 10;
 
   return (
     <div className='area-container'>
@@ -178,18 +167,6 @@ export const FilePathsForm = ({ formHandlers }: FilePathsFormProps) => {
           </div>
         </div>
         <div className='area-content'>
-          <div>
-            <TextAreaField
-              label='Prompt:'
-              value={form.values.prompt}
-              className='text-dialog-area input border'
-              onValueChange={(value) => form.setValue('prompt', value)}
-              status={
-                form.submitAttempted && invalidPrompt ? 'error' : undefined
-              }
-              notice={invalidPrompt ? 'Required' : undefined}
-            />
-          </div>
           {form.values.paths.map((entry, idx) => {
             const showError = pathsChanged && !entry.path.trim();
             const invalid = !entry.path.trim();

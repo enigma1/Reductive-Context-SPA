@@ -1,3 +1,6 @@
+/* File src/services/strings.ts
+  String common support functions
+*/
 import { MAX_TEXT_STRING } from '>/config';
 
 export const isEmptyString = (s: unknown): s is string =>
@@ -29,12 +32,6 @@ export const hasit = ({ input, parts, at = 0 }: HasitProps) => {
   });
 };
 
-export const extractNameFromRequired = (param: string) =>
-  param
-    .replace(/\s*\*$/, '')
-    .trim()
-    .toLowerCase();
-
 export const formatSize = (bytes: number): string => {
   if (bytes < 1024) {
     return `${bytes} B`;
@@ -50,25 +47,4 @@ export const formatSize = (bytes: number): string => {
   }
 
   return `${value.toFixed(1)} ${units[unit]}`;
-};
-
-export const sqlStringConvert = async (file: File): Promise<string | null> => {
-  const name = file.name.toLowerCase();
-
-  // If it's plain sql fetch the text from it
-  if (name.endsWith('.sql')) {
-    return await file.text();
-  }
-
-  // otherwise for compressed files make the browser decompress it.
-  if (name.endsWith('.gz')) {
-    const buffer = await file.arrayBuffer();
-    const stream = new DecompressionStream('gzip');
-    const decompressedStream = new Response(
-      new Blob([buffer]).stream().pipeThrough(stream),
-    );
-
-    return await decompressedStream.text();
-  }
-  return Promise.resolve(null);
 };
