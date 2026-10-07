@@ -6,10 +6,10 @@ import { routes } from '>/config';
 import {
   GetTableDataContract,
   GetPathsContract,
+  ReadFileContract,
   CreateBundleContract,
   GetBundleContract,
   SetBundleContract,
-  SubmitBundleContract,
 } from '>/contracts';
 import type {
   BasicResponse,
@@ -26,8 +26,9 @@ import type {
   SetBundleRequest,
   SetBundleResponse,
   SubmitBundleRequest,
-  SubmitBundleResponse,
 } from '>/contracts';
+
+import { bundlePostResponse, streamPost } from './sse';
 
 import type {
   AbortResponse,
@@ -58,6 +59,11 @@ const apiCall = <T>(fn: () => Promise<AxiosResponse<T>>): Promise<T> =>
     return res.data;
   });
 
+const apiCallRaw = <T = void>(fn: () => Promise<T>) =>
+  handleApiAxios<T>(async () => {
+    return await fn();
+  });
+
 const abort = () =>
   apiCall<AbortResponse>(() => apiClient.get(routes.back.abort));
 const ping = () =>
@@ -75,7 +81,9 @@ const getPaths = (data: GetPathsRequest) =>
   );
 
 const readFile = (data: ReadFileRequest) =>
-  apiCall<ReadFileResponse>(() => apiClient.post(routes.back.readFile, data));
+  apiCall<ReadFileResponse>(() =>
+    apiClient.post(routes.back.readFile, data, ReadFileContract),
+  );
 
 const createBundle = (data: CreateBundleRequest) =>
   apiCall<CreateBundleResponse>(() =>
@@ -93,8 +101,12 @@ const setBundle = (data: SetBundleRequest) =>
   );
 
 const submitBundle = (data: SubmitBundleRequest) =>
-  apiCall<SubmitBundleResponse>(() =>
-    apiClient.post(routes.back.submitBundle, data, SubmitBundleContract),
+  apiCallRaw<void>(() =>
+    streamPost<SubmitBundleRequest>(
+      routes.back.submitBundle,
+      data,
+      bundlePostResponse,
+    ),
   );
 
 const getTableData = (data: GetTableDataRequest) =>

@@ -8,8 +8,8 @@ import type {
   SetBundleRequest,
   SetBundleResponse,
   SubmitBundleRequest,
-  SubmitBundleResponse,
 } from '>/contracts';
+import { queryKeys } from './defs';
 
 const defaultCreateBundle = {
   totalTokens: 0,
@@ -23,6 +23,13 @@ export const useCreateBundle = createMutationHook<
   state: {
     ...defaultResponse,
     ...defaultCreateBundle,
+  },
+  options: {
+    cache: async (qc, data) => {
+      await qc.invalidateQueries({
+        queryKey: queryKeys.getBundle({ bundleId: data.bundleId }),
+      });
+    },
   },
 });
 
@@ -42,11 +49,10 @@ export const useSetBundle = createMutationHook<
 });
 
 export const useSubmitBundle = createMutationHook<
-  MutationFunction<SubmitBundleResponse, SubmitBundleRequest>
+  MutationFunction<unknown, SubmitBundleRequest>
 >({
-  fn: apiPoints.setBundle,
+  fn: apiPoints.submitBundle,
   state: {
     ...defaultResponse,
-    ...defaultSetBundle,
   },
 });

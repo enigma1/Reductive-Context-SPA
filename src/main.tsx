@@ -4,7 +4,7 @@ import { redirect } from 'react-router';
 import { RouterProvider, createBrowserRouter } from 'react-router';
 import ReactDOM from 'react-dom/client';
 import { QueryClientProvider } from '@tanstack/react-query';
-import { queryClientTsx } from '>/services/queryHooks';
+import { queryClientHandlers } from '>/services/api';
 import { codeStoreActions } from '>/services/stores';
 import { routes } from '>/config';
 import {
@@ -70,7 +70,7 @@ if (!container) {
 
 ReactDOM.createRoot(container).render(
   <StrictMode>
-    <QueryClientProvider client={queryClientTsx}>
+    <QueryClientProvider client={queryClientHandlers}>
       <RouterProvider router={browserRouter} />
     </QueryClientProvider>
   </StrictMode>,

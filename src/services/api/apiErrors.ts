@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { queryClientTsx } from '</src/services/queryHooks';
+import { queryClientHandlers } from './apiReactQueryError';
 import { hasObjectProps, hasStringPropValue } from '>/services/utils';
 
 export const isNetworkError = (error: unknown): boolean =>
@@ -31,7 +31,7 @@ export const createUnknownError = (response: Record<string, unknown>) => ({
 });
 
 const authError = async () => {
-  await queryClientTsx.cancelQueries();
+  await queryClientHandlers.cancelQueries();
   throw createAuthError('Login required to access this');
 };
 

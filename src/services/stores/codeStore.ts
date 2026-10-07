@@ -34,12 +34,16 @@ const removeSelectedFile = (
   );
 };
 
+export type BundleStream = 'done' | 'processing' | 'error' | 'idle';
+
 type StoreState = {
   selectedFiles: FileNode[];
   activePaths: FolderPath[];
   activePrompt: string;
   activeBundleId?: number;
   activeFile?: ActiveFile;
+  bundleStream: BundleStream;
+  bundleResponse: string;
 };
 
 export type CodeStoreActions = {
@@ -59,6 +63,9 @@ export type CodeStoreActions = {
   setActivePrompt: (prompt: string) => void;
   getActivePrompt: () => string;
   setActiveBundleId: (bundleId?: number) => void;
+
+  setBundleStream: (mode: BundleStream) => void;
+  setBundleResponse: (rsp: string) => void;
 };
 
 export type CodeStore = StoreState & CodeStoreActions;
@@ -67,6 +74,8 @@ const initialState: StoreState = {
   selectedFiles: [],
   activePaths: [],
   activePrompt: '',
+  bundleStream: 'idle',
+  bundleResponse: '',
 };
 
 const baseStore = makeState<StoreState>(() => ({ ...initialState }));
@@ -173,6 +182,13 @@ export const codeStoreActions: CodeStoreActions = {
 
   setActivePrompt: (prompt) => {
     setAuto({ activePrompt: prompt });
+  },
+
+  setBundleStream: (mode) => {
+    setAuto({ bundleStream: mode });
+  },
+  setBundleResponse: (chunk) => {
+    setAuto((s) => ({ bundleResponse: s.bundleResponse + chunk }));
   },
 };
 
