@@ -1,6 +1,6 @@
 import type { AxiosAdapter, AxiosResponse } from 'axios';
 import { routes } from '>/config';
-import { handleLocalRequests } from '>/services/utils';
+import { handleLocalRequests } from './_mockHandlers';
 
 type ManifestJson = Record<string, string>;
 let manifestMocks: ManifestJson | null = null;

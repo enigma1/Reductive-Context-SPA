@@ -1,7 +1,7 @@
 import { Children, isValidElement, ReactNode, useEffect, useRef } from 'react';
 import { XIcon } from 'lucide-react';
 import { useModal } from '>/services/hooks';
-import { dialogSizes } from '>/services/utils';
+import { dialogSizes } from '>/config';
 
 type ModalCompoundComponent = React.FC<ModalBoxProps> & {
   Caption: React.FC<{ children: ReactNode }>;

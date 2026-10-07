@@ -1,9 +1,10 @@
+/* File: src/services/stores/configStore.ts
+  Processes user preferences
+*/
 import cloneDeep from 'lodash-es/cloneDeep';
-import { makeState } from './estate';
-import { userPrefs } from '>/services/utils';
-import { apiClient } from '>/services/api/client';
-import { backPath } from '>/config';
+import { userPrefs } from '>/config';
 import type { UserPrefs, LayoutPrefs } from '>/contracts';
+import { makeState } from './estate';
 
 type ConfigStoreState = UserPrefs;
 
@@ -20,7 +21,6 @@ export type ConfigStoreActions = {
 const initialState: ConfigStoreState = userPrefs;
 
 const baseStore = makeState<ConfigStoreState>(() => {
-  apiClient.defaults.baseURL = `${backPath}:${userPrefs.backPort}`;
   return cloneDeep(initialState);
 });
 const { get, set, setAuto } = baseStore;

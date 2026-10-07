@@ -4,7 +4,7 @@ import { redirect } from 'react-router';
 import { RouterProvider, createBrowserRouter } from 'react-router';
 import ReactDOM from 'react-dom/client';
 import { QueryClientProvider } from '@tanstack/react-query';
-import { queryClientHandlers } from '>/services/api';
+import { queryClientHandlers } from '>/bootstrap';
 import { codeStoreActions } from '>/services/stores';
 import { routes } from '>/config';
 import {
@@ -12,6 +12,7 @@ import {
   Home,
   NetworkDown,
   BundleView,
+  BundleList,
   PathsView,
   Reader,
   DataTable,
@@ -47,6 +48,10 @@ export const browserRouter = createBrowserRouter([
         path: routes.front.readFile,
         loader: readFileLoader,
         element: <Reader />,
+      },
+      {
+        path: routes.front.bundleList,
+        element: <BundleList />,
       },
       {
         path: routes.front.tableData,

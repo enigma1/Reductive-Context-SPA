@@ -1,5 +1,4 @@
 import axios from 'axios';
-import { queryClientHandlers } from './apiReactQueryError';
 import { hasObjectProps, hasStringPropValue } from '>/services/utils';
 
 export const isNetworkError = (error: unknown): boolean =>
@@ -30,11 +29,6 @@ export const createUnknownError = (response: Record<string, unknown>) => ({
   details: response?.details ?? [],
 });
 
-const authError = async () => {
-  await queryClientHandlers.cancelQueries();
-  throw createAuthError('Login required to access this');
-};
-
 export const apiErrorResolver = async (e: unknown) => {
   if (axios.isAxiosError(e) && e.code === axios.AxiosError.ERR_CANCELED) {
     const cancelError = createCancelError(
@@ -57,9 +51,6 @@ export const apiErrorResolver = async (e: unknown) => {
     const status = axiosError.response?.status;
     const data = axiosError.response?.data;
 
-    if (status === 401) {
-      await authError();
-    }
     throw createUnknownError({ ...data, code: status });
   }
   if (e instanceof Error) {

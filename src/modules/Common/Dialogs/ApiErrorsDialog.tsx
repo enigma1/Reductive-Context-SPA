@@ -1,9 +1,10 @@
 import { dialogStoreActions } from '>/services/stores';
-import { dialogActions } from '>/services/utils';
-import { DialogContent } from '>/modules';
+import { dialogActions } from './_dialogActions';
+import { DialogContent } from './DialogContent';
 import { ApiError } from '>/types';
 
 type ApiErrorContext = 'query' | 'mutation' | 'stream';
+
 export const handleApiError = (error: ApiError, context: ApiErrorContext) => {
   console.error(context, error);
   const isActive = dialogStoreActions.getActive();

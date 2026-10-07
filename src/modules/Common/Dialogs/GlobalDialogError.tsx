@@ -1,6 +1,6 @@
 import { useEffect } from 'react';
 import { useDialogStore } from '>/services/stores';
-import { dialogActions } from '>/services/utils';
+import { dialogActions } from './_dialogActions';
 import { DialogContent } from './DialogContent';
 
 export const GlobalDialogError = () => {

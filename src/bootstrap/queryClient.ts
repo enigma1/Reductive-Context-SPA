@@ -1,6 +1,9 @@
+/* File: src/bootstrap/queryClient.ts
+  handles errors for data queries and mutations
+*/
 import { QueryClient, QueryCache, MutationCache } from '@tanstack/react-query';
-import { handleApiError } from './apiErrorsDialog';
 import { ApiError } from '>/types';
+import { handleApiError } from '>/modules';
 
 export const queryClientHandlers = new QueryClient({
   queryCache: new QueryCache({

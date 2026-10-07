@@ -1,6 +1,7 @@
+/* File src/services/api/apiPoints.ts
+  API to connect to the back end
+*/
 import type { AxiosResponse } from 'axios';
-import { apiErrorResolver } from './apiErrors';
-import { apiClient } from './client';
 import { routes } from '>/config';
 
 import {
@@ -10,6 +11,7 @@ import {
   CreateBundleContract,
   GetBundleContract,
   SetBundleContract,
+  GetBundleListContract,
 } from '>/contracts';
 import type {
   BasicResponse,
@@ -26,10 +28,12 @@ import type {
   SetBundleRequest,
   SetBundleResponse,
   SubmitBundleRequest,
+  GetBundleListResponse,
 } from '>/contracts';
 
 import { bundlePostResponse, streamPost } from './sse';
-
+import { apiErrorResolver } from './apiErrors';
+import { apiClient } from './client';
 import type {
   AbortResponse,
   DelayedRequest,
@@ -109,6 +113,11 @@ const submitBundle = (data: SubmitBundleRequest) =>
     ),
   );
 
+const getBundleList = () =>
+  apiCall<GetBundleListResponse>(() =>
+    apiClient.get(routes.back.getBundleList, GetBundleListContract),
+  );
+
 const getTableData = (data: GetTableDataRequest) =>
   apiCall<GetTableDataResponse>(() =>
     apiClient.post(routes.back.getTableData, data, GetTableDataContract),
@@ -130,6 +139,7 @@ export const apiPoints = {
   getBundle,
   setBundle,
   submitBundle,
+  getBundleList,
   getTableData,
   saveSettings,
   loadSettings,

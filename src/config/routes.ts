@@ -25,6 +25,7 @@ export const routes: AllRoutes = {
   front: {
     home: '/',
     bundleView: '/bundle-view',
+    bundleList: '/bundle-list',
     pathsView: '/paths-view',
     readFile: '/read-file',
     tableData: '/tableData',

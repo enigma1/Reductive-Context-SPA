@@ -16,12 +16,18 @@ import {
   useSubmitBundle,
 } from '>/services/queryHooks';
 import { ScreenLoader } from '>/modules';
-import { SetBundleResponse, SubmitBundleResponse } from '</src/contracts';
+import { SetBundleResponse, SubmitBundleResponse } from '>/contracts';
 
 export const BundleView = () => {
   const navigate = useNavigate();
-  const { bundleId = 0 } = useCodeStore(({ state }) => ({
+  const {
+    bundleId = 0,
+    bundleStream,
+    setBundleStream,
+  } = useCodeStore(({ state, api }) => ({
     bundleId: state.activeBundleId,
+    bundleStream: state.bundleStream,
+    setBundleStream: api.setBundleStream,
   }));
 
   const { bundleContent, isFetching, refetch } = useGetBundle(
@@ -86,21 +92,15 @@ export const BundleView = () => {
   };
 
   const submitCallbacks = {
-    onSuccess: (data: SubmitBundleResponse) => {
-      if (data.ok) {
-        // navigate(routes.front.bundleView);
-        messageStoreActions.addMessage({
-          type: 'success',
-          content: {
-            text: 'Bundle In progress',
-            duration: 5000,
-          },
-        });
-      } else {
-        // Show error dialog
+    onSuccess: () => {
+      if (bundleStream === 'processing') {
+        setBundleStream('done');
       }
     },
     onError: () => {
+      if (bundleStream === 'processing') {
+        setBundleStream('error');
+      }
       messageStoreActions.addMessage({
         content: {
           text: 'Processing the Bundle failed',
@@ -111,6 +111,7 @@ export const BundleView = () => {
   };
 
   const onSubmitBundle = () => {
+    setBundleStream('processing');
     submitBundle({ bundleId, bundleContent }, submitCallbacks);
   };
 

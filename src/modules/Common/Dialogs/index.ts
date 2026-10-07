@@ -6,3 +6,4 @@ export * from './Maps';
 export * from './ModalBox';
 export * from './ModalDialog';
 export * from './DialogContent';
+export * from './ApiErrorsDialog';

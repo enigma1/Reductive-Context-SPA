@@ -1,7 +1,7 @@
 import type { ReactNode } from 'react';
-import type { DataInputProps } from '>/types';
-import { type MiniTableOptions, MiniTable } from '>/modules';
 import { intoViewRows } from '>/services/utils';
+import type { DataInputProps } from '>/types';
+import { type MiniTableOptions, MiniTable } from './Tables';
 
 type ActionPreviewProps = DataInputProps & {
   message: ReactNode;

@@ -2,7 +2,7 @@
   stream message handling for SSE routes
  */
 import { codeStoreActions } from '>/services/stores';
-import { handleApiError } from './apiErrorsDialog';
+import { ApiError } from '>/types';
 
 export type StreamMessage = {
   content?: string;
@@ -59,15 +59,12 @@ export const streamPost = async <TData>(
 export const bundlePostResponse = (msg: StreamMessage) => {
   if (msg.error) {
     codeStoreActions.setBundleStream('error');
-    handleApiError(
-      {
-        name: 'Bundle Stream',
-        error: 'Stream Error',
-        message: msg.error,
-      },
-      'stream',
-    );
-    return;
+
+    const error = new Error(msg.error) as ApiError;
+    error.name = 'Bundle Stream';
+    error.error = 'Stream Error';
+
+    throw error;
   }
   if (msg.done) {
     codeStoreActions.setBundleStream('done');

@@ -194,3 +194,22 @@ export const GetTableDataContract = {
   requestSchema: GetTableDataRequestSchema,
   responseSchema: GetTableDataResponseSchema,
 };
+
+export const BundleListSchema = z.object({
+  bundleId: z.number().int().nonnegative(),
+  prompt: z.string(),
+  bundleContent: z.string(),
+});
+
+export const GetBundleListRequestSchema = z.void();
+export type GetBundleListRequest = z.infer<typeof GetBundleListRequestSchema>;
+
+export const GetBundleListResponseSchema = BasicResponseSchema.extend({
+  bundles: z.array(BundleListSchema),
+});
+export type GetBundleListResponse = z.infer<typeof GetBundleListResponseSchema>;
+
+export const GetBundleListContract = {
+  requestSchema: GetBundleListRequestSchema,
+  responseSchema: GetBundleListResponseSchema,
+};

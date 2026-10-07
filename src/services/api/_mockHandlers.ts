@@ -1,8 +1,8 @@
 import { z } from 'zod';
-import { dialogStoreActions } from '>/services/stores';
+import { dialogStoreActions } from '>/services/stores/dialogStore';
 import type { LocalError, LocalErrorTypes } from '>/types';
 
-export const createManifestError = (
+const createManifestError = (
   msg: string,
   type: LocalErrorTypes,
 ): LocalError => ({
@@ -25,7 +25,7 @@ const localErrorSchemas = [
   },
 ];
 
-export const customErrorResolver = (e: unknown) => {
+const customErrorResolver = (e: unknown) => {
   for (const item of localErrorSchemas) {
     const result = item.schema.safeParse(e);
 

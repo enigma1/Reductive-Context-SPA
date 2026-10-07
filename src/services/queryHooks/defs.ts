@@ -107,6 +107,7 @@ export const queryKeys = {
   getPaths: (paths: GetPathsRequest) => ['get-paths', { ...paths }],
   readFile: (req: ReadFileRequest) => ['read-file', { ...req }],
   getBundle: (req: GetBundleRequest) => ['get-bundle', { ...req }],
+  getBundleList: () => ['get-bundle-list'],
 };
 
 export const getMutationResult = <TData = any, TVariables = any>(

@@ -1,5 +1,5 @@
 import { useSyncExternalStore, useRef } from 'react';
-import { comparisonTypes, EqualityFn } from '>/services/utils';
+import { comparisonTypes, type EqualityFn } from '>/services/utils';
 type StateCreator<T> = (
   set: (updater: (prev: T) => T) => void,
   get: () => T,

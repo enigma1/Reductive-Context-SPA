@@ -21,6 +21,7 @@ export const UserPrefsConfigSchema = z.object({
   backPort: z.number().int().min(1).max(65535),
   frontPort: z.number().int().min(1).max(65535),
   theme: noTrim('theme').min(1).max(256),
+  sidebarWidth: z.number().int().positive(),
   layout: LayoutPrefsSchema,
 });
 export type UserPrefs = z.infer<typeof UserPrefsConfigSchema>;

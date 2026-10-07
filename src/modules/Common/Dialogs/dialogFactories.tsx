@@ -1,6 +1,6 @@
 import { ReactNode } from 'react';
 import { dialogStoreActions } from '>/services/stores';
-import { dialogActions } from '>/services/utils';
+import { dialogActions } from './_dialogActions';
 import { Preferences, FilePathsForm } from '>/modules';
 import { DialogPayload, WizardHandlers, CommonDialogHandlers } from '>/types';
 import { DialogContent } from './DialogContent';

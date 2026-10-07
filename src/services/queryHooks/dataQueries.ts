@@ -7,6 +7,8 @@ import type {
   ReadFileResponse,
   GetBundleRequest,
   GetBundleResponse,
+  GetBundleListRequest,
+  GetBundleListResponse,
 } from '>/contracts';
 import { apiPoints } from '>/services/api';
 import { defaultResponse, defaultListResponse } from '>/config';
@@ -88,6 +90,23 @@ export const useGetBundle = createDataQueryHook<
     totalTokens: 0,
   }),
   enabled: (req) => !!req.bundleId,
+});
+
+export const useGetBundleList = createDataQueryHook<
+  GetBundleListResponse,
+  GetBundleListRequest,
+  {}
+>({
+  queryKey: () => queryKeys.getBundleList(),
+  queryFn: async () => {
+    const rsp = await apiPoints.getBundleList();
+    return rsp;
+  },
+  initialData: (req) => ({
+    ...defaultResponse,
+    bundles: [],
+  }),
+  enabled: () => true,
 });
 
 // // Call site — same signature as before

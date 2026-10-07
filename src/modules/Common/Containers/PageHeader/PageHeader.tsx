@@ -36,7 +36,7 @@ export const PageTableShell = ({
   indicators,
   notice,
 }: PageTableShellProps) => {
-  const { useFactoryTableStore } = store;
+  const { useContextTableStore: useFactoryTableStore } = store;
   const { hasSelects, clearSelected } = useFactoryTableStore(
     ({ state, api }) => ({
       hasSelects: state.selectedRows.size > 0,

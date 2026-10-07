@@ -8,6 +8,11 @@ declare module 'axios' {
     responseSchema?: z.ZodType;
   }
 }
+
+export const configureApiClient = (baseURL: string) => {
+  apiClient.defaults.baseURL = baseURL;
+};
+
 export const apiClient = axios.create({
   timeout: 5000,
   headers: {

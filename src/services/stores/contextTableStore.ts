@@ -21,7 +21,7 @@ export type ContextTableActions = {
 };
 
 export type ContextTableStore = {
-  useFactoryTableStore: <
+  useContextTableStore: <
     TSelected = {
       state: ContextTableState;
       api: ContextTableActions;
@@ -38,8 +38,7 @@ export type ContextTableStore = {
 
 type GetOptionsProps = {};
 
-// const baseStore = makeFactoryStore<UiTableState>(() => initialState);
-export const createFactoryTableStore = (options: GetOptionsProps) => {
+export const createContextTableStore = (options: GetOptionsProps) => {
   const baseStore = makeFactoryState<ContextTableState>(() => ({
     selectedRows: new Map(),
     editedRow: {},
@@ -104,7 +103,7 @@ export const createFactoryTableStore = (options: GetOptionsProps) => {
     api: ContextTableActions;
   };
 
-  const useFactoryTableStore = <TSelected = SelectorProps>(
+  const useContextTableStore = <TSelected = SelectorProps>(
     selector?: (args: SelectorProps) => TSelected,
   ): TSelected => {
     const state = baseStore();
@@ -120,11 +119,11 @@ export const createFactoryTableStore = (options: GetOptionsProps) => {
   // useStore() - classic reactive UI hook with selector pattern
   // get() read only state to use with component action/handlers to avoid re-renders
   // api - state mutations
-  // Usage: const store = createFactoryTableStore()
+  // Usage: const store = createContextTableStore()
   // const {useStore, api} = store
   // or const prop = store.get().stateProperty
   return {
-    useFactoryTableStore,
+    useContextTableStore,
     get,
     api,
   };
