@@ -224,3 +224,16 @@ export const GetBundleListContract = {
   requestSchema: GetBundleListRequestSchema,
   responseSchema: GetBundleListResponseSchema,
 };
+
+export const DeleteBundlesRequestSchema = z.object({
+  bundleIds: z.array(z.number()),
+});
+export type DeleteBundlesRequest = z.infer<typeof DeleteBundlesRequestSchema>;
+
+export const DeleteBundlesResponseSchema = BasicResponseSchema;
+export type DeleteBundlesResponse = z.infer<typeof DeleteBundlesResponseSchema>;
+
+export const DeleteBundlesContract = {
+  requestSchema: DeleteBundlesRequestSchema,
+  responseSchema: DeleteBundlesResponseSchema,
+};

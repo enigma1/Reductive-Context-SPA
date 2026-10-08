@@ -97,7 +97,7 @@ export const PageHeader = ({
             )}
             {onDelete && hasSelects && (
               <button
-                className='btn icon-critical'
+                className='btn btn-error'
                 onClick={onDelete}
                 title='Delete Entries'
               >
@@ -184,7 +184,6 @@ export const PageHeader = ({
               <ShrinkIcon size={24} />
             </button>
           )}
-
           {notice && <div className='wrapper w-full page-notice'>{notice}</div>}
         </div>
       </div>

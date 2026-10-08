@@ -8,6 +8,8 @@
   "getBundle": "/extras/mocks/getBundle.json",
   "setBundle": "/extras/mocks/setBundle.json",
   "submitBundle": "/extras/mocks/submitBundle.json",
+  "getBundleList": "/extras/mocks/getBundleList.json",
+  "deleteBundles": "/extras/mocks/stdResponse.json",
   "saveSettings": "/extras/mocks/saveSettings.json",
   "loadSettings": "/extras/mocks/loadSettings.json"
 }

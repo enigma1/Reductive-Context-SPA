@@ -1,3 +1,6 @@
 export const Footer = () => {
-  return <footer className='wrapper'>Footer Written by Author</footer>;
+  const currentYear = new Date().getFullYear();
+  return (
+    <footer className='wrapper'>{`Reductive Context Workspace - Copyright (c) ${currentYear} Mark Samios`}</footer>
+  );
 };

@@ -184,4 +184,13 @@
     }
   }
 
+
+  .btn-error {
+    background-color: var(--color-srf-peak);
+
+    &:hover {
+      background-color: var(--color-error-bg);
+    }
+  }
+
 }

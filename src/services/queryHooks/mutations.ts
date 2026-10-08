@@ -7,6 +7,8 @@ import type {
   SetBundleRequest,
   SetBundleResponse,
   SubmitBundleRequest,
+  DeleteBundlesRequest,
+  DeleteBundlesResponse,
 } from '>/contracts';
 import { createMutationHook } from './mutationBuilder';
 import { queryKeys } from './defs';
@@ -52,6 +54,15 @@ export const useSubmitBundle = createMutationHook<
   MutationFunction<unknown, SubmitBundleRequest>
 >({
   fn: apiPoints.submitBundle,
+  state: {
+    ...defaultResponse,
+  },
+});
+
+export const useDeleteBundles = createMutationHook<
+  MutationFunction<DeleteBundlesResponse, DeleteBundlesRequest>
+>({
+  fn: apiPoints.deleteBundles,
   state: {
     ...defaultResponse,
   },

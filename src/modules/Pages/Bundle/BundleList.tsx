@@ -1,15 +1,26 @@
 import { useRef, useMemo } from 'react';
-import { useGetBundleList } from '>/services/queryHooks';
-import { createContextTableStore } from '>/services/stores';
+import { useNavigate } from 'react-router';
+import { useGetBundleList, useDeleteBundles } from '>/services/queryHooks';
 import {
+  createContextTableStore,
+  codeStoreActions,
+  messageStoreActions,
+  dialogStoreActions,
+} from '>/services/stores';
+import {
+  dialogActions,
   ScreenLoader,
   TableContainer,
   PageHeader,
   EffectiveTableWrapper,
+  ActionPreview,
 } from '>/modules';
+import { routes, BUNDLE_ID } from '>/config';
+import { getSingleColumnFromResult, intoViewRows } from '>/services/utils';
 import { JsonArray } from '>/types';
 
 export const BundleList = () => {
+  const navigate = useNavigate();
   const resizeLineRef = useRef<HTMLDivElement | null>(null);
   const tableRef = useRef<HTMLTableElement>(null);
   const outerRef = useRef<HTMLDivElement>(null);
@@ -31,22 +42,72 @@ export const BundleList = () => {
     }),
   );
 
-  const viewRows = rows.map((row, idx) => {
-    return {
-      row: row as JsonArray,
-      offset: idx,
-    };
-  });
+  const { isPending, mutate } = useDeleteBundles(({ query, state, api }) => ({
+    isPending: query.isPending,
+    mutate: api.mutate,
+  }));
+
+  const viewRows = useMemo(() => {
+    return intoViewRows(rows as JsonArray[]);
+  }, [rows]);
 
   const headerActions = {
     onRefetch: () => {
       refetch();
     },
+    onDelete: () => {
+      const selectedRows = tableStore.get().selectedRows;
+      if (selectedRows.size === 0) {
+        return;
+      }
+      const rows = [...selectedRows.values()].map(({ row }) => row);
+      const bundleIds = getSingleColumnFromResult({
+        rows,
+        columnsOrder,
+        field: BUNDLE_ID,
+      }).map((r) => Number(r));
+
+      dialogStoreActions.openDialog({
+        payload: {
+          caption: 'Bundles Removal',
+          variant: 'error',
+          component: (
+            <ActionPreview
+              rows={rows}
+              columnsOrder={columnsOrder}
+              message='The following bundles will be permanently removed'
+            />
+          ),
+          actions: dialogActions.confirmCancel({
+            onConfirm: () => {
+              dialogStoreActions.closeDialog();
+              mutate({ bundleIds });
+            },
+          }),
+        },
+      });
+    },
   };
 
-  const tableActions = {};
+  const tableActions = {
+    onEditRow: (offset: number) => {
+      const row = viewRows[offset].row;
+      const id = columnsOrder.findIndex((c) => c === BUNDLE_ID);
+      if (row === undefined || id === -1) return;
 
-  const isBusy = isFetching;
+      messageStoreActions.addMessage({
+        content: {
+          text: 'Invalid Bundle',
+          duration: 5000,
+        },
+      });
+      codeStoreActions.setActiveBundleId(Number(row[id]));
+      navigate(routes.front.bundleView);
+    },
+    onSelectRow: () => {},
+  };
+
+  const isBusy = isFetching || isPending;
   return (
     <>
       {isBusy && <ScreenLoader />}

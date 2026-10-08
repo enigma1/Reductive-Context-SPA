@@ -12,6 +12,7 @@ import {
   GetBundleContract,
   SetBundleContract,
   GetBundleListContract,
+  DeleteBundlesContract,
 } from '>/contracts';
 import type {
   BasicResponse,
@@ -29,6 +30,8 @@ import type {
   SetBundleResponse,
   SubmitBundleRequest,
   GetBundleListResponse,
+  DeleteBundlesRequest,
+  DeleteBundlesResponse,
 } from '>/contracts';
 
 import { bundlePostResponse, streamPost } from './sse';
@@ -118,6 +121,11 @@ const getBundleList = () =>
     apiClient.get(routes.back.getBundleList, GetBundleListContract),
   );
 
+const deleteBundles = (data: DeleteBundlesRequest) =>
+  apiCall<DeleteBundlesResponse>(() =>
+    apiClient.post(routes.back.deleteBundles, data, DeleteBundlesContract),
+  );
+
 const getTableData = (data: GetTableDataRequest) =>
   apiCall<GetTableDataResponse>(() =>
     apiClient.post(routes.back.getTableData, data, GetTableDataContract),
@@ -140,6 +148,7 @@ export const apiPoints = {
   setBundle,
   submitBundle,
   getBundleList,
+  deleteBundles,
   getTableData,
   saveSettings,
   loadSettings,

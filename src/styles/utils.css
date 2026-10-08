@@ -9,6 +9,63 @@
 }
 
 @layer utilities {
+  .animate-fade-out {
+    animation: fadeOut 6s ease-out forwards;
+  }
+
+  .field-error {
+    color: var(--color-error);
+  }
+
+  .field-error-bg {
+    background-color: var(--color-error-bg);
+    border-color: var(--color-error);
+  }
+
+  .field-warn {
+    color: var(--color-warn);
+  }
+
+  .field-warn-bg {
+    background-color: var(--color-warn-bg);
+  }
+
+  .field-info {
+    color: var(--color-info);
+  }
+
+  .field-info-bg {
+    background-color: var(--color-info-bg);
+  }
+
+  .field-success {
+    color: var(--color-success);
+  }
+
+  .field-success-bg {
+    background-color: var(--color-success-bg);
+  }
+
+  .icon-info {
+    background-color: var(--color-info);
+    color: var(--color-text-peak);
+  }
+
+  .icon-critical {
+    background-color: var(--color-error);
+    color: var(--color-text-peak);
+  }
+
+  .icon-warn {
+    background-color: var(--color-warn);
+    color: var(--color-text-peak);
+  }
+
+  .icon-success {
+    background-color: var(--color-success);
+    color: var(--color-text-peak);
+  }
+
   .overlay-wrapper {
     @apply fixed z-50 inset-0 flex items-center justify-center;
     background-color: var(--overlay);
@@ -23,5 +80,21 @@
     @apply w-9 h-9 border-4 rounded-full animate-spin;
     border-color: var(--color-srf);
     border-top-color: var(--color-text);
+  }
+
+  @keyframes top-slide {
+    from {
+      max-height: 0;
+      opacity: 0;
+    }
+
+    to {
+      max-height: 500px;
+      opacity: 1;
+    }
+  }
+
+  .animate-top-slide {
+    animation: top-slide 400ms ease-out forwards;
   }
 }

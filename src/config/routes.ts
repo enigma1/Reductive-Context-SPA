@@ -19,6 +19,7 @@ export const routes: AllRoutes = {
     setBundle: '/api/set-bundle',
     submitBundle: '/api/submit-bundle',
     getBundleList: '/api/get-bundle-list',
+    deleteBundles: '/api/delete-bundles',
     getTableData: '/api/get-table-data',
     loadSettings: '/api/load-settings',
     saveSettings: '/api/save-settings',

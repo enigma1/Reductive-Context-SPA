@@ -1,0 +1,8 @@
+{
+  "ok": true,
+  "message": "Standard Response",
+  "aiStatus": {
+    "active": true,
+    "model": "some-llm-v-1"
+  }
+}

@@ -1,0 +1,28 @@
+{
+  "ok": true,
+  "message": "Bundle List",
+  "aiStatus": {
+    "active": true,
+    "model": "some-llm-v-1"
+  },
+  "cols": {
+    "bundle_id": {
+      "type": "number",
+      "name": "bundle_id"
+    },
+    "bundle_content": {
+      "type": "text",
+      "name": "bundle_content"
+    },
+    "prompt": {
+      "type": "text",
+      "name": "prompt"
+    }
+  },
+  "columnsOrder": ["bundle_id", "bundle_content", "prompt"],
+  "rows": [
+    [1, "content of bundle-1", "prompt of bundle-1"],
+    [2, "content of bundle-2", "prompt of bundle-2"],
+    [3, "content of bundle-3", "prompt of bundle-3"]
+  ]
+}

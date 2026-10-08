@@ -1,5 +1,5 @@
 import { dialogStoreActions } from '>/services/stores';
-import { dialogActions } from './_dialogActions';
+import { dialogActions } from './dialogActions';
 import { DialogContent } from './DialogContent';
 import { ApiError } from '>/types';
 
