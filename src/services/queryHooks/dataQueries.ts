@@ -1,3 +1,8 @@
+/* File: src/services/queryHooks/dataQueries.ts
+  Data query hooks use a selector interface
+  First argument is a request object or undefined
+  Second argument is the selector function
+*/
 import type {
   GetPathsRequest,
   GetPathsResponse,
@@ -11,7 +16,11 @@ import type {
   GetBundleListResponse,
 } from '>/contracts';
 import { apiPoints } from '>/services/api';
-import { defaultResponse, defaultListResponse } from '>/config';
+import {
+  defaultResponse,
+  defaultTableResponse,
+  defaultExtTableResponse,
+} from '>/config';
 import { createDataQueryHook } from './dataQueryBuilder';
 import { queryKeys } from './defs';
 
@@ -28,7 +37,7 @@ export const useGetTableData = createDataQueryHook<
   },
   initialData: () => ({
     ...defaultResponse,
-    ...defaultListResponse,
+    ...defaultTableResponse,
   }),
   enabled: (req) => !!req.table,
 });
@@ -102,11 +111,10 @@ export const useGetBundleList = createDataQueryHook<
     const rsp = await apiPoints.getBundleList();
     return rsp;
   },
-  initialData: (req) => ({
+  initialData: () => ({
     ...defaultResponse,
-    bundles: [],
+    ...defaultExtTableResponse,
   }),
-  enabled: () => true,
 });
 
 // // Call site — same signature as before

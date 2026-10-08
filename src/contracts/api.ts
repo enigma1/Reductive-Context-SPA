@@ -1,5 +1,6 @@
 /* src/config/contracts/api.ts
-  API contracts on request/response of the back end
+  Infers API types with back end
+  Validates APIs requests/responses with the back end
 */
 import { z } from 'zod';
 
@@ -195,18 +196,28 @@ export const GetTableDataContract = {
   responseSchema: GetTableDataResponseSchema,
 };
 
-export const BundleListSchema = z.object({
-  bundleId: z.number().int().nonnegative(),
-  prompt: z.string(),
-  bundleContent: z.string(),
-});
+// const BundleRow = {
+//   bundleId: z.number().int().nonnegative(),
+//   prompt: z.string(),
+//   bundleContent: z.string(),
+//   totalTokens: z.number().int(),
+//   createdAt: z.iso.datetime(),
+//   lastModified: z.iso.datetime(),
+// };
+
+// export const BundleRowSchema = z.object(BundleRow);
+// export type BundleRowShape = z.infer<typeof BundleRowSchema>;
 
 export const GetBundleListRequestSchema = z.void();
 export type GetBundleListRequest = z.infer<typeof GetBundleListRequestSchema>;
-
 export const GetBundleListResponseSchema = BasicResponseSchema.extend({
-  bundles: z.array(BundleListSchema),
+  ...BasicRowsShapeSchema.shape,
 });
+
+// export const GetBundleListResponseSchema = BasicResponseSchema.extend({
+//   columnsOrder: z.array(BundleRowSchema.keyof()),
+//   rows: z.array(z.array(BundleRowSchema)),
+// });
 export type GetBundleListResponse = z.infer<typeof GetBundleListResponseSchema>;
 
 export const GetBundleListContract = {

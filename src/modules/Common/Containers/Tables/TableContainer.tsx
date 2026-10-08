@@ -15,7 +15,7 @@ type EditHandlerProps = {
 
 type TableContainerProps = {
   rows: ViewRow<JsonArray>[];
-  activeCols: string[];
+  activeCols?: string[];
   columnsOrder: string[];
   store: ContextTableStore;
   outerRef: RefObject<HTMLDivElement | null>;
@@ -29,7 +29,7 @@ type TableContainerProps = {
   onCopyRow?: (offset: number) => void;
 };
 
-export const SimpleTableContainer = ({
+export const TableContainer = ({
   rows,
   columnsOrder,
   activeCols,
@@ -44,6 +44,7 @@ export const SimpleTableContainer = ({
   onSelectRow,
   onCopyRow,
 }: TableContainerProps) => {
+  const visibleColumns = activeCols ?? columnsOrder;
   const { useContextTableStore } = store;
   const columnIndices = useMemo(
     () => Object.fromEntries(columnsOrder.map((name, idx) => [name, idx])),
@@ -70,7 +71,7 @@ export const SimpleTableContainer = ({
       <thead>
         <tr>
           {showCheckbox && <th />}
-          {activeCols.map((colName) => {
+          {visibleColumns.map((colName) => {
             return (
               <th
                 key={`col-${colName}`}
@@ -134,7 +135,7 @@ export const SimpleTableContainer = ({
                   </div>
                 </td>
               )}
-              {activeCols.map((colName) => {
+              {visibleColumns.map((colName) => {
                 const colIndex = columnIndices[colName];
                 const getValue = () => {
                   const value = row[colIndex];

@@ -38,7 +38,7 @@ export type ContextTableStore = {
 
 type GetOptionsProps = {};
 
-export const createContextTableStore = (options: GetOptionsProps) => {
+export const createContextTableStore = (options?: GetOptionsProps) => {
   const baseStore = makeFactoryState<ContextTableState>(() => ({
     selectedRows: new Map(),
     editedRow: {},

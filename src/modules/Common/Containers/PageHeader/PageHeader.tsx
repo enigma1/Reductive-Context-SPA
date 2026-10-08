@@ -17,27 +17,27 @@ import {
 import type { ContextTableStore } from '>/services/stores';
 import { PageHeaderActions } from './types';
 
-export type TableShellIndicators = {
+export type ColumnIndicators = {
   hasHiddenColumns: boolean;
 };
 
-export type PageTableShellProps = {
+export type PageHeaderProps = {
   title: ReactNode;
   store: ContextTableStore;
   actions?: PageHeaderActions;
-  indicators: TableShellIndicators;
+  indicators?: ColumnIndicators;
   notice?: ReactNode;
 };
 
-export const PageTableShell = ({
+export const PageHeader = ({
   store,
   actions,
   title,
   indicators,
   notice,
-}: PageTableShellProps) => {
-  const { useContextTableStore: useFactoryTableStore } = store;
-  const { hasSelects, clearSelected } = useFactoryTableStore(
+}: PageHeaderProps) => {
+  const { useContextTableStore } = store;
+  const { hasSelects, clearSelected } = useContextTableStore(
     ({ state, api }) => ({
       hasSelects: state.selectedRows.size > 0,
       clearSelected: api.clearSelected,
@@ -132,7 +132,7 @@ export const PageTableShell = ({
               </button>
             )}
 
-            {onFilterColumns && (
+            {onFilterColumns && indicators && (
               <button
                 className={`btn-secondary ${indicators.hasHiddenColumns ? 'emphasize' : ''}`}
                 onClick={onFilterColumns}
