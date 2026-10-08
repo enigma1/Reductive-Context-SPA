@@ -6,6 +6,13 @@ import { getMergedSimpleColumnData } from '>/services/utils';
 import { ViewRow, JsonTypes, JsonObject, JsonArray } from '>/types';
 import type { ContextTableStore } from '>/services/stores';
 
+type TableActions = {
+  onEditCell?: (props: EditHandlerProps) => void;
+  onEditRow?: (offset: number) => void;
+  onSelectRow?: (offset: number) => void;
+  onCopyRow?: (offset: number) => void;
+};
+
 type EditHandlerProps = {
   row: JsonTypes[];
   rId: number;
@@ -23,10 +30,7 @@ type TableContainerProps = {
   resizeLineRef: RefObject<HTMLDivElement | null>;
   editedRow?: Record<string, JsonObject>;
   selectedRow?: string;
-  onEditCell?: (props: EditHandlerProps) => void;
-  onEditRow?: (offset: number) => void;
-  onSelectRow?: (offset: number) => void;
-  onCopyRow?: (offset: number) => void;
+  actions?: TableActions;
 };
 
 export const TableContainer = ({
@@ -39,11 +43,9 @@ export const TableContainer = ({
   tableRef,
   editedRow,
   selectedRow,
-  onEditCell,
-  onEditRow,
-  onSelectRow,
-  onCopyRow,
+  actions = {},
 }: TableContainerProps) => {
+  const { onEditCell, onEditRow, onSelectRow, onCopyRow } = actions;
   const visibleColumns = activeCols ?? columnsOrder;
   const { useContextTableStore } = store;
   const columnIndices = useMemo(

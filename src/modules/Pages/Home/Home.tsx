@@ -27,6 +27,7 @@ export const Home = () => {
           >
             Set Root Files
           </button>
+          <Link to={routes.front.bundleList}>Existing Bundles</Link>
           <Link to={routes.front.tableData}>Data Table</Link>
           <Link to={routes.front.down}>Maintenance</Link>
         </div>

@@ -1,7 +1,7 @@
 /* File: src/modules/Containers/PageHeader.tsx
   Contains title and controls for the main view of a page
 */
-import { type ReactNode, useState } from 'react';
+import { type ReactNode, type RefObject, useState } from 'react';
 
 import {
   CaptionsIcon,
@@ -13,9 +13,23 @@ import {
   MapPlusIcon,
   DatabaseBackupIcon,
   SquareArrowLeftIcon,
+  ListRestartIcon,
+  ShrinkIcon,
 } from 'lucide-react';
 import type { ContextTableStore } from '>/services/stores';
-import { PageHeaderActions } from './types';
+import { compactTable } from '>/services/utils';
+
+type PageHeaderActions = {
+  onDiscardEdits?: () => void;
+  onSave?: () => void;
+  onDownload?: () => void;
+  onExportCsv?: () => void;
+  onCreate?: () => void;
+  onDelete?: () => void;
+  onFilterColumns?: () => void;
+  onRefetch?: () => void;
+  onBack?: () => void;
+};
 
 export type ColumnIndicators = {
   hasHiddenColumns: boolean;
@@ -27,6 +41,7 @@ export type PageHeaderProps = {
   actions?: PageHeaderActions;
   indicators?: ColumnIndicators;
   notice?: ReactNode;
+  expansionRef?: RefObject<HTMLTableElement | null>;
 };
 
 export const PageHeader = ({
@@ -35,6 +50,7 @@ export const PageHeader = ({
   title,
   indicators,
   notice,
+  expansionRef,
 }: PageHeaderProps) => {
   const { useContextTableStore } = store;
   const { hasSelects, clearSelected } = useContextTableStore(
@@ -53,6 +69,7 @@ export const PageHeader = ({
     onCreate,
     onDelete,
     onFilterColumns,
+    onRefetch,
     onBack,
   } = shellActions;
   const [isPacked, setIsPacked] = useState(false);
@@ -132,6 +149,16 @@ export const PageHeader = ({
               </button>
             )}
 
+            {onRefetch && (
+              <button
+                className={`btn-secondary`}
+                onClick={onRefetch}
+                title='Refresh the Table'
+              >
+                <ListRestartIcon size={24} />
+              </button>
+            )}
+
             {onFilterColumns && indicators && (
               <button
                 className={`btn-secondary ${indicators.hasHiddenColumns ? 'emphasize' : ''}`}
@@ -142,6 +169,22 @@ export const PageHeader = ({
               </button>
             )}
           </div>
+          {expansionRef && (
+            <button
+              title={isPacked ? 'Columns inline' : 'Pack columns'}
+              className='btn-secondary'
+              onClick={() => {
+                if (expansionRef.current) {
+                  const nextPacked = !isPacked;
+                  setIsPacked(nextPacked);
+                  compactTable(expansionRef.current, nextPacked);
+                }
+              }}
+            >
+              <ShrinkIcon size={24} />
+            </button>
+          )}
+
           {notice && <div className='wrapper w-full page-notice'>{notice}</div>}
         </div>
       </div>

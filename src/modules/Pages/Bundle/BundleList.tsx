@@ -21,12 +21,13 @@ export const BundleList = () => {
     };
   }, []);
 
-  const { rows, columnsOrder, isFetching } = useGetBundleList(
+  const { rows, columnsOrder, isFetching, refetch } = useGetBundleList(
     undefined,
     ({ state, query }) => ({
       rows: state.rows,
       columnsOrder: state.columnsOrder,
       isFetching: query.isFetching,
+      refetch: query.refetch,
     }),
   );
 
@@ -37,11 +38,24 @@ export const BundleList = () => {
     };
   });
 
+  const headerActions = {
+    onRefetch: () => {
+      refetch();
+    },
+  };
+
+  const tableActions = {};
+
   const isBusy = isFetching;
   return (
     <>
       {isBusy && <ScreenLoader />}
-      <PageHeader store={tableStore} title='Stored Bundles' />
+      <PageHeader
+        actions={headerActions}
+        store={tableStore}
+        expansionRef={tableRef}
+        title='Stored Bundles'
+      />
       <EffectiveTableWrapper
         outerRef={outerRef}
         resizeLineRef={resizeLineRef}
@@ -54,6 +68,7 @@ export const BundleList = () => {
           outerRef={outerRef}
           tableRef={tableRef}
           resizeLineRef={resizeLineRef}
+          actions={tableActions}
         />
       </EffectiveTableWrapper>
     </>
