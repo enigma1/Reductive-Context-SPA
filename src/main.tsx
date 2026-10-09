@@ -13,6 +13,7 @@ import {
   NetworkDown,
   BundleView,
   BundleList,
+  BundleAnswer,
   PathsView,
   Reader,
   DataTable,
@@ -52,6 +53,10 @@ export const browserRouter = createBrowserRouter([
       {
         path: routes.front.bundleList,
         element: <BundleList />,
+      },
+      {
+        path: routes.front.bundleAnswer,
+        element: <BundleAnswer />,
       },
       {
         path: routes.front.tableData,

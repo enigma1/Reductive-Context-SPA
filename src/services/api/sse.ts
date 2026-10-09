@@ -2,13 +2,15 @@
   stream message handling for SSE routes
  */
 import { codeStoreActions } from '>/services/stores';
-import { ApiError } from '>/types';
+import { FrontRequest } from '>/contracts';
+import { ApiError, AIScope } from '>/types';
 
 export type StreamMessage = {
-  content?: string;
+  frontRequesst?: FrontRequest;
   node?: string;
   done?: boolean;
   error?: string;
+  scope?: AIScope;
   [key: string]: unknown;
 };
 
@@ -59,16 +61,21 @@ export const streamPost = async <TData>(
 export const bundlePostResponse = (msg: StreamMessage) => {
   if (msg.error) {
     codeStoreActions.setBundleStream('error');
-
     const error = new Error(msg.error) as ApiError;
     error.name = 'Bundle Stream';
     error.error = 'Stream Error';
-
     throw error;
   }
   if (msg.done) {
     codeStoreActions.setBundleStream('done');
     return;
   }
-  codeStoreActions.setBundleResponse(msg.content ?? '');
+  if (msg.node === 'classifyScope') {
+    codeStoreActions.setBundleStream('processing');
+    // optionally store the scope if you need it
+  }
+  if (msg.node === 'generateCode') {
+    codeStoreActions.setBundleResponse(msg.frontRequest as FrontRequest);
+    //                        ^^^^^^^^^^^^^ actual field in the frame
+  }
 };

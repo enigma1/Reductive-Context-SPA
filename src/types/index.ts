@@ -1,3 +1,4 @@
+export * from './ai';
 export * from './fileCode';
 export * from './errors';
 export * from './dialog';

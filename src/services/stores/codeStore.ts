@@ -2,7 +2,8 @@
     store service for paths and file selections
 */
 import { makeState } from './estate';
-import type { FolderPath, FileNode } from '>/contracts';
+import type { FolderPath, FileNode, FrontRequest } from '>/contracts';
+import { defaultFrontRequest } from '>/config';
 
 type ActiveFile = Pick<FileNode, 'path' | 'name'>;
 
@@ -43,7 +44,7 @@ type StoreState = {
   activeBundleId?: number;
   activeFile?: ActiveFile;
   bundleStream: BundleStream;
-  bundleResponse: string;
+  bundleResponse: FrontRequest;
 };
 
 export type CodeStoreActions = {
@@ -65,7 +66,7 @@ export type CodeStoreActions = {
   setActiveBundleId: (bundleId?: number) => void;
 
   setBundleStream: (mode: BundleStream) => void;
-  setBundleResponse: (rsp: string) => void;
+  setBundleResponse: (response: FrontRequest) => void;
 };
 
 export type CodeStore = StoreState & CodeStoreActions;
@@ -75,7 +76,9 @@ const initialState: StoreState = {
   activePaths: [],
   activePrompt: '',
   bundleStream: 'idle',
-  bundleResponse: '',
+  bundleResponse: {
+    ...defaultFrontRequest,
+  },
 };
 
 const baseStore = makeState<StoreState>(() => ({ ...initialState }));
@@ -187,8 +190,8 @@ export const codeStoreActions: CodeStoreActions = {
   setBundleStream: (mode) => {
     setAuto({ bundleStream: mode });
   },
-  setBundleResponse: (chunk) => {
-    setAuto((s) => ({ bundleResponse: s.bundleResponse + chunk }));
+  setBundleResponse: (response) => {
+    setAuto({ bundleResponse: response });
   },
 };
 

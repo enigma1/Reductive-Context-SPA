@@ -106,7 +106,6 @@ export const Reader = () => {
           onMount={onMount}
           value={code}
           language={language}
-          theme='vs-dark'
           options={{
             readOnly: true,
             domReadOnly: true,

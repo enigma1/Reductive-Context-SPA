@@ -1,6 +1,6 @@
 /* File src/services/hooks/editor.ts
   Identifies file language
-  Implements an editor hook to set line ranges
+  Implements monaco editor hooks for file editing/reading
 */
 import isEqual from 'lodash-es/isEqual';
 import { useState, useRef } from 'react';
@@ -35,30 +35,35 @@ const areRangesEqual = ({ original, modified }: CodeRangesComparison) =>
     mergeRanges({ original: [], modified: modified }),
   );
 
-const getMonacoLanguage = (filename: string) => {
-  const extension = filename.split('.').pop()?.toLowerCase();
+const extToLanguage: Record<string, string> = {
+  ts: 'typescript',
+  tsx: 'typescript',
+  astro: 'html',
+  js: 'javascript',
+  jsx: 'javascript',
+  json: 'json',
+  css: 'css',
+  scss: 'scss',
+  less: 'less',
+  html: 'html',
+  htm: 'html',
+  md: 'markdown',
+  py: 'python',
+  rs: 'rust',
+  go: 'go',
+  java: 'java',
+  sql: 'sql',
+  sh: 'shell',
+  yaml: 'yaml',
+  yml: 'yaml',
+  toml: 'ini',
+  xml: 'xml',
+  svg: 'xml',
+};
 
-  switch (extension) {
-    case 'ts':
-    case 'tsx':
-    case 'astro':
-      return 'typescript';
-    case 'js':
-    case 'jsx':
-      return 'javascript';
-    case 'json':
-      return 'json';
-    case 'css':
-      return 'css';
-    case 'html':
-      return 'html';
-    case 'md':
-      return 'markdown';
-    case 'py':
-      return 'python';
-    default:
-      return 'plaintext';
-  }
+const getMonacoLanguage = (filePath: string): string => {
+  const ext = filePath.split('.').pop()?.toLowerCase() ?? '';
+  return extToLanguage[ext] ?? 'plaintext';
 };
 
 export const useViewerSelection = (file?: FileNode) => {
@@ -137,5 +142,18 @@ export const useEditorBundle = () => {
   return {
     onMount,
     isDirty,
+  };
+};
+
+export const useEditor = (filename?: string) => {
+  const editorRef = useRef<Parameters<OnMount>[0] | null>(null);
+  const language = filename ? getMonacoLanguage(filename) : undefined;
+  const onMount: OnMount = (editor) => {
+    editorRef.current = editor;
+  };
+
+  return {
+    onMount,
+    language,
   };
 };

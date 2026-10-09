@@ -72,9 +72,13 @@ export const BundleView = () => {
   const setCallbacks = {
     onSuccess: (data: SetBundleResponse) => {
       if (data.ok) {
-        // navigate(routes.front.bundleView);
       } else {
-        // Show error dialog
+        messageStoreActions.addMessage({
+          content: {
+            text: 'Submitting the bundle caused a problem',
+            duration: 5000,
+          },
+        });
       }
     },
     onError: () => {
@@ -113,6 +117,7 @@ export const BundleView = () => {
   const onSubmitBundle = () => {
     setBundleStream('processing');
     submitBundle({ bundleId, bundleContent }, submitCallbacks);
+    navigate(routes.front.bundleAnswer, { replace: true });
   };
 
   const onGoBack = () => {
@@ -176,7 +181,6 @@ export const BundleView = () => {
           onMount={onMount}
           value={bundleContent}
           language={'markdown'}
-          theme='vs-dark'
           options={{
             domReadOnly: false,
             automaticLayout: true,

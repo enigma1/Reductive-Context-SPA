@@ -28,6 +28,7 @@ export const routes: AllRoutes = {
     home: '/',
     bundleView: '/bundle-view',
     bundleList: '/bundle-list',
+    bundleAnswer: '/bundle-answer',
     pathsView: '/paths-view',
     readFile: '/read-file',
     tableData: '/tableData',

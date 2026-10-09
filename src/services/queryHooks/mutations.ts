@@ -66,4 +66,11 @@ export const useDeleteBundles = createMutationHook<
   state: {
     ...defaultResponse,
   },
+  options: {
+    cache: async (qc) => {
+      await qc.invalidateQueries({
+        queryKey: queryKeys.getBundleList(),
+      });
+    },
+  },
 });
