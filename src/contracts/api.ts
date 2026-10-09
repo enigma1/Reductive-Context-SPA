@@ -59,7 +59,7 @@ export type SaveSettingsRequest = z.infer<typeof SaveSettingsRequestSchema>;
 // Response is record of strings with a string array
 export const FolderPathSchema = z.object({
   path: z.string(),
-  depth: z.number().optional(),
+  depth: z.number().positive().optional(),
 });
 export type FolderPath = z.infer<typeof FolderPathSchema>;
 
@@ -113,6 +113,7 @@ export const FileNodeSchema = z.object({
 export type FileNode = z.infer<typeof FileNodeSchema>;
 
 export const CreateBundleRequestSchema = z.object({
+  rootPaths: z.array(FolderPathSchema),
   paths: z.array(FileNodeSchema),
   prompt: z.string().min(10),
 });
@@ -226,7 +227,7 @@ export const GetBundleListContract = {
 };
 
 export const DeleteBundlesRequestSchema = z.object({
-  bundleIds: z.array(z.number()),
+  bundleIds: z.array(z.number()).min(1),
 });
 export type DeleteBundlesRequest = z.infer<typeof DeleteBundlesRequestSchema>;
 

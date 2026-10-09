@@ -78,7 +78,10 @@ export const PathsView = () => {
 
   const onCreateBundle = () => {
     const prompt = getActivePrompt();
-    mutate({ paths: getSelectedFiles(), prompt }, callbacks);
+    mutate(
+      { rootPaths: currentPaths, paths: getSelectedFiles(), prompt },
+      callbacks,
+    );
   };
 
   const onRefresh = () => {

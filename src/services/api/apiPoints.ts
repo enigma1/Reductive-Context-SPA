@@ -49,6 +49,9 @@ type ApiOptions = {
   signal?: AbortSignal;
 };
 
+const constructClientUrl = (relative: string) =>
+  `${(apiClient.defaults.baseURL ?? '').replace(/\/$/, '')}/${relative.replace(/^\//, '')}`;
+
 // For axios
 export const handleApiAxios = async <T>(fn: () => Promise<T>): Promise<T> => {
   try {
@@ -110,7 +113,7 @@ const setBundle = (data: SetBundleRequest) =>
 const submitBundle = (data: SubmitBundleRequest) =>
   apiCallRaw<void>(() =>
     streamPost<SubmitBundleRequest>(
-      routes.back.submitBundle,
+      constructClientUrl(routes.back.submitBundle),
       data,
       bundlePostResponse,
     ),

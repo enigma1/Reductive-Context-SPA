@@ -1,5 +1,10 @@
 import { useMemo, type RefObject } from 'react';
-import { SquarePenIcon, PencilLineIcon, CopyIcon } from 'lucide-react';
+import {
+  SquarePenIcon,
+  PencilLineIcon,
+  CopyIcon,
+  InfoIcon,
+} from 'lucide-react';
 import { useColumnResize } from '>/services/hooks';
 import { CheckboxField } from '>/modules';
 import { getMergedSimpleColumnData } from '>/services/utils';
@@ -11,6 +16,7 @@ type TableActions = {
   onEditRow?: (offset: number) => void;
   onSelectRow?: (offset: number) => void;
   onCopyRow?: (offset: number) => void;
+  onInfoRow?: (offset: number) => void;
 };
 
 type EditHandlerProps = {
@@ -45,7 +51,7 @@ export const TableContainer = ({
   selectedRow,
   actions = {},
 }: TableContainerProps) => {
-  const { onEditCell, onEditRow, onSelectRow, onCopyRow } = actions;
+  const { onEditCell, onEditRow, onSelectRow, onCopyRow, onInfoRow } = actions;
   const visibleColumns = activeCols ?? columnsOrder;
   const { useContextTableStore } = store;
   const columnIndices = useMemo(
@@ -132,6 +138,14 @@ export const TableContainer = ({
                         onClick={() => onEditRow(offset)}
                       >
                         <PencilLineIcon size={18} className='inline-block' />
+                      </button>
+                    )}
+                    {onInfoRow && (
+                      <button
+                        className='btn-secondary p-0 bg-transparent border-0'
+                        onClick={() => onInfoRow(offset)}
+                      >
+                        <InfoIcon size={18} className='inline-block' />
                       </button>
                     )}
                   </div>

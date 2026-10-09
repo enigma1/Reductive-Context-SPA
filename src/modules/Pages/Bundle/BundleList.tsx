@@ -104,7 +104,8 @@ export const BundleList = () => {
       codeStoreActions.setActiveBundleId(Number(row[id]));
       navigate(routes.front.bundleView);
     },
-    onSelectRow: () => {},
+
+    onInfoRow: () => {},
   };
 
   const isBusy = isFetching || isPending;
