@@ -1,7 +1,7 @@
 import ReactMarkdown from 'react-markdown';
 import { ArrowLeftToLineIcon, ListRestartIcon } from 'lucide-react';
 import { useCodeStore } from '>/services/stores';
-import { FileBlock } from '>/modules';
+import { ScreenLoader, FileBlock } from '>/modules';
 
 export const BundleAnswer = () => {
   const { bundleResponse, bundleStream } = useCodeStore(({ state }) => ({
@@ -14,6 +14,11 @@ export const BundleAnswer = () => {
 
   const onGoBack = () => {};
   const onRefresh = () => {};
+
+  const isBusy = bundleStream === 'processing';
+  if (isBusy) {
+    return <ScreenLoader />;
+  }
 
   return (
     <>
@@ -46,9 +51,7 @@ export const BundleAnswer = () => {
         {bundleStream === 'error' && (
           <div className='page-section'>Request failed</div>
         )}
-        {(bundleStream === 'done' ||
-          bundleStream === 'idle' ||
-          bundleStream === 'processing') && (
+        {(bundleStream === 'done' || bundleStream === 'idle') && (
           <>
             <div className='page-section'>
               <h2>Summary:</h2>

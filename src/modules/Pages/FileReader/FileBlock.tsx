@@ -9,7 +9,7 @@ type FileBlockProps = {
 export const FileBlock = ({ file }: FileBlockProps) => {
   const { onMount, language } = useEditor(file.path);
   const path = `${file.path} ${file.isNew ? '(New File)' : ''}`;
-  console.log('file.content', file.content);
+
   return (
     <>
       <h3>{path}</h3>
@@ -18,11 +18,12 @@ export const FileBlock = ({ file }: FileBlockProps) => {
         value={file.content}
         language={language}
         options={{
-          readOnly: true,
-          domReadOnly: true,
           automaticLayout: true,
           minimap: { enabled: false },
           contextmenu: true,
+          copyWithSyntaxHighlighting: true,
+          domReadOnly: false,
+          accessibilitySupport: 'on',
         }}
       />
     </>

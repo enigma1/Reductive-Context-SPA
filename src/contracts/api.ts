@@ -99,8 +99,8 @@ const codeMode = ['code', 'signature'] as const;
 export type FileMode = (typeof codeMode)[number];
 
 const CodeRangeSchema = z.object({
-  startLine: z.number().int().min(1),
-  endLine: z.number().int().min(1),
+  startLine: z.number().int().positive().min(1),
+  endLine: z.number().int().positive().min(1),
 });
 export type CodeRange = z.infer<typeof CodeRangeSchema>;
 
@@ -120,8 +120,8 @@ export const CreateBundleRequestSchema = z.object({
 export type CreateBundleRequest = z.infer<typeof CreateBundleRequestSchema>;
 
 export const CreateBundleResponseSchema = BasicResponseSchema.extend({
-  totalTokens: z.number(),
-  bundleId: z.number(),
+  inputTokens: z.number().int().nonnegative(),
+  bundleId: z.number().int().positive(),
 });
 export type CreateBundleResponse = z.infer<typeof CreateBundleResponseSchema>;
 
@@ -131,13 +131,13 @@ export const CreateBundleContract = {
 };
 
 export const GetBundleRequestSchema = z.object({
-  bundleId: z.number(),
+  bundleId: z.number().int().positive(),
 });
 export type GetBundleRequest = z.infer<typeof GetBundleRequestSchema>;
 
 export const GetBundleResponseSchema = BasicResponseSchema.extend({
-  totalTokens: z.number(),
-  bundleId: z.number(),
+  inputTokens: z.number().int().nonnegative(),
+  bundleId: z.number().int().positive(),
   bundleContent: z.string(),
 });
 export type GetBundleResponse = z.infer<typeof GetBundleResponseSchema>;
@@ -148,14 +148,15 @@ export const GetBundleContract = {
 };
 
 export const SetBundleRequestSchema = z.object({
-  bundleId: z.number(),
+  bundleId: z.number().int().positive(),
   bundleContent: z.string(),
 });
 export type SetBundleRequest = z.infer<typeof SetBundleRequestSchema>;
 
 export const SetBundleResponseSchema = BasicResponseSchema.extend({
-  totalTokens: z.number(),
-  bundleId: z.number(),
+  outputTokens: z.number().int().nonnegative(),
+  inputTokens: z.number().int().nonnegative(),
+  bundleId: z.number().int().positive(),
 });
 export type SetBundleResponse = z.infer<typeof SetBundleResponseSchema>;
 
@@ -165,14 +166,16 @@ export const SetBundleContract = {
 };
 
 export const SubmitBundleRequestSchema = z.object({
-  bundleId: z.number(),
+  bundleId: z.number().int().positive(),
   bundleContent: z.string(),
+  prompt: z.string(),
 });
 export type SubmitBundleRequest = z.infer<typeof SubmitBundleRequestSchema>;
 
 export const SubmitBundleResponseSchema = BasicResponseSchema.extend({
-  totalTokens: z.number(),
-  bundleId: z.number(),
+  outputTokens: z.number().int().nonnegative(),
+  inputTokens: z.number().int().nonnegative(),
+  bundleId: z.number().int().positive(),
 });
 export type SubmitBundleResponse = z.infer<typeof SubmitBundleResponseSchema>;
 
@@ -197,28 +200,12 @@ export const GetTableDataContract = {
   responseSchema: GetTableDataResponseSchema,
 };
 
-// const BundleRow = {
-//   bundleId: z.number().int().nonnegative(),
-//   prompt: z.string(),
-//   bundleContent: z.string(),
-//   totalTokens: z.number().int(),
-//   createdAt: z.iso.datetime(),
-//   lastModified: z.iso.datetime(),
-// };
-
-// export const BundleRowSchema = z.object(BundleRow);
-// export type BundleRowShape = z.infer<typeof BundleRowSchema>;
-
 export const GetBundleListRequestSchema = z.void();
 export type GetBundleListRequest = z.infer<typeof GetBundleListRequestSchema>;
 export const GetBundleListResponseSchema = BasicResponseSchema.extend({
   ...BasicRowsShapeSchema.shape,
 });
 
-// export const GetBundleListResponseSchema = BasicResponseSchema.extend({
-//   columnsOrder: z.array(BundleRowSchema.keyof()),
-//   rows: z.array(z.array(BundleRowSchema)),
-// });
 export type GetBundleListResponse = z.infer<typeof GetBundleListResponseSchema>;
 
 export const GetBundleListContract = {

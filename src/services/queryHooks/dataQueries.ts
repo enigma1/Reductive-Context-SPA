@@ -96,7 +96,8 @@ export const useGetBundle = createDataQueryHook<
     ...defaultResponse,
     bundleContent: '',
     bundleId: req.bundleId,
-    totalTokens: 0,
+    inputTokens: 0,
+    outputTokens: 0,
   }),
   enabled: (req) => !!req.bundleId,
 });

@@ -18,8 +18,8 @@ import { ScreenLoader } from '>/modules';
 export const Reader = () => {
   const navigate = useNavigate();
   const { activeFile, addSelectedFile, setActiveFile } = useCodeStore(
-    ({ api }) => ({
-      activeFile: api.getActiveFile(),
+    ({ api, state }) => ({
+      activeFile: state.activeFile,
       setActiveFile: api.setActiveFile,
       addSelectedFile: api.addSelectedFile,
     }),
@@ -107,11 +107,12 @@ export const Reader = () => {
           value={code}
           language={language}
           options={{
-            readOnly: true,
-            domReadOnly: true,
             automaticLayout: true,
             minimap: { enabled: false },
             contextmenu: true,
+            domReadOnly: false,
+            copyWithSyntaxHighlighting: true,
+            accessibilitySupport: 'on',
           }}
         />
       </div>

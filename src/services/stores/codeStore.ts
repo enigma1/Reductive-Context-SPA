@@ -59,6 +59,7 @@ export type CodeStoreActions = {
   getCurrentPaths: () => FolderPath[];
   setCurrentPaths: (paths?: FolderPath[]) => void;
   setActiveFile: (file?: FileNode) => void;
+  setViewFile: (file?: FileNode) => void;
   getActiveFile: () => FileNode | undefined;
 
   setActivePrompt: (prompt: string) => void;
@@ -144,9 +145,10 @@ export const codeStoreActions: CodeStoreActions = {
       return undefined;
     }
 
-    return selectedFiles.find(
+    const found = selectedFiles.find(
       (file) => file.path === activeFile.path && file.name === activeFile.name,
     );
+    return found ?? activeFile;
   },
 
   setActiveFile: (file) => {
@@ -174,7 +176,9 @@ export const codeStoreActions: CodeStoreActions = {
       };
     });
   },
-
+  setViewFile: (file) => {
+    setAuto({ activeFile: file });
+  },
   setActiveBundleId: (bundleId = 0) => {
     setAuto({ activeBundleId: bundleId });
   },

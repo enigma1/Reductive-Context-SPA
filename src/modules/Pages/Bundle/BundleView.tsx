@@ -23,11 +23,13 @@ export const BundleView = () => {
   const {
     bundleId = 0,
     bundleStream,
+    activePrompt,
     setBundleStream,
   } = useCodeStore(({ state, api }) => ({
     bundleId: state.activeBundleId,
     bundleStream: state.bundleStream,
     setBundleStream: api.setBundleStream,
+    activePrompt: state.activePrompt,
   }));
 
   const { bundleContent, isFetching, refetch } = useGetBundle(
@@ -116,7 +118,10 @@ export const BundleView = () => {
 
   const onSubmitBundle = () => {
     setBundleStream('processing');
-    submitBundle({ bundleId, bundleContent }, submitCallbacks);
+    submitBundle(
+      { bundleId, bundleContent, prompt: activePrompt },
+      submitCallbacks,
+    );
     navigate(routes.front.bundleAnswer, { replace: true });
   };
 
@@ -182,10 +187,12 @@ export const BundleView = () => {
           value={bundleContent}
           language={'markdown'}
           options={{
-            domReadOnly: false,
             automaticLayout: true,
             minimap: { enabled: false },
             contextmenu: true,
+            copyWithSyntaxHighlighting: true,
+            accessibilitySupport: 'on',
+            domReadOnly: true,
           }}
         />
       </div>

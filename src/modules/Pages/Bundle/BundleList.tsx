@@ -14,10 +14,12 @@ import {
   PageHeader,
   EffectiveTableWrapper,
   ActionPreview,
+  DialogContent,
 } from '>/modules';
-import { routes, BUNDLE_ID } from '>/config';
+import { routes, BUNDLE_ID, BUNDLE_PROMPT } from '>/config';
 import { getSingleColumnFromResult, intoViewRows } from '>/services/utils';
 import { JsonArray } from '>/types';
+import { BundleInfoDlg } from './BundleInfoDlg';
 
 export const BundleList = () => {
   const navigate = useNavigate();
@@ -105,7 +107,17 @@ export const BundleList = () => {
       navigate(routes.front.bundleView);
     },
 
-    onInfoRow: () => {},
+    onInfoRow: (offset: number) => {
+      const row = viewRows[offset].row;
+      const id = columnsOrder.findIndex((c) => c === BUNDLE_ID);
+      dialogStoreActions.openDialog({
+        payload: {
+          caption: `Info on ${row[id]}`,
+          component: <BundleInfoDlg bundleId={id} />,
+          actions: dialogActions.ack(),
+        },
+      });
+    },
   };
 
   const isBusy = isFetching || isPending;

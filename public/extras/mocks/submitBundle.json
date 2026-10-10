@@ -5,6 +5,6 @@
     "active": true,
     "model": "some-llm-v-1"
   },
-  "totalTokens": 1418,
+  "inputTokens": 1418,
   "bundleId": 123
 }

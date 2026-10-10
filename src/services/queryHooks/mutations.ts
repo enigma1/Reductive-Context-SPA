@@ -14,7 +14,7 @@ import { createMutationHook } from './mutationBuilder';
 import { queryKeys } from './defs';
 
 const defaultCreateBundle = {
-  totalTokens: 0,
+  inputTokens: 0,
   bundleId: 0,
 };
 
@@ -36,7 +36,8 @@ export const useCreateBundle = createMutationHook<
 });
 
 const defaultSetBundle = {
-  totalTokens: 0,
+  outputTokens: 0,
+  inputTokens: 0,
   bundleId: 0,
 };
 

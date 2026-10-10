@@ -17,7 +17,7 @@ export const FileSelector = ({ filesByFolder }: FileSelectorProps) => {
     selectedFiles,
     addSelectedFiles,
     removeSelectedFiles,
-    setActiveFile,
+    setViewFile,
     addSelectedFile,
     setActivePrompt,
     activePrompt,
@@ -26,7 +26,7 @@ export const FileSelector = ({ filesByFolder }: FileSelectorProps) => {
     selectedFiles: state.selectedFiles,
     addSelectedFiles: api.addSelectedFiles,
     removeSelectedFiles: api.removeSelectedFiles,
-    setActiveFile: api.setActiveFile,
+    setViewFile: api.setViewFile,
     addSelectedFile: api.addSelectedFile,
     setActivePrompt: api.setActivePrompt,
   }));
@@ -49,7 +49,7 @@ export const FileSelector = ({ filesByFolder }: FileSelectorProps) => {
   };
 
   const onEdit = (file: FileNode) => {
-    setActiveFile(file);
+    setViewFile(file);
     navigate(routes.front.readFile);
   };
 
