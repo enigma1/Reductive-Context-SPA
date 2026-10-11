@@ -1,6 +1,7 @@
 @layer components {
   .side-accordion {
     @apply flex flex-col min-h-0 border-be last:border-0;
+    width: 250px;
     border-color: var(--color-border);
   }
 
@@ -64,7 +65,7 @@
   }
 
   .side-list-item {
-    @apply w-full flex items-center px-4 py-2 text-left border-be;
+    @apply w-full min-w-0 items-center px-4 py-2 text-left border-be;
     color: var(--color-text);
     border-color: var(--color-border);
 

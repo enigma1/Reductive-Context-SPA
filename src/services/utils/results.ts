@@ -54,6 +54,15 @@ export const getColumnsFromResult = ({
   );
 };
 
+export const getOnlyColumnsFromResult = ({
+  rows,
+  columnsOrder,
+  fields,
+}: ColumnsFromResultProps) => {
+  const indexes = fields.map((field) => columnsOrder.indexOf(field));
+  return rows.map((row) => indexes.map((i) => row[i]));
+};
+
 type ViewType = 'monaco' | 'markdown';
 type GetLanguageFromFileProps = {
   filePath: string;

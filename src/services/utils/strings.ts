@@ -48,3 +48,11 @@ export const formatSize = (bytes: number): string => {
 
   return `${value.toFixed(1)} ${units[unit]}`;
 };
+
+export const truncateText = (text: string, maxChars: number): string => {
+  if (text.length <= maxChars) return text;
+  return `${text.slice(0, maxChars)}...`;
+};
+
+export const snakeToCamel = (str: string): string =>
+  str.replace(/_([a-z])/g, (_, char) => char.toUpperCase());

@@ -18,7 +18,7 @@ import type {
   GetLanguagesRequest,
 } from '>/contracts';
 import { apiPoints } from '>/services/api';
-import { getColumnsFromResult } from '>/services/utils';
+import { getOnlyColumnsFromResult, snakeToCamel } from '>/services/utils';
 import {
   defaultResponse,
   defaultTableResponse,
@@ -26,7 +26,7 @@ import {
   BUNDLE_ID,
   BUNDLE_PROMPT,
 } from '>/config';
-import type { JsonArray } from '>/types';
+import type { Primitive, JsonArray, JsonTypes, JsonObject } from '>/types';
 import { createDataQueryHook } from './dataQueryBuilder';
 import { queryKeys } from './defs';
 
@@ -108,10 +108,18 @@ export const useGetBundle = createDataQueryHook<
   enabled: (req) => !!req.bundleId,
 });
 
+type EntryFields = {
+  bundleId: number;
+  prompt: string;
+};
+
 export const useGetBundleList = createDataQueryHook<
   GetBundleListResponse,
   GetBundleListRequest,
-  { getBundleNames: () => string[] }
+  {
+    getBundleNames: () => string[];
+    getBundleFields: () => EntryFields[];
+  }
 >({
   queryKey: () => queryKeys.getBundleList(),
   queryFn: async () => {
@@ -123,9 +131,21 @@ export const useGetBundleList = createDataQueryHook<
     ...defaultExtTableResponse,
   }),
   createApi: (state) => ({
+    getBundleFields: () => {
+      const fields = [BUNDLE_ID, BUNDLE_PROMPT];
+      return getOnlyColumnsFromResult({
+        rows: state.rows as JsonArray[],
+        columnsOrder: state.columnsOrder,
+        fields,
+      }).map(([bundleId, prompt]) => ({
+        bundleId: Number(bundleId),
+        prompt: String(prompt ?? ''),
+      }));
+    },
+
     getBundleNames: () => {
       const fields = [BUNDLE_ID, BUNDLE_PROMPT];
-      const names = getColumnsFromResult({
+      const names = getOnlyColumnsFromResult({
         rows: state.rows as JsonArray[],
         columnsOrder: state.columnsOrder,
         fields,
@@ -135,7 +155,7 @@ export const useGetBundleList = createDataQueryHook<
           .filter((line) => !line.trimStart().startsWith('#'))
           .join(' ')
           .trim();
-        return `${id}-${text.slice(0, 100)}`;
+        return `${id}-${text}`;
       });
       return names;
     },
