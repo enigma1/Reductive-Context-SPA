@@ -41,7 +41,7 @@ export const BundleView = () => {
     }),
   );
 
-  const { onMount, isDirty } = useEditorBundle();
+  const { onMount, isDirty, getContent } = useEditorBundle();
   const { mutate: setBundle, isPending: isSetting } = useSetBundle(
     ({ query, api }) => ({
       isPending: query.isPending,
@@ -94,7 +94,7 @@ export const BundleView = () => {
   };
 
   const onSetBundle = () => {
-    setBundle({ bundleId, bundleContent }, setCallbacks);
+    setBundle({ bundleId, bundleContent: getContent() }, setCallbacks);
   };
 
   const submitCallbacks = {
@@ -119,7 +119,7 @@ export const BundleView = () => {
   const onSubmitBundle = () => {
     setBundleStream('processing');
     submitBundle(
-      { bundleId, bundleContent, prompt: activePrompt },
+      { bundleId, bundleContent: getContent(), prompt: activePrompt },
       submitCallbacks,
     );
     navigate(routes.front.bundleAnswer, { replace: true });

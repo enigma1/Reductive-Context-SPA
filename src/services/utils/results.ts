@@ -35,6 +35,25 @@ export const getSingleColumnFromResult = ({
   return values;
 };
 
+type ColumnsFromResultProps = {
+  rows: JsonArray[];
+  columnsOrder: string[];
+  fields: string[];
+};
+export const getColumnsFromResult = ({
+  rows,
+  columnsOrder,
+  fields,
+}: ColumnsFromResultProps) => {
+  const fieldSet = new Set(fields);
+
+  return rows.map((row) =>
+    row.map((value, index) =>
+      fieldSet.has(columnsOrder[index]) ? value : null,
+    ),
+  );
+};
+
 type ViewType = 'monaco' | 'markdown';
 type GetLanguageFromFileProps = {
   filePath: string;

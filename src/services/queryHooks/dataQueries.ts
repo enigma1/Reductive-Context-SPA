@@ -18,11 +18,15 @@ import type {
   GetLanguagesRequest,
 } from '>/contracts';
 import { apiPoints } from '>/services/api';
+import { getColumnsFromResult } from '>/services/utils';
 import {
   defaultResponse,
   defaultTableResponse,
   defaultExtTableResponse,
+  BUNDLE_ID,
+  BUNDLE_PROMPT,
 } from '>/config';
+import type { JsonArray } from '>/types';
 import { createDataQueryHook } from './dataQueryBuilder';
 import { queryKeys } from './defs';
 
@@ -107,7 +111,7 @@ export const useGetBundle = createDataQueryHook<
 export const useGetBundleList = createDataQueryHook<
   GetBundleListResponse,
   GetBundleListRequest,
-  {}
+  { getBundleNames: () => string[] }
 >({
   queryKey: () => queryKeys.getBundleList(),
   queryFn: async () => {
@@ -117,6 +121,24 @@ export const useGetBundleList = createDataQueryHook<
   initialData: () => ({
     ...defaultResponse,
     ...defaultExtTableResponse,
+  }),
+  createApi: (state) => ({
+    getBundleNames: () => {
+      const fields = [BUNDLE_ID, BUNDLE_PROMPT];
+      const names = getColumnsFromResult({
+        rows: state.rows as JsonArray[],
+        columnsOrder: state.columnsOrder,
+        fields,
+      }).map(([id, prompt]) => {
+        const text = String(prompt ?? '')
+          .split('\n')
+          .filter((line) => !line.trimStart().startsWith('#'))
+          .join(' ')
+          .trim();
+        return `${id}-${text.slice(0, 100)}`;
+      });
+      return names;
+    },
   }),
 });
 

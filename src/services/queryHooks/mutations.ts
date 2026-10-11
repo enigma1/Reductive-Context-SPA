@@ -49,6 +49,13 @@ export const useSetBundle = createMutationHook<
     ...defaultResponse,
     ...defaultSetBundle,
   },
+  options: {
+    cache: async (qc, data) => {
+      await qc.invalidateQueries({
+        queryKey: queryKeys.getBundle({ bundleId: data.bundleId }),
+      });
+    },
+  },
 });
 
 export const useSubmitBundle = createMutationHook<

@@ -69,7 +69,7 @@ const getMonacoLanguage = (filePath: string): string => {
 export const useViewerSelection = (file?: FileNode) => {
   const editorRef = useRef<Parameters<OnMount>[0] | null>(null);
   const [isDirty, setIsDirty] = useState(false);
-
+  const getContent = () => editorRef.current?.getValue() ?? '';
   const language = file ? getMonacoLanguage(file.name) : undefined;
 
   const getSelections = (): CodeRange[] => {
@@ -124,12 +124,14 @@ export const useViewerSelection = (file?: FileNode) => {
     getSelections,
     isDirty,
     language,
+    getContent,
   };
 };
 
 export const useEditorBundle = () => {
   const editorRef = useRef<Parameters<OnMount>[0] | null>(null);
   const [isDirty, setIsDirty] = useState(false);
+  const getContent = () => editorRef.current?.getValue() ?? '';
 
   const onMount: OnMount = (editor) => {
     editorRef.current = editor;
@@ -142,12 +144,14 @@ export const useEditorBundle = () => {
   return {
     onMount,
     isDirty,
+    getContent,
   };
 };
 
 export const useEditor = (filename?: string) => {
   const editorRef = useRef<Parameters<OnMount>[0] | null>(null);
   const language = filename ? getMonacoLanguage(filename) : undefined;
+  const getContent = () => editorRef.current?.getValue() ?? '';
   const onMount: OnMount = (editor) => {
     editorRef.current = editor;
   };
@@ -155,5 +159,6 @@ export const useEditor = (filename?: string) => {
   return {
     onMount,
     language,
+    getContent,
   };
 };

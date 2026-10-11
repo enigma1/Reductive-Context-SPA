@@ -83,6 +83,8 @@ export const BundleList = () => {
           actions: dialogActions.confirmCancel({
             onConfirm: () => {
               dialogStoreActions.closeDialog();
+              codeStoreActions.clearSelectedFiles();
+              codeStoreActions.setActiveBundleId();
               mutate({ bundleIds });
             },
           }),
