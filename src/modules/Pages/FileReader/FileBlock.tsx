@@ -21,9 +21,16 @@ export const FileBlock = ({ file }: FileBlockProps) => {
           automaticLayout: true,
           minimap: { enabled: false },
           contextmenu: true,
-          copyWithSyntaxHighlighting: true,
           domReadOnly: false,
+          copyWithSyntaxHighlighting: true,
           accessibilitySupport: 'on',
+          occurrencesHighlight: 'off',
+          glyphMargin: false,
+          quickSuggestions: false,
+          parameterHints: { enabled: false },
+          wordBasedSuggestions: 'off',
+          folding: true,
+          renderValidationDecorations: 'off',
         }}
       />
     </>

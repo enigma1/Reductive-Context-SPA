@@ -1,41 +1,44 @@
-// src/modules/Pages/Bundle/BundleInfoDlg.tsx
+/* File: src/modules/Pages/Bundle/BundleInfoDlg.tsx
+  Shows information about a bundle indluding
+  bundle content and tokens spent
+*/
+import ReactMarkdown from 'react-markdown';
 import { useGetBundle } from '>/services/queryHooks';
+import { ScreenLoader } from '>/modules';
 
 type BundleInfoDlgProps = {
   bundleId: number;
 };
 
 export const BundleInfoDlg = ({ bundleId }: BundleInfoDlgProps) => {
-  const { data, isLoading } = useGetBundle({ bundleId });
+  const { bundleContent, inputTokens, outputTokens, isFetching } = useGetBundle(
+    { bundleId },
+    ({ state, query }) => ({
+      bundleContent: state.bundleContent,
+      inputTokens: state.inputTokens,
+      outputTokens: state.outputTokens,
+      isFetching: query.isFetching,
+    }),
+  );
 
+  const isBusy = isFetching;
   return (
-    <div className='area-container'>
-      <div className='area-spacer'>
-        <h1 className='area-title'>Bundle Information</h1>
-      </div>
-      <div className='area-content'>
-        {isLoading ? (
-          <p className='p-2 stand'>Loading bundle information...</p>
-        ) : (
-          <div className='p-2'>
-            <p>
-              <strong>Bundle ID:</strong> {data?.bundleId}
-            </p>
-            <p>
-              <strong>Input Tokens:</strong> {data?.inputTokens}
-            </p>
-            <p>
-              <strong>Output Tokens:</strong> {data?.outputTokens}
-            </p>
-            <div className='mt-2'>
-              <strong>Bundle Content:</strong>
-              <pre className='p-2 bg-gray-100 rounded'>
-                {data?.bundleContent}
-              </pre>
+    <>
+      {isBusy && <ScreenLoader />}
+      <div className='area-container'>
+        <div className='area-spacer'>
+          <h1 className='area-title'>Bundle Information</h1>
+        </div>
+        <div className='area-content'>
+          <div className='space-y-2'>
+            <p>Input Tokens: {inputTokens}</p>
+            <p>Output Tokens: {outputTokens}</p>
+            <div className='prose max-w-none'>
+              <ReactMarkdown>{bundleContent}</ReactMarkdown>
             </div>
           </div>
-        )}
+        </div>
       </div>
-    </div>
+    </>
   );
 };

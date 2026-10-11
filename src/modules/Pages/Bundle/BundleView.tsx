@@ -190,9 +190,16 @@ export const BundleView = () => {
             automaticLayout: true,
             minimap: { enabled: false },
             contextmenu: true,
+            domReadOnly: false,
             copyWithSyntaxHighlighting: true,
             accessibilitySupport: 'on',
-            domReadOnly: true,
+            occurrencesHighlight: 'off',
+            glyphMargin: false,
+            quickSuggestions: false,
+            parameterHints: { enabled: false },
+            wordBasedSuggestions: 'off',
+            folding: true,
+            renderValidationDecorations: 'off',
           }}
         />
       </div>

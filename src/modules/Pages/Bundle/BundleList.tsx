@@ -110,10 +110,11 @@ export const BundleList = () => {
     onInfoRow: (offset: number) => {
       const row = viewRows[offset].row;
       const id = columnsOrder.findIndex((c) => c === BUNDLE_ID);
+      const bId = Number(row[id]);
       dialogStoreActions.openDialog({
         payload: {
-          caption: `Info on ${row[id]}`,
-          component: <BundleInfoDlg bundleId={id} />,
+          caption: `Info on Bundle ID: ${bId}`,
+          component: <BundleInfoDlg bundleId={bId} />,
           actions: dialogActions.ack(),
         },
       });

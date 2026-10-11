@@ -1,7 +1,7 @@
 /* File: src/config/settings.ts
   Application settings support functions and constants
 */
-import { AppConfigSchema, type AppConfig } from '>/contracts';
+import { AppConfigSchema } from '>/contracts';
 
 const validated = AppConfigSchema.parse(window.APP_CONFIG);
 export const userPrefs = Object.freeze(validated.userPrefs);

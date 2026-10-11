@@ -13,6 +13,7 @@ import {
   SetBundleContract,
   GetBundleListContract,
   DeleteBundlesContract,
+  GetLanguagesContract,
 } from '>/contracts';
 import type {
   BasicResponse,
@@ -32,6 +33,7 @@ import type {
   GetBundleListResponse,
   DeleteBundlesRequest,
   DeleteBundlesResponse,
+  GetLanguagesResponse,
 } from '>/contracts';
 
 import { bundlePostResponse, streamPost } from './sse';
@@ -134,6 +136,11 @@ const getTableData = (data: GetTableDataRequest) =>
     apiClient.post(routes.back.getTableData, data, GetTableDataContract),
   );
 
+const getLanguages = () =>
+  apiCall<GetLanguagesResponse>(() =>
+    apiClient.get(routes.back.getLanguages, GetLanguagesContract),
+  );
+
 const saveSettings = (data: SaveSettingsRequest) =>
   apiCall<BasicResponse>(() => apiClient.post(routes.back.saveSettings, data));
 const loadSettings = () =>
@@ -153,6 +160,7 @@ export const apiPoints = {
   getBundleList,
   deleteBundles,
   getTableData,
+  getLanguages,
   saveSettings,
   loadSettings,
 } as const;

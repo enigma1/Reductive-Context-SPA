@@ -14,6 +14,8 @@ import type {
   GetBundleResponse,
   GetBundleListRequest,
   GetBundleListResponse,
+  GetLanguagesResponse,
+  GetLanguagesRequest,
 } from '>/contracts';
 import { apiPoints } from '>/services/api';
 import {
@@ -47,14 +49,14 @@ export const useGetPaths = createDataQueryHook<
   GetPathsRequest,
   {}
 >({
-  queryKey: (req) => queryKeys.getPaths(req).map((e) => String(e)),
+  queryKey: (req) => queryKeys.getPaths(req),
   queryFn: async (req) => {
     const response = await apiPoints.getPaths({
       paths: req.paths,
     });
     return response;
   },
-  initialData: (req) => ({
+  initialData: () => ({
     ...defaultResponse,
     paths: {},
   }),
@@ -115,6 +117,22 @@ export const useGetBundleList = createDataQueryHook<
   initialData: () => ({
     ...defaultResponse,
     ...defaultExtTableResponse,
+  }),
+});
+
+export const useGetLanguages = createDataQueryHook<
+  GetLanguagesResponse,
+  GetLanguagesRequest,
+  {}
+>({
+  queryKey: () => queryKeys.getLanguages(),
+  queryFn: async () => {
+    const rsp = await apiPoints.getLanguages();
+    return rsp;
+  },
+  initialData: () => ({
+    ...defaultResponse,
+    languages: {},
   }),
 });
 

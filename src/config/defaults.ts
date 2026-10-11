@@ -34,3 +34,7 @@ export const defaultFrontRequest: FrontRequest = {
   reasoning: '',
   files: [],
 };
+
+export const defaultLanguagesResponse = {
+  languages: {},
+};

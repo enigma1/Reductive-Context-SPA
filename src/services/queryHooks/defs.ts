@@ -108,6 +108,7 @@ export const queryKeys = {
   readFile: (req: ReadFileRequest) => ['read-file', { ...req }],
   getBundle: (req: GetBundleRequest) => ['get-bundle', { ...req }],
   getBundleList: () => ['get-bundle-list'],
+  getLanguages: () => ['get-languages'],
 };
 
 export const getMutationResult = <TData = any, TVariables = any>(

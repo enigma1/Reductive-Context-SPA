@@ -137,6 +137,7 @@ export type GetBundleRequest = z.infer<typeof GetBundleRequestSchema>;
 
 export const GetBundleResponseSchema = BasicResponseSchema.extend({
   inputTokens: z.number().int().nonnegative(),
+  outputTokens: z.number().int().nonnegative(),
   bundleId: z.number().int().positive(),
   bundleContent: z.string(),
 });
@@ -224,4 +225,21 @@ export type DeleteBundlesResponse = z.infer<typeof DeleteBundlesResponseSchema>;
 export const DeleteBundlesContract = {
   requestSchema: DeleteBundlesRequestSchema,
   responseSchema: DeleteBundlesResponseSchema,
+};
+
+export const GetLanguagesRequestSchema = z.void();
+export type GetLanguagesRequest = z.infer<typeof GetLanguagesRequestSchema>;
+
+const LanguageEntrySchema = z.object({
+  monaco: z.string(),
+  markdown: z.string(),
+});
+export const GetLanguagesResponseSchema = z.object({
+  languages: z.record(z.string(), LanguageEntrySchema),
+});
+export type GetLanguagesResponse = z.infer<typeof GetLanguagesResponseSchema>;
+
+export const GetLanguagesContract = {
+  requestSchema: GetLanguagesRequestSchema,
+  responseSchema: GetLanguagesResponseSchema,
 };
