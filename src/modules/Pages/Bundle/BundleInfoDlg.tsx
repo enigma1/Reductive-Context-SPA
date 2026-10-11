@@ -4,7 +4,7 @@
 */
 import ReactMarkdown from 'react-markdown';
 import { useGetBundle } from '>/services/queryHooks';
-import { ScreenLoader } from '>/modules';
+import { ScreenLoader, CodeBlock } from '>/modules';
 
 type BundleInfoDlgProps = {
   bundleId: number;
@@ -27,14 +27,14 @@ export const BundleInfoDlg = ({ bundleId }: BundleInfoDlgProps) => {
       {isBusy && <ScreenLoader />}
       <div className='area-container'>
         <div className='area-spacer'>
-          <h1 className='area-title'>Bundle Information</h1>
+          <h1 className='area-title'>{`Bundle Info - Tokens In/Out: ${inputTokens}/${outputTokens}`}</h1>
         </div>
         <div className='area-content'>
           <div className='space-y-2'>
-            <p>Input Tokens: {inputTokens}</p>
-            <p>Output Tokens: {outputTokens}</p>
-            <div className='prose max-w-none'>
-              <ReactMarkdown>{bundleContent}</ReactMarkdown>
+            <div className='max-w-none'>
+              <ReactMarkdown components={{ code: CodeBlock }}>
+                {bundleContent}
+              </ReactMarkdown>
             </div>
           </div>
         </div>

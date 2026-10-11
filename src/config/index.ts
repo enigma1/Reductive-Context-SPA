@@ -6,3 +6,4 @@ export * from './defaults';
 export * from './dialog';
 export * from './sql';
 export * from './editors';
+export * from './syntax';
