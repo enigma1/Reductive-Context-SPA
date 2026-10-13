@@ -16,6 +16,8 @@ import type {
   GetBundleListResponse,
   GetLanguagesResponse,
   GetLanguagesRequest,
+  GetOpenRouterModelsRequest,
+  GetOpenRouterModelsResponse,
 } from '>/contracts';
 import { apiPoints } from '>/services/api';
 import { getOnlyColumnsFromResult, snakeToCamel } from '>/services/utils';
@@ -175,6 +177,22 @@ export const useGetLanguages = createDataQueryHook<
   initialData: () => ({
     ...defaultResponse,
     languages: {},
+  }),
+});
+
+export const useOpenRouterModels = createDataQueryHook<
+  GetOpenRouterModelsResponse,
+  GetOpenRouterModelsRequest,
+  {}
+>({
+  queryKey: () => queryKeys.getOpenRouterModels(),
+  queryFn: async () => {
+    const rsp = await apiPoints.getOpenRouterModels();
+    return rsp;
+  },
+  initialData: () => ({
+    ...defaultResponse,
+    models: [],
   }),
 });
 

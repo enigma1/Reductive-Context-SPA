@@ -1,4 +1,4 @@
-import { useState, type ReactNode } from 'react';
+import { useState, useEffect, type ReactNode } from 'react';
 import { useNavigate, useLocation, Link } from 'react-router';
 import { MessageSquarePlusIcon, CircleChevronLeftIcon } from 'lucide-react';
 import {
@@ -38,7 +38,7 @@ export const LeftSide = () => {
       getTitle: () => {
         return activeBundleId ? `Bundle: ${activeBundleId}` : 'Conversations';
       },
-      getRoute: () => routes.front.databasesView,
+      getRoute: () => routes.front.bundleList,
       component: <BundleSideList />,
       icon: (
         <span title='New Conversation'>
@@ -62,6 +62,10 @@ export const LeftSide = () => {
       navigate(route);
     }
   };
+
+  useEffect(() => {
+    toggleSection(sideSections[0]);
+  }, []);
 
   return (
     <>

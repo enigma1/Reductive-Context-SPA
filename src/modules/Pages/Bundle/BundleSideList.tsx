@@ -1,12 +1,12 @@
 import { useNavigate, useLocation } from 'react-router';
+import { FileXIcon } from 'lucide-react';
 import { routes } from '>/config';
+
 import { useCodeStore } from '>/services/stores';
 import { useGetBundleList, useDeleteBundles } from '>/services/queryHooks';
 import { ScreenLoader } from '>/modules';
 
 export const BundleSideList = () => {
-  const navigate = useNavigate();
-  const location = useLocation();
   const {
     rows,
     columnsOrder,
@@ -30,9 +30,25 @@ export const BundleSideList = () => {
     }),
   );
 
-  const isBusy = isFetching;
+  const { isPending, mutate } = useDeleteBundles(({ query, api }) => ({
+    isPending: query.isPending,
+    mutate: api.mutate,
+  }));
+
+  // ----------------
+  // No-Hooks Section
+  // ----------------
+  const navigate = useNavigate();
+  const location = useLocation();
   const names = getBundleNames();
   const fieldEntries = getBundleFields();
+
+  const onDeleteBundle = (idx: number) => {
+    const bundleId = fieldEntries[idx].bundleId;
+    // mutate({ bundleIds: [bundleId] });
+  };
+
+  const isBusy = isFetching || isPending;
 
   return (
     <div className='relative'>
@@ -44,17 +60,24 @@ export const BundleSideList = () => {
               const entry = fieldEntries[idx];
               const isSelected = activeBundleId === entry.bundleId;
               return (
-                <button
-                  key={`${row}-${idx}`}
-                  className='side-list-item truncate'
-                  data-active={isSelected}
-                  onClick={() => {
-                    setActiveBundleId(entry.bundleId);
-                    navigate(routes.front.bundleView);
-                  }}
-                >
-                  {names[idx]}
-                </button>
+                <div className='btn-group side-list-item' key={`${row}-${idx}`}>
+                  <button
+                    className='btn-micro'
+                    onClick={() => onDeleteBundle(idx)}
+                  >
+                    <FileXIcon size={16} />
+                  </button>
+                  <button
+                    className='truncate'
+                    data-active={isSelected}
+                    onClick={() => {
+                      setActiveBundleId(entry.bundleId);
+                      navigate(routes.front.bundleView);
+                    }}
+                  >
+                    {names[idx]}
+                  </button>
+                </div>
               );
             })}
           </>

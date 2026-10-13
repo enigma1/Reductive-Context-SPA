@@ -27,7 +27,7 @@ export const HeaderMenu = () => {
         >
           Clear Pending
         </button>
-        <GuardedLink to={routes.front.home}>Guarded Link</GuardedLink>
+        <Link to={routes.front.openRouterModelsView}>Open Router Models</Link>
       </DropdownMenu>
     </div>
   );

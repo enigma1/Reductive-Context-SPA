@@ -3,6 +3,7 @@
   Validates APIs requests/responses with the back end
 */
 import { z } from 'zod';
+import { OpenRouterModelSchema } from './openRouter';
 
 export const AiStatusSchema = z.object({
   active: z.boolean(),
@@ -242,4 +243,21 @@ export type GetLanguagesResponse = z.infer<typeof GetLanguagesResponseSchema>;
 export const GetLanguagesContract = {
   requestSchema: GetLanguagesRequestSchema,
   responseSchema: GetLanguagesResponseSchema,
+};
+
+export const GetOpenRouterModelsRequestSchema = z.void();
+export type GetOpenRouterModelsRequest = z.infer<
+  typeof GetOpenRouterModelsRequestSchema
+>;
+
+export const GetOpenRouterModelsResponseSchema = z.object({
+  models: z.array(OpenRouterModelSchema),
+});
+export type GetOpenRouterModelsResponse = z.infer<
+  typeof GetOpenRouterModelsResponseSchema
+>;
+
+export const GetOpenRouterModelsContract = {
+  requestSchema: GetOpenRouterModelsRequestSchema,
+  responseSchema: GetOpenRouterModelsResponseSchema,
 };

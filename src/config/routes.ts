@@ -22,6 +22,7 @@ export const routes: AllRoutes = {
     deleteBundles: '/api/delete-bundles',
     getTableData: '/api/get-table-data',
     getLanguages: '/api/get-languages',
+    getOpenRouterModels: '/api/get-open-router-models',
     loadSettings: '/api/load-settings',
     saveSettings: '/api/save-settings',
   },
@@ -34,6 +35,7 @@ export const routes: AllRoutes = {
     readFile: '/read-file',
     tableData: '/tableData',
     networkDown: '/network-down',
+    openRouterModelsView: '/open-router-models-view',
   },
 };
 

@@ -94,7 +94,7 @@ export const PathsView = () => {
     });
   };
 
-  const hasPaths = Object.values(paths).length > 0;
+  const hasPaths = currentPaths.length > 0;
 
   return (
     <>

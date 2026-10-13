@@ -17,6 +17,7 @@ import {
   PathsView,
   Reader,
   DataTable,
+  OpenRouterModelsView,
 } from '>/modules';
 
 const readFileLoader = () => {
@@ -58,6 +59,11 @@ export const browserRouter = createBrowserRouter([
         path: routes.front.bundleAnswer,
         element: <BundleAnswer />,
       },
+      {
+        path: routes.front.openRouterModelsView,
+        element: <OpenRouterModelsView />,
+      },
+
       {
         path: routes.front.tableData,
         element: <DataTable />,

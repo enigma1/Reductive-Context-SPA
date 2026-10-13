@@ -25,11 +25,13 @@ export const BundleView = () => {
     bundleStream,
     activePrompt,
     setBundleStream,
+    getCurrentPaths,
   } = useCodeStore(({ state, api }) => ({
     bundleId: state.activeBundleId,
     bundleStream: state.bundleStream,
     setBundleStream: api.setBundleStream,
     activePrompt: state.activePrompt,
+    getCurrentPaths: api.getCurrentPaths,
   }));
 
   const { bundleContent, isFetching, refetch } = useGetBundle(
@@ -126,7 +128,10 @@ export const BundleView = () => {
   };
 
   const onGoBack = () => {
-    navigate(routes.front.pathsView, { replace: true });
+    const paths = getCurrentPaths();
+    const dest =
+      paths.length > 0 ? routes.front.pathsView : routes.front.bundleList;
+    navigate(dest);
   };
 
   const onRefresh = () => {

@@ -14,6 +14,7 @@ import {
   GetBundleListContract,
   DeleteBundlesContract,
   GetLanguagesContract,
+  GetOpenRouterModelsContract,
 } from '>/contracts';
 import type {
   BasicResponse,
@@ -34,6 +35,7 @@ import type {
   DeleteBundlesRequest,
   DeleteBundlesResponse,
   GetLanguagesResponse,
+  GetOpenRouterModelsResponse,
 } from '>/contracts';
 
 import { bundlePostResponse, streamPost } from './sse';
@@ -141,6 +143,11 @@ const getLanguages = () =>
     apiClient.get(routes.back.getLanguages, GetLanguagesContract),
   );
 
+const getOpenRouterModels = () =>
+  apiCall<GetOpenRouterModelsResponse>(() =>
+    apiClient.get(routes.back.getOpenRouterModels, GetOpenRouterModelsContract),
+  );
+
 const saveSettings = (data: SaveSettingsRequest) =>
   apiCall<BasicResponse>(() => apiClient.post(routes.back.saveSettings, data));
 const loadSettings = () =>
@@ -161,6 +168,7 @@ export const apiPoints = {
   deleteBundles,
   getTableData,
   getLanguages,
+  getOpenRouterModels,
   saveSettings,
   loadSettings,
 } as const;

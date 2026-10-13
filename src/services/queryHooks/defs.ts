@@ -109,6 +109,7 @@ export const queryKeys = {
   getBundle: (req: GetBundleRequest) => ['get-bundle', { ...req }],
   getBundleList: () => ['get-bundle-list'],
   getLanguages: () => ['get-languages'],
+  getOpenRouterModels: () => ['get-open-router-models'],
 };
 
 export const getMutationResult = <TData = any, TVariables = any>(
