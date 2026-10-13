@@ -1,3 +1,5 @@
+import type { CSSProperties } from 'react';
+
 import { PrismLight } from 'react-syntax-highlighter';
 import { oneLight } from 'react-syntax-highlighter/dist/esm/styles/prism';
 
@@ -61,5 +63,7 @@ PrismLight.registerLanguage('swift', swift);
 PrismLight.registerLanguage('kotlin', kotlin);
 PrismLight.registerLanguage('dockerfile', dockerfile);
 PrismLight.registerLanguage('graphql', graphql);
+
+export const prismStyle = oneLight as { [key: string]: CSSProperties };
 
 export { PrismLight, oneLight };

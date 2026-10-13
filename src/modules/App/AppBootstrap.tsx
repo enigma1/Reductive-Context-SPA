@@ -5,23 +5,26 @@ import { setExtensionLanguages } from '>/config';
 
 export const AppBootstrap = ({ children }: { children: ReactNode }) => {
   const [bootstrap, setBootstrap] = useState<boolean>(false);
-  const { isSuccess, isFetching, languages } = useGetLanguages(
+
+  const { isFetching, isFetched, languages } = useGetLanguages(
     undefined,
     ({ state, query }) => ({
-      isSuccess: query.isSuccess,
       isFetching: query.isFetching,
+      isFetched: query.isFetched,
       languages: state.languages,
     }),
   );
+  const ready = isFetched && !isFetching;
 
   useEffect(() => {
-    if (!isSuccess) return;
+    if (!ready) return;
     setExtensionLanguages(languages);
     setBootstrap(true);
-  }, [isSuccess, languages]);
+  }, [ready, languages]);
 
   if (!bootstrap) {
     return <ScreenLoader />;
   }
+
   return children;
 };

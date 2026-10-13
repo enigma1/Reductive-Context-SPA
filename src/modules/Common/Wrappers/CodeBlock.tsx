@@ -1,12 +1,27 @@
-import { PrismLight, oneLight } from '>/config';
+import type { ComponentProps, CSSProperties } from 'react';
+import { PrismLight, prismStyle } from '>/config';
 
-export const CodeBlock = ({ className, children, ...props }: any) => {
+type CodeBlockProps = ComponentProps<'code'> & {
+  language?: string;
+  wrapClasses?: string;
+};
+
+export const CodeBlock = ({
+  language: languageProp,
+  className,
+  children,
+  style: _style,
+  ref: _ref,
+  ...props
+}: CodeBlockProps) => {
   const match = /language-(\w+)/.exec(className || '');
-  const language = match?.[1] || 'text';
-
+  const language = languageProp ?? match?.[1] ?? 'text';
+  const { wrapClasses, ...prismProps } = props;
   return (
-    <PrismLight language={language} style={oneLight} {...props}>
-      {String(children).replace(/\n$/, '')}
-    </PrismLight>
+    <div className={wrapClasses}>
+      <PrismLight language={language} style={prismStyle} {...prismProps}>
+        {String(children).replace(/\n$/, '')}
+      </PrismLight>
+    </div>
   );
 };

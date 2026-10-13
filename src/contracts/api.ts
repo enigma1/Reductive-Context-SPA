@@ -136,11 +136,23 @@ export const GetBundleRequestSchema = z.object({
 });
 export type GetBundleRequest = z.infer<typeof GetBundleRequestSchema>;
 
+export const ConversationSchema = z.object({
+  inputTokens: z.number().int().nonnegative(),
+  outputTokens: z.number().int().nonnegative(),
+  prompt: z.string(),
+  summary: z.string(),
+  reasoning: z.string(),
+  filesJson: z.string(),
+  createdAt: z.string(),
+});
+export type Conversation = z.infer<typeof ConversationSchema>;
+
 export const GetBundleResponseSchema = BasicResponseSchema.extend({
   inputTokens: z.number().int().nonnegative(),
   outputTokens: z.number().int().nonnegative(),
   bundleId: z.number().int().positive(),
   bundleContent: z.string(),
+  conversations: z.array(ConversationSchema),
 });
 export type GetBundleResponse = z.infer<typeof GetBundleResponseSchema>;
 

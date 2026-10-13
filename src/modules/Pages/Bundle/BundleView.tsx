@@ -1,13 +1,18 @@
 import { useEffect } from 'react';
 import { useNavigate } from 'react-router';
+import ReactMarkdown from 'react-markdown';
 import Editor from '@monaco-editor/react';
 import {
   ListRestartIcon,
-  ArrowLeftToLineIcon,
   SavePlusIcon,
   FileSlidersIcon,
+  ChevronsLeftRightEllipsisIcon,
 } from 'lucide-react';
-import { useCodeStore, messageStoreActions } from '>/services/stores';
+import {
+  useConfigStore,
+  useCodeStore,
+  messageStoreActions,
+} from '>/services/stores';
 import { routes } from '>/config';
 import { useEditorBundle } from '>/services/hooks';
 import {
@@ -15,11 +20,26 @@ import {
   useSetBundle,
   useSubmitBundle,
 } from '>/services/queryHooks';
-import { ScreenLoader } from '>/modules';
+import { ScreenLoader, CustomPageHeader, CodeBlock } from '>/modules';
 import { SetBundleResponse, SubmitBundleResponse } from '>/contracts';
+import { getLanguageFromFilename } from '>/services/utils';
+
+type BundleFile = {
+  path: string;
+  content: string;
+  isNew: boolean;
+};
 
 export const BundleView = () => {
   const navigate = useNavigate();
+
+  const { conversationMode, setConversationMode } = useConfigStore(
+    ({ state, api }) => ({
+      conversationMode: state.conversationMode,
+      setConversationMode: api.setConversationMode,
+    }),
+  );
+
   const {
     bundleId = 0,
     bundleStream,
@@ -34,10 +54,11 @@ export const BundleView = () => {
     getCurrentPaths: api.getCurrentPaths,
   }));
 
-  const { bundleContent, isFetching, refetch } = useGetBundle(
+  const { bundleContent, conversations, isFetching, refetch } = useGetBundle(
     { bundleId: bundleId },
     ({ state, query }) => ({
       bundleContent: state.bundleContent,
+      conversations: state.conversations,
       isFetching: query.isFetching,
       refetch: query.refetch,
     }),
@@ -65,6 +86,10 @@ export const BundleView = () => {
     }
   }, [bundleId, isFetching, navigate]);
 
+  useEffect(() => {
+    if (conversationMode === 'listing' && conversations.length === 0)
+      setConversationMode('initial');
+  }, [conversations, conversationMode]);
   // ----------------
   // No-Hooks Section
   // ----------------
@@ -138,75 +163,161 @@ export const BundleView = () => {
     refetch();
   };
 
+  const onSwitchConversationMode = () => {
+    setConversationMode(
+      conversationMode === 'listing' || conversations.length === 0
+        ? 'initial'
+        : 'listing',
+    );
+  };
+
+  const parseFiles = (filesJson: string): BundleFile[] => {
+    try {
+      return JSON.parse(filesJson);
+    } catch {
+      return [];
+    }
+  };
   const isProcessingBundle = isSubmitting || isSetting;
+  const firstActions = (
+    <>
+      <button
+        className='btn'
+        onClick={onSubmitBundle}
+        title='Submit Bundle'
+        data-status={isProcessingBundle}
+      >
+        <FileSlidersIcon size={24} />
+      </button>
+      <button
+        className='btn'
+        onClick={onSetBundle}
+        title='Update Bundle'
+        data-status={!isDirty || isProcessingBundle ? 'disabled' : undefined}
+      >
+        <SavePlusIcon size={24} />
+      </button>
+    </>
+  );
+
+  const switchNote =
+    conversationMode === 'listing'
+      ? 'Switch To Conversation'
+      : 'Switch to Original Prompt';
+
+  const commonActions = (
+    <>
+      <button className='btn-secondary' onClick={onRefresh} title='Refresh'>
+        <ListRestartIcon size={24} />
+      </button>
+      <button
+        className='btn-secondary'
+        onClick={onSwitchConversationMode}
+        title={switchNote}
+        data-status={conversations.length === 0 ? 'disabled' : undefined}
+      >
+        <ChevronsLeftRightEllipsisIcon size={24} />
+      </button>
+    </>
+  );
+
+  const actions =
+    conversationMode === 'listing' ? (
+      commonActions
+    ) : (
+      <>
+        {firstActions}
+        {commonActions}
+      </>
+    );
 
   return (
     <>
-      <div className='page-heading'>
-        <div className='page-toolbar'>
-          <div className='inline-wrapper'>
-            <button
-              className='btn-micro'
-              title='Back to the File List'
-              onClick={onGoBack}
-            >
-              <ArrowLeftToLineIcon size={18} />
-            </button>
-            <div className='page-title' title='Generated Bundle'>
-              Viewing Bundle
-            </div>
-          </div>
-          <div className='page-actions'>
-            <button
-              className='btn'
-              onClick={onSubmitBundle}
-              title='Submit Bundle'
-              data-status={isProcessingBundle}
-            >
-              <FileSlidersIcon size={24} />
-            </button>
-
-            <button
-              className='btn'
-              onClick={onSetBundle}
-              title='Update Bundle'
-              data-status={
-                !isDirty || isProcessingBundle ? 'disabled' : undefined
-              }
-            >
-              <SavePlusIcon size={24} />
-            </button>
-            <button
-              className='btn-secondary'
-              onClick={onRefresh}
-              title='Restore Bundle'
-            >
-              <ListRestartIcon size={24} />
-            </button>
-          </div>
-        </div>
-      </div>
+      <CustomPageHeader
+        title={`Viewing Bundle in ${conversationMode} mode: ${bundleId}`}
+        onBack={onGoBack}
+        actions={actions}
+      />
       <div className='page-content'>
-        <Editor
-          onMount={onMount}
-          value={bundleContent}
-          language={'markdown'}
-          options={{
-            automaticLayout: true,
-            minimap: { enabled: false },
-            contextmenu: true,
-            domReadOnly: false,
-            copyWithSyntaxHighlighting: true,
-            accessibilitySupport: 'on',
-            occurrencesHighlight: 'off',
-            glyphMargin: false,
-            quickSuggestions: false,
-            parameterHints: { enabled: false },
-            wordBasedSuggestions: 'off',
-            folding: true,
-            renderValidationDecorations: 'off',
-          }}
-        />
+        {conversationMode === 'initial' ? (
+          <Editor
+            onMount={onMount}
+            value={bundleContent}
+            language={'markdown'}
+            options={{
+              automaticLayout: true,
+              minimap: { enabled: false },
+              contextmenu: true,
+              domReadOnly: false,
+              copyWithSyntaxHighlighting: true,
+              accessibilitySupport: 'on',
+              occurrencesHighlight: 'off',
+              glyphMargin: false,
+              quickSuggestions: false,
+              parameterHints: { enabled: false },
+              wordBasedSuggestions: 'off',
+              folding: true,
+              renderValidationDecorations: 'off',
+            }}
+          />
+        ) : (
+          conversations.map((entry, idx) => (
+            <div
+              className='space-y-2 page-section'
+              key={`conversation-${entry.createdAt}-${bundleId}-${idx}`}
+            >
+              <div className='wrapper gap-1 text-sm'>
+                <span>Input tokens: {entry.inputTokens}</span>
+                <span>Output tokens: {entry.outputTokens}</span>
+                <span>Created: {entry.createdAt}</span>
+              </div>
+              <div className='max-w-none'>
+                <ReactMarkdown components={{ code: CodeBlock }}>
+                  {entry.summary}
+                </ReactMarkdown>
+              </div>
+              <div className='max-w-none'>
+                <ReactMarkdown components={{ code: CodeBlock }}>
+                  {entry.prompt}
+                </ReactMarkdown>
+              </div>
+              <div className='max-w-none'>
+                <ReactMarkdown components={{ code: CodeBlock }}>
+                  {entry.reasoning}
+                </ReactMarkdown>
+              </div>
+              {parseFiles(entry.filesJson).map((file, fileIndex) => {
+                const language = getLanguageFromFilename({
+                  filePath: file.path,
+                  view: 'markdown',
+                });
+
+                return (
+                  <section
+                    key={`${file.path}-${fileIndex}`}
+                    className='max-w-none'
+                  >
+                    <h4 className='wrapper py-2'>{file.path}</h4>
+
+                    <ReactMarkdown
+                      components={{
+                        code: (props) => (
+                          <CodeBlock
+                            {...props}
+                            language={language}
+                            wrapClasses='page-border'
+                          />
+                        ),
+                      }}
+                    >
+                      {`\`\`\`${language}\n${file.content}\n\`\`\``}
+                    </ReactMarkdown>
+                  </section>
+                );
+              })}
+            </div>
+          ))
+        )}
       </div>
     </>
   );

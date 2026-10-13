@@ -55,7 +55,7 @@ export const BundleAnswer = () => {
           <>
             <div className='page-section'>
               <h2>Summary:</h2>
-              <p>{summary}</p>
+              {summary}
             </div>
             <div className='page-section'>
               <h2>Reasoning:</h2>

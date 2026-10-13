@@ -17,7 +17,7 @@ export const DataTable = () => {
   if (isBusy) {
     return <ScreenLoader />;
   }
-  console.log('cols', columnsOrder, rows);
+
   return (
     <>
       <div className='page-heading'>

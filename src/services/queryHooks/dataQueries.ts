@@ -103,6 +103,7 @@ export const useGetBundle = createDataQueryHook<
   initialData: (req) => ({
     ...defaultResponse,
     bundleContent: '',
+    conversations: [],
     bundleId: req.bundleId,
     inputTokens: 0,
     outputTokens: 0,

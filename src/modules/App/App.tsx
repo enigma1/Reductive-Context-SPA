@@ -1,8 +1,5 @@
-import { useEffect } from 'react';
 import { Outlet } from 'react-router';
 import { useConfigStore } from '>/services/stores';
-import { configureApiClient } from '>/services/api';
-import { backPath } from '>/config';
 import {
   LeftSide,
   RightSide,
@@ -13,14 +10,9 @@ import {
 } from '>/modules';
 
 export const App = () => {
-  const { layout, backPort } = useConfigStore(({ state }) => ({
+  const { layout } = useConfigStore(({ state }) => ({
     layout: state.layout,
-    backPort: state.backPort,
   }));
-
-  useEffect(() => {
-    configureApiClient(`${backPath}:${backPort}`);
-  }, [backPort]);
 
   return (
     <>

@@ -6,9 +6,12 @@ import ReactDOM from 'react-dom/client';
 import { QueryClientProvider } from '@tanstack/react-query';
 import { queryClientHandlers } from '>/bootstrap';
 import { codeStoreActions } from '>/services/stores';
-import { routes } from '>/config';
+import { routes, backPath, userPrefs } from '>/config';
+import { configureApiClient } from '>/services/api';
+
 import {
   App,
+  AppBootstrap,
   Home,
   NetworkDown,
   BundleView,
@@ -84,10 +87,14 @@ if (!container) {
   );
 }
 
+configureApiClient(`${backPath}:${userPrefs.backPort}`);
+// console.log('start', `${backPath}:${userPrefs.backPort}`);
 ReactDOM.createRoot(container).render(
   <StrictMode>
     <QueryClientProvider client={queryClientHandlers}>
-      <RouterProvider router={browserRouter} />
+      <AppBootstrap>
+        <RouterProvider router={browserRouter} />
+      </AppBootstrap>
     </QueryClientProvider>
   </StrictMode>,
 );

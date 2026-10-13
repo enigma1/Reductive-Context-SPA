@@ -3,7 +3,7 @@
 */
 import cloneDeep from 'lodash-es/cloneDeep';
 import { userPrefs } from '>/config';
-import type { UserPrefs, LayoutPrefs } from '>/contracts';
+import type { UserPrefs, LayoutPrefs, ConversationMode } from '>/contracts';
 import { makeState } from './estate';
 
 type ConfigStoreState = UserPrefs;
@@ -14,6 +14,8 @@ export type ConfigStoreActions = {
   savePreferences: (prefs?: Partial<ConfigStoreState>) => void;
   getLayoutPrefs: () => LayoutPrefs;
   setLayoutPrefs: (prefs: Partial<LayoutPrefs>) => void;
+  getConversationMode: () => ConversationMode;
+  setConversationMode: (mode: ConversationMode) => void;
 };
 
 // type ConfigStore = ConfigStoreState & ConfigStoreActions;
@@ -47,6 +49,11 @@ export const configStoreActions: ConfigStoreActions = {
   savePreferences: (settings?: Partial<ConfigStoreState>) => {
     const modSettings = settings ?? get();
     setAuto({ ...modSettings });
+  },
+
+  getConversationMode: () => get().conversationMode,
+  setConversationMode: (mode) => {
+    setAuto({ conversationMode: mode });
   },
 };
 
