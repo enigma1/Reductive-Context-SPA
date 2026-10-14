@@ -3,3 +3,5 @@ export * from './themes';
 export * from './modals';
 export * from './editor';
 export * from './resize';
+export * from './resizableSplit';
+export * from './bundleActions';

@@ -147,12 +147,20 @@ export const ConversationSchema = z.object({
 });
 export type Conversation = z.infer<typeof ConversationSchema>;
 
+export const RootPathSchema = z.object({
+  rootPath: z.string(),
+  depth: z.number().positive().optional(),
+});
+export type RootPath = z.infer<typeof RootPathSchema>;
+
 export const GetBundleResponseSchema = BasicResponseSchema.extend({
   inputTokens: z.number().int().nonnegative(),
   outputTokens: z.number().int().nonnegative(),
   bundleId: z.number().int().positive(),
+  prompt: z.string(),
   bundleContent: z.string(),
   conversations: z.array(ConversationSchema),
+  rootPaths: z.array(RootPathSchema),
 });
 export type GetBundleResponse = z.infer<typeof GetBundleResponseSchema>;
 
@@ -164,6 +172,7 @@ export const GetBundleContract = {
 export const SetBundleRequestSchema = z.object({
   bundleId: z.number().int().positive(),
   bundleContent: z.string(),
+  prompt: z.string(),
 });
 export type SetBundleRequest = z.infer<typeof SetBundleRequestSchema>;
 

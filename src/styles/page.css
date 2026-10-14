@@ -30,6 +30,10 @@
     & .central {
       @apply text-lg my-1 mx-auto text-center;
     }
+
+    &:not(:first-child) {
+      @apply mt-4;
+    }
   }
 
   .page-title {
@@ -59,6 +63,24 @@
 
   .page-border {
     @apply rounded-lg border;
-    border-color: var(--color-border-separate)
+    border-color: var(--color-accent);
+  }
+
+  .page-bundle-entry {
+    @apply max-w-none border-b py-2;
+    border-color: var(--color-accent);
+  }
+
+  .page-bundle-details {
+    @apply max-w-none rounded-lg border p-2 text-sm font-semibold;
+    border-color: var(--color-accent);
+    background: linear-gradient(54deg in oklch, var(--color-srf) 35%, var(--color-srf-dim) 100%);
+  }
+
+  .page-bundle-heading {
+    @apply flex flex-col flex-1 rounded-lg border p-2;
+    background: var(--color-srf-dim);
+    color: var(--color-srf-peak);
+    border-color: var(--color-accent);
   }
 }
