@@ -1,28 +1,14 @@
 import { useState } from 'react';
 import ReactMarkdown from 'react-markdown';
 import { CircleChevronLeftIcon } from 'lucide-react';
-
-import { RecommendedFile, Conversation } from '>/contracts';
-import { toLocalTime, getLanguageFromFilename } from '>/services/utils';
-import { CodeBlock } from '>/modules';
-
-const parseFiles = (filesJson: string): RecommendedFile[] => {
-  try {
-    const parsed: unknown = JSON.parse(filesJson);
-
-    if (!Array.isArray(parsed)) return [];
-
-    return parsed.filter(
-      (file): file is RecommendedFile =>
-        typeof file === 'object' &&
-        file !== null &&
-        typeof file.path === 'string' &&
-        typeof file.content === 'string',
-    );
-  } catch {
-    return [];
-  }
-};
+import { Conversation } from '>/contracts';
+import { parseBundleFiles } from '>/services/utils';
+import {
+  fixMarkdown,
+  toLocalTime,
+  getLanguageFromFilename,
+} from '>/services/utils';
+import { CodeBlock, MarkdownComponents } from '>/modules';
 
 type ConversationCardProps = {
   entry: Conversation;
@@ -41,7 +27,7 @@ export const ConversationCard = ({ entry }: ConversationCardProps) => {
     reasoning,
   } = entry;
 
-  const pathFiles = parseFiles(filesJson);
+  const pathFiles = parseBundleFiles(filesJson);
   const entryTime = toLocalTime(createdAt);
 
   return (
@@ -50,7 +36,7 @@ export const ConversationCard = ({ entry }: ConversationCardProps) => {
         className='page-bundle-heading cursor-pointer flex flex-row items-center justify-between select-none'
         onClick={() => setIsOpen((previous) => !previous)}
       >
-        <span className='truncate'>{`Entry on ${entryTime}: ${summary}`}</span>
+        <span className='truncate'>{`${entryTime}: ${summary}`}</span>
 
         <CircleChevronLeftIcon
           size={24}
@@ -68,22 +54,22 @@ export const ConversationCard = ({ entry }: ConversationCardProps) => {
 
           <div className='page-bundle-entry'>
             <h4 className='wrapper'>User Prompt:</h4>
-            <ReactMarkdown components={{ code: CodeBlock }}>
-              {prompt}
+            <ReactMarkdown components={MarkdownComponents}>
+              {fixMarkdown(prompt)}
             </ReactMarkdown>
           </div>
 
           <div className='page-bundle-entry'>
             <h4 className='wrapper'>LLM Summary:</h4>
-            <ReactMarkdown components={{ code: CodeBlock }}>
-              {summary}
+            <ReactMarkdown components={MarkdownComponents}>
+              {fixMarkdown(summary)}
             </ReactMarkdown>
           </div>
 
           <div className='page-bundle-entry'>
             <h4 className='wrapper'>LLM Reasoning:</h4>
-            <ReactMarkdown components={{ code: CodeBlock }}>
-              {reasoning}
+            <ReactMarkdown components={MarkdownComponents}>
+              {fixMarkdown(reasoning)}
             </ReactMarkdown>
           </div>
 
@@ -107,16 +93,31 @@ export const ConversationCard = ({ entry }: ConversationCardProps) => {
 
                 <ReactMarkdown
                   components={{
-                    code: (props) => (
-                      <CodeBlock
-                        {...props}
-                        language={language}
-                        wrapClasses='page-border'
-                      />
-                    ),
+                    code: ({ node, className, children, ...props }: any) => {
+                      const match = /language-(\w+)/.exec(className || '');
+                      const isBlock =
+                        !!match ||
+                        node?.position?.start?.line !==
+                          node?.position?.end?.line;
+
+                      if (isBlock) {
+                        return (
+                          <CodeBlock
+                            {...props}
+                            language={language}
+                            wrapClasses='page-border'
+                            className={className}
+                          >
+                            {children}
+                          </CodeBlock>
+                        );
+                      }
+
+                      return <code className={className}>{children}</code>;
+                    },
                   }}
                 >
-                  {`\`\`\`${language}\n${file.content}\n\`\`\``}
+                  {fixMarkdown(`\`\`\`${language}\n${file.content}\n\`\`\``)}
                 </ReactMarkdown>
               </section>
             );

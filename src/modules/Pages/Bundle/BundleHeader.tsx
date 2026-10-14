@@ -3,11 +3,9 @@ import {
   SavePlusIcon,
   FileSlidersIcon,
   ChevronsLeftRightEllipsisIcon,
-  CircleChevronLeftIcon,
 } from 'lucide-react';
 import { useConfigStore } from '>/services/stores';
 
-import { ConversationMode } from '>/contracts';
 type BundleHeaderProps = {
   hasConversations: boolean;
   onRefresh: () => void;

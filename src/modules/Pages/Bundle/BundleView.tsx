@@ -1,3 +1,4 @@
+import { useEffect } from 'react';
 import { useNavigate } from 'react-router';
 import { useConfigStore, useCodeStore } from '>/services/stores';
 import { routes } from '>/config';
@@ -10,31 +11,44 @@ import { BundleHeader } from './BundleHeader';
 
 export const BundleView = () => {
   const navigate = useNavigate();
-  const { conversationMode } = useConfigStore(({ state }) => ({
-    conversationMode: state.conversationMode,
-  }));
+  const { conversationMode, setConversationMode } = useConfigStore(
+    ({ state, api }) => ({
+      conversationMode: state.conversationMode,
+      setConversationMode: api.setConversationMode,
+    }),
+  );
 
   const {
     bundleId = 0,
     activePrompt,
+    setActivePrompt,
     getCurrentPaths,
+    setCurrentPaths,
   } = useCodeStore(({ state, api }) => ({
     bundleId: state.activeBundleId,
     bundleStream: state.bundleStream,
     setBundleStream: api.setBundleStream,
     activePrompt: state.activePrompt,
+    setActivePrompt: api.setActivePrompt,
     getCurrentPaths: api.getCurrentPaths,
+    setCurrentPaths: api.setCurrentPaths,
   }));
 
-  const { bundleContent, conversations, isFetching, refetch } = useGetBundle(
-    { bundleId: bundleId },
-    ({ state, query }) => ({
-      bundleContent: state.bundleContent,
-      conversations: state.conversations,
-      isFetching: query.isFetching,
-      refetch: query.refetch,
-    }),
-  );
+  const {
+    prompt,
+    rootPaths,
+    bundleContent,
+    conversations,
+    isFetching,
+    refetch,
+  } = useGetBundle({ bundleId: bundleId }, ({ state, query }) => ({
+    bundleContent: state.bundleContent,
+    conversations: state.conversations,
+    rootPaths: state.rootPaths,
+    prompt: state.prompt,
+    isFetching: query.isFetching,
+    refetch: query.refetch,
+  }));
 
   const {
     onSubmitBundle,
@@ -47,6 +61,11 @@ export const BundleView = () => {
     isContentDirty,
   } = useBundleActions();
 
+  useEffect(() => {
+    if (conversationMode === 'listing' && conversations.length === 0) {
+      setConversationMode('initial');
+    }
+  }, [conversationMode, conversations]);
   // ----------------
   // No-Hooks Section
   // ----------------
@@ -57,14 +76,20 @@ export const BundleView = () => {
   }
 
   const onGoBack = () => {
-    const paths = getCurrentPaths();
-    const dest =
-      paths.length > 0 ? routes.front.pathsView : routes.front.bundleList;
-    navigate(dest);
+    if (conversationMode === 'initial') {
+      navigate(routes.front.pathsView);
+      return;
+    }
+    if (conversationMode === 'listing') {
+      setConversationMode('initial');
+      return;
+    }
+    navigate(routes.front.bundleList);
   };
 
   const pageTitle = `Viewing Bundle [${bundleId}] in ${conversationMode} mode ${conversationMode === 'listing' ? 'Entries [' + conversations.length + ']' : ''}`;
   const isDirty = isPromptDirty || isContentDirty;
+  const cMode = conversations.length > 0 ? conversationMode : 'listing';
   return (
     <>
       <CustomPageHeader

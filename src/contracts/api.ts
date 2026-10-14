@@ -148,7 +148,7 @@ export const ConversationSchema = z.object({
 export type Conversation = z.infer<typeof ConversationSchema>;
 
 export const RootPathSchema = z.object({
-  rootPath: z.string(),
+  path: z.string(),
   depth: z.number().positive().optional(),
 });
 export type RootPath = z.infer<typeof RootPathSchema>;

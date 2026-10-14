@@ -25,3 +25,21 @@ export const CodeBlock = ({
     </div>
   );
 };
+
+export const MarkdownComponents = {
+  code: ({ node, className, children, ...props }: any) => {
+    const match = /language-(\w+)/.exec(className || '');
+    // Block code: has a language class OR spans multiple lines
+    const isBlock =
+      !!match || node?.position?.start?.line !== node?.position?.end?.line;
+
+    if (isBlock) {
+      return (
+        <CodeBlock {...props} className={className}>
+          {children}
+        </CodeBlock>
+      );
+    }
+    return <code className={className}>{children}</code>;
+  },
+};

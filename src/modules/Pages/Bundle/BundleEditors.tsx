@@ -61,6 +61,7 @@ export const BundleEditors = ({
         style={{ height: `${100 - upperHeight}%` }}
         className='w-full overflow-hidden'
       >
+        <div className='page-title p-3'>Files Context</div>
         <Editor
           onMount={onContentMount}
           value={content}

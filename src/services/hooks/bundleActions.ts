@@ -68,8 +68,8 @@ export const useBundleActions = () => {
     submitBundle(
       {
         bundleId,
-        bundleContent: promptEditor.getContent(),
-        prompt: activePrompt,
+        bundleContent: contentEditor.getContent(),
+        prompt: promptEditor.getContent(),
       },
       {
         onSuccess: () => {

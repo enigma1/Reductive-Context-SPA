@@ -56,3 +56,6 @@ export const truncateText = (text: string, maxChars: number): string => {
 
 export const snakeToCamel = (str: string): string =>
   str.replace(/_([a-z])/g, (_, char) => char.toUpperCase());
+
+export const fixMarkdown = (md: string): string =>
+  md.replace(/([^\n])(```)/g, '$1\n\n$2').replace(/(```)([^\n])/g, '$1\n\n$2');

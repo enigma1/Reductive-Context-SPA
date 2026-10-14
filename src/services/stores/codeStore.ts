@@ -37,6 +37,13 @@ const removeSelectedFile = (
 
 export type BundleStream = 'done' | 'processing' | 'error' | 'idle';
 
+type BundleSession = {
+  selectedFiles: FileNode[];
+  activePaths: FolderPath[];
+  activePrompt: string;
+  bundleStream: BundleStream;
+};
+
 type StoreState = {
   selectedFiles: FileNode[];
   activePaths: FolderPath[];
@@ -68,6 +75,8 @@ export type CodeStoreActions = {
 
   setBundleStream: (mode: BundleStream) => void;
   setBundleResponse: (response: FrontRequest) => void;
+
+  setBundleSession: (session: BundleSession) => void;
 };
 
 export type CodeStore = StoreState & CodeStoreActions;
@@ -179,8 +188,15 @@ export const codeStoreActions: CodeStoreActions = {
   setViewFile: (file) => {
     setAuto({ activeFile: file });
   },
-  setActiveBundleId: (bundleId = 0) => {
+  setActiveBundleId: (bundleId) => {
     setAuto({ activeBundleId: bundleId });
+  },
+
+  setBundleSession: (session) => {
+    setAuto((state) => ({
+      ...state,
+      ...session,
+    }));
   },
 
   getActivePrompt: () => {
