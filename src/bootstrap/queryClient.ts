@@ -1,5 +1,5 @@
 /* File: src/bootstrap/queryClient.ts
-  handles errors for data queries and mutations
+  Handles errors for data queries and mutations
 */
 import { QueryClient, QueryCache, MutationCache } from '@tanstack/react-query';
 import { ApiError } from '>/types';

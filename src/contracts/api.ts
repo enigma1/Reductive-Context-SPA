@@ -153,14 +153,20 @@ export const RootPathSchema = z.object({
 });
 export type RootPath = z.infer<typeof RootPathSchema>;
 
+export const UserFileSchema = CodeRangeSchema.partial().extend({
+  filePath: z.string(),
+});
+export type UserFile = z.infer<typeof UserFileSchema>;
+
 export const GetBundleResponseSchema = BasicResponseSchema.extend({
   inputTokens: z.number().int().nonnegative(),
   outputTokens: z.number().int().nonnegative(),
   bundleId: z.number().int().positive(),
-  prompt: z.string(),
   bundleContent: z.string(),
+  prompt: z.string(),
   conversations: z.array(ConversationSchema),
   rootPaths: z.array(RootPathSchema),
+  userFiles: z.array(UserFileSchema),
 });
 export type GetBundleResponse = z.infer<typeof GetBundleResponseSchema>;
 
@@ -171,8 +177,9 @@ export const GetBundleContract = {
 
 export const SetBundleRequestSchema = z.object({
   bundleId: z.number().int().positive(),
-  bundleContent: z.string(),
   prompt: z.string(),
+  rootPaths: z.array(FolderPathSchema).optional(),
+  paths: z.array(FileNodeSchema).optional(),
 });
 export type SetBundleRequest = z.infer<typeof SetBundleRequestSchema>;
 

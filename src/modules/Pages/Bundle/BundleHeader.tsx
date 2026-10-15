@@ -9,7 +9,6 @@ import { useConfigStore } from '>/services/stores';
 type BundleHeaderProps = {
   hasConversations: boolean;
   onRefresh: () => void;
-  onSetBundle: () => void;
   onSubmitBundle: () => void;
   isDirty: boolean;
 };
@@ -17,7 +16,6 @@ type BundleHeaderProps = {
 export const BundleHeader = ({
   hasConversations,
   onRefresh,
-  onSetBundle,
   onSubmitBundle,
   isDirty,
 }: BundleHeaderProps) => {
@@ -32,14 +30,6 @@ export const BundleHeader = ({
     <>
       <button className='btn' onClick={onSubmitBundle} title='Submit Bundle'>
         <FileSlidersIcon size={24} />
-      </button>
-      <button
-        className='btn'
-        onClick={onSetBundle}
-        title='Update Bundle'
-        data-status={!isDirty ? 'disabled' : undefined}
-      >
-        <SavePlusIcon size={24} />
       </button>
     </>
   );

@@ -1,6 +1,5 @@
-import { useSetBundle, useSubmitBundle } from '>/services/queryHooks';
+import { useSubmitBundle } from '>/services/queryHooks';
 import { messageStoreActions, useCodeStore } from '>/services/stores';
-import { SetBundleResponse } from '>/contracts';
 import { useEditorBundle } from './editor';
 
 export const useBundleActions = () => {
@@ -9,7 +8,6 @@ export const useBundleActions = () => {
 
   const {
     bundleId = 0,
-    activePrompt,
     bundleStream,
     setBundleStream,
   } = useCodeStore(({ state, api }) => ({
@@ -19,49 +17,12 @@ export const useBundleActions = () => {
     setBundleStream: api.setBundleStream,
   }));
 
-  const { mutate: setBundle, isPending: isSetting } = useSetBundle(
-    ({ query, api }) => ({
-      isPending: query.isPending,
-      mutate: api.mutate,
-    }),
-  );
-
   const { mutate: submitBundle, isPending: isSubmitting } = useSubmitBundle(
     ({ query, api }) => ({
       isPending: query.isPending,
       mutate: api.mutate,
     }),
   );
-
-  const onSetBundle = () => {
-    setBundle(
-      {
-        bundleId,
-        bundleContent: contentEditor.getContent(),
-        prompt: activePrompt,
-      },
-      {
-        onSuccess: (data: SetBundleResponse) => {
-          if (!data.ok) {
-            messageStoreActions.addMessage({
-              content: {
-                text: 'Submitting the bundle caused a problem',
-                duration: 5000,
-              },
-            });
-          }
-        },
-        onError: () => {
-          messageStoreActions.addMessage({
-            content: {
-              text: 'Updating the bundle failed - Check if LLM is active',
-              duration: 5000,
-            },
-          });
-        },
-      },
-    );
-  };
 
   const onSubmitBundle = () => {
     setBundleStream('processing');
@@ -94,9 +55,7 @@ export const useBundleActions = () => {
   };
 
   return {
-    onSetBundle,
     onSubmitBundle,
-    isSetting,
     isSubmitting,
 
     onPromptMount: promptEditor.onMount,

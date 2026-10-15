@@ -83,4 +83,19 @@
     color: var(--color-srf-peak);
     border-color: var(--color-accent);
   }
+
+  .page-splitter-resize {
+    @apply h-2 shrink-0 cursor-row-resize w-full flex items-center justify-center transition-colors select-none;
+    background: var(--color-srf-dim);
+    border-color: var(--color-border-separate);
+
+    &:hover {
+      border-color: var(--color-border-focus);
+    }
+
+    & .handle {
+      @apply w-8 h-1 rounded-full;
+      background: var(--color-srf-high);
+    }
+  }
 }

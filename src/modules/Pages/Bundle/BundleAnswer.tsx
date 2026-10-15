@@ -1,7 +1,8 @@
 import ReactMarkdown from 'react-markdown';
 import { ArrowLeftToLineIcon, ListRestartIcon } from 'lucide-react';
 import { useCodeStore } from '>/services/stores';
-import { ScreenLoader, FileBlock, CodeBlock } from '>/modules';
+import { ScreenLoader, FileBlock, MarkdownComponents } from '>/modules';
+import { fixMarkdown } from '>/services/utils';
 
 export const BundleAnswer = () => {
   const { bundleResponse, bundleStream } = useCodeStore(({ state }) => ({
@@ -60,8 +61,8 @@ export const BundleAnswer = () => {
             <div className='page-section'>
               <h2>Reasoning:</h2>
               <div className='prose max-w-none'>
-                <ReactMarkdown components={{ code: CodeBlock }}>
-                  {reasoning}
+                <ReactMarkdown components={MarkdownComponents}>
+                  {fixMarkdown(reasoning)}
                 </ReactMarkdown>
               </div>
             </div>

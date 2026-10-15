@@ -71,15 +71,23 @@ export type CodeStoreActions = {
 
   setActivePrompt: (prompt: string) => void;
   getActivePrompt: () => string;
+  getActiveBundleId: () => number | undefined;
   setActiveBundleId: (bundleId?: number) => void;
 
   setBundleStream: (mode: BundleStream) => void;
   setBundleResponse: (response: FrontRequest) => void;
 
-  setBundleSession: (session: BundleSession) => void;
+  setBundleSession: (session?: BundleSession) => void;
 };
 
 export type CodeStore = StoreState & CodeStoreActions;
+
+const initialBundleSession: BundleSession = {
+  selectedFiles: [],
+  activePaths: [],
+  activePrompt: '',
+  bundleStream: 'idle',
+};
 
 const initialState: StoreState = {
   selectedFiles: [],
@@ -188,6 +196,10 @@ export const codeStoreActions: CodeStoreActions = {
   setViewFile: (file) => {
     setAuto({ activeFile: file });
   },
+
+  getActiveBundleId: () => {
+    return get().activeBundleId;
+  },
   setActiveBundleId: (bundleId) => {
     setAuto({ activeBundleId: bundleId });
   },
@@ -195,7 +207,7 @@ export const codeStoreActions: CodeStoreActions = {
   setBundleSession: (session) => {
     setAuto((state) => ({
       ...state,
-      ...session,
+      ...(session ?? initialBundleSession),
     }));
   },
 

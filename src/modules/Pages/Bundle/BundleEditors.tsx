@@ -51,10 +51,10 @@ export const BundleEditors = ({
 
       <div
         onMouseDown={handleMouseDown}
-        className='h-2 shrink-0 bg-gray-700 hover:bg-blue-500 cursor-row-resize w-full flex items-center justify-center transition-colors select-none'
+        className='page-splitter-resize'
         title='Drag to resize editors'
       >
-        <div className='w-8 h-1 bg-gray-400 rounded-full' />
+        <div className='handle' />
       </div>
 
       <div

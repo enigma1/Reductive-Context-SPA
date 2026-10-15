@@ -4,7 +4,8 @@
 */
 import ReactMarkdown from 'react-markdown';
 import { useGetBundle } from '>/services/queryHooks';
-import { ScreenLoader, CodeBlock } from '>/modules';
+import { fixMarkdown } from '>/services/utils';
+import { ScreenLoader, MarkdownComponents } from '>/modules';
 
 type BundleInfoDlgProps = {
   bundleId: number;
@@ -32,8 +33,8 @@ export const BundleInfoDlg = ({ bundleId }: BundleInfoDlgProps) => {
         <div className='area-content'>
           <div className='space-y-2'>
             <div className='max-w-none'>
-              <ReactMarkdown components={{ code: CodeBlock }}>
-                {bundleContent}
+              <ReactMarkdown components={MarkdownComponents}>
+                {fixMarkdown(bundleContent)}
               </ReactMarkdown>
             </div>
           </div>

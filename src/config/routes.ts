@@ -1,3 +1,6 @@
+/* File: src/config/routes.ts
+  All routes definitions for front and back-ends
+*/
 type Endpoint = Record<string, string>;
 
 export type AllRoutes = {

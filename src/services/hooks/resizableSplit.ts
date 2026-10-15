@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 
-export const useResizableSplit = (initialHeight = 50) => {
+export const useResizableSplit = (initialHeight = 20) => {
   const [upperHeight, setUpperHeight] = useState(initialHeight);
   const containerRef = useRef<HTMLDivElement>(null);
   const isDraggingRef = useRef(false);

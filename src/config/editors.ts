@@ -1,3 +1,6 @@
+/* File: src/config/editors.ts
+  Extension Language wrappers for monaco and markdown
+*/
 type ExtensionLanguage = Record<string, { monaco: string; markdown: string }>;
 let extToLanguage: ExtensionLanguage = {};
 

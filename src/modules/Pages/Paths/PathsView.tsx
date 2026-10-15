@@ -1,6 +1,12 @@
+import { useState } from 'react';
 import { useNavigate } from 'react-router';
 import { ListRestartIcon, FolderDotIcon, CirclePileIcon } from 'lucide-react';
-import { useGetPaths, useCreateBundle } from '>/services/queryHooks';
+import {
+  useGetPaths,
+  useCreateBundle,
+  useSetBundle,
+  useGetBundle,
+} from '>/services/queryHooks';
 import {
   useCodeStore,
   dialogStoreActions,
@@ -8,49 +14,53 @@ import {
 } from '>/services/stores';
 import { routes } from '>/config';
 import { ScreenLoader, dialogFactories } from '>/modules';
-import type {
-  FileNode,
-  CreateBundleRequest,
-  CreateBundleResponse,
-} from '>/contracts';
+import type { CreateBundleResponse } from '>/contracts';
 import { FileSelector } from './FileSelector';
 
 export const PathsView = () => {
   const navigate = useNavigate();
 
   const {
+    activeBundleId,
     activePrompt,
     currentPaths,
-    selectedFiles,
     getSelectedFiles,
     setActiveBundleId,
     getActivePrompt,
   } = useCodeStore(({ state, api }) => ({
+    activeBundleId: state.activeBundleId,
     activePrompt: state.activePrompt,
-    selectedFiles: state.selectedFiles,
     currentPaths: state.activePaths,
     getSelectedFiles: api.getAllSelectedFiles,
     setActiveBundleId: api.setActiveBundleId,
     getActivePrompt: api.getActivePrompt,
   }));
 
-  const { paths, isFetching, refetch } = useGetPaths(
+  const { paths, isPathFetching, refetch } = useGetPaths(
     { paths: currentPaths },
     ({ state, query }) => ({
       paths: state.paths,
-      isFetching: query.isFetching,
+      isPathFetching: query.isFetching,
       refetch: query.refetch,
     }),
   );
 
-  const { mutate } = useCreateBundle(({ api }) => ({
-    mutate: api.mutate,
+  const { mutateCreate, isCreatePending } = useCreateBundle(
+    ({ api, query }) => ({
+      mutateCreate: api.mutate,
+      isCreatePending: query.isPending,
+    }),
+  );
+
+  const { mutateSet, isSetPending } = useSetBundle(({ api, query }) => ({
+    mutateSet: api.mutate,
+    isSetPending: query.isPending,
   }));
 
   // ----------------
   // No-Hooks Section
   // ----------------
-  const isBusy = isFetching;
+  const isBusy = isPathFetching || isCreatePending || isSetPending;
   if (isBusy) {
     return <ScreenLoader />;
   }
@@ -69,7 +79,7 @@ export const PathsView = () => {
       setActiveBundleId();
       messageStoreActions.addMessage({
         content: {
-          text: 'Bundle Creation failed. Please check endpoint and try again.',
+          text: 'Bundle failed. Please check endpoint and try again.',
           duration: 8000,
         },
       });
@@ -78,8 +88,22 @@ export const PathsView = () => {
 
   const onCreateBundle = () => {
     const prompt = getActivePrompt();
-    mutate(
+    mutateCreate(
       { rootPaths: currentPaths, paths: getSelectedFiles(), prompt },
+      callbacks,
+    );
+  };
+
+  const onSetBundle = () => {
+    if (!activeBundleId) return;
+    const prompt = getActivePrompt();
+    mutateSet(
+      {
+        bundleId: activeBundleId,
+        rootPaths: currentPaths,
+        paths: getSelectedFiles(),
+        prompt,
+      },
       callbacks,
     );
   };
@@ -100,17 +124,17 @@ export const PathsView = () => {
     <>
       <div className='page-heading'>
         <div className='page-toolbar'>
-          <div className='page-title'>Paths View</div>
+          <div className='page-title'>{`Paths View ${activeBundleId ? 'for bundle ' + activeBundleId : '(New Bundle)'}`}</div>
           <div className='page-actions'>
             <button
               className='btn'
-              onClick={onCreateBundle}
-              title='Request a bundle from the given selected bundles'
-              data-status={
-                selectedFiles.length === 0 || activePrompt.length < 10
-                  ? 'disabled'
-                  : undefined
+              onClick={activeBundleId ? onSetBundle : onCreateBundle}
+              title={
+                activeBundleId
+                  ? `Update Bundle ${activeBundleId}`
+                  : 'Create a new bundle'
               }
+              data-status={activePrompt.length < 10 ? 'disabled' : undefined}
             >
               <CirclePileIcon size={24} />
             </button>

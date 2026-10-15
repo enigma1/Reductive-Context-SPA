@@ -65,7 +65,7 @@
   }
 
   .side-list-item {
-    @apply w-full min-w-0 items-center px-4 py-2 text-left border-be;
+    @apply w-full min-w-0 items-center py-2 text-left border-be;
     color: var(--color-text);
     border-color: var(--color-border);
 

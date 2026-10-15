@@ -4,6 +4,7 @@
 import { useEffect } from 'react';
 import { useCodeStore } from '>/services/stores/codeStore';
 import { useGetBundle } from '>/services/queryHooks';
+import { transformUserFiles } from '>/services/utils';
 
 export const useBundleSync = () => {
   const { activeBundleId, setBundleSession } = useCodeStore(
@@ -13,7 +14,7 @@ export const useBundleSync = () => {
     }),
   );
 
-  const { bundleId, rootPaths, prompt, isFetched } = useGetBundle(
+  const { bundleId, rootPaths, prompt, userFiles, isFetched } = useGetBundle(
     {
       bundleId: activeBundleId ?? 0,
     },
@@ -22,6 +23,7 @@ export const useBundleSync = () => {
       bundleId: state.bundleId,
       rootPaths: state.rootPaths,
       prompt: state.prompt,
+      userFiles: state.userFiles,
     }),
   );
 
@@ -31,7 +33,7 @@ export const useBundleSync = () => {
       activePrompt: prompt,
       bundleStream: 'idle',
       activePaths: rootPaths,
-      selectedFiles: [],
+      selectedFiles: transformUserFiles(userFiles),
     });
   }, [isFetched, activeBundleId, rootPaths, prompt]);
 };

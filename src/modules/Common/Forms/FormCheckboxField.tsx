@@ -13,6 +13,7 @@ type CheckboxFieldProps = Omit<
   onChange: (checked: boolean) => void;
   indeterminate?: boolean;
   wrapLayout?: 'inline' | 'stack';
+  wrapClass?: string;
   labelClass?: string;
 };
 
@@ -26,6 +27,7 @@ export const CheckboxField = ({
   onChange,
   wrapLayout = 'inline',
   labelClass,
+  wrapClass,
   indeterminate = false,
   disabled = false,
 }: CheckboxFieldProps) => {
@@ -44,6 +46,7 @@ export const CheckboxField = ({
       label={label ?? id}
       labelClass={labelClass}
       wrapLayout={wrapLayout}
+      wrapClass={wrapClass}
       $notice={notice}
       $status={status}
     >

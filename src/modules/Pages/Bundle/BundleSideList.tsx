@@ -62,7 +62,7 @@ export const BundleSideList = () => {
               return (
                 <div className='btn-group side-list-item' key={`${row}-${idx}`}>
                   <button
-                    className='btn-micro'
+                    className='btn-square border-0 error'
                     onClick={() => onDeleteBundle(idx)}
                   >
                     <FileXIcon size={16} />

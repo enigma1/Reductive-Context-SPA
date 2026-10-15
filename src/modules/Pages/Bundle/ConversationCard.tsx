@@ -1,3 +1,6 @@
+/* File: src/modules/Pages/Bundle/ConversationCard.tsx
+  displays the details of a conversation entry
+*/
 import { useState } from 'react';
 import ReactMarkdown from 'react-markdown';
 import { CircleChevronLeftIcon } from 'lucide-react';

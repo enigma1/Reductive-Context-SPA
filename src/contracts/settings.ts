@@ -25,6 +25,7 @@ export const UserPrefsConfigSchema = z.object({
   frontPort: z.number().int().min(1).max(65535),
   theme: noTrim('theme').min(1).max(256),
   sidebarWidth: z.number().int().positive(),
+  promptSplit: z.number().int().positive(),
   layout: LayoutPrefsSchema,
   conversationMode: z.enum(conversationMode),
 });

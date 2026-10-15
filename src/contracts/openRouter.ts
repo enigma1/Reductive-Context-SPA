@@ -1,3 +1,6 @@
+/* File: src/contracts/openRouter.ts
+  Schema contract fields for LLMs via openrouter
+*/
 import { z } from 'zod';
 
 export const OpenRouterModelSchema = z.object({

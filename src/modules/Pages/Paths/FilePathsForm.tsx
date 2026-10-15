@@ -9,12 +9,22 @@ import {
   codeStoreActions,
   formsStoreActions,
 } from '>/services/stores';
-import { InputField, DialogContent, ErrorDetails, ComboField } from '>/modules';
+import {
+  InputField,
+  NumberField,
+  DialogContent,
+  ErrorDetails,
+  ComboField,
+  CheckboxField,
+} from '>/modules';
 import type { FolderPath } from '>/contracts';
 import type { CommonDialogHandlers } from '>/types';
 
 // const blankPath = (path = '') => ({ id: crypto.randomUUID(), path });
-const blankPath = (path = '') => ({ path });
+const blankPath = (path = '', depth?: number) => ({
+  path,
+  depth,
+});
 const getFormInitialPaths = () => {
   const paths = codeStoreActions.getCurrentPaths();
   return paths.length > 0
@@ -36,6 +46,7 @@ export const FilePathsForm = ({ formHandlers }: FilePathsFormProps) => {
   const form = useSimpleForm(
     {
       paths: getFormInitialPaths(),
+      isNewSet: codeStoreActions.getActiveBundleId() ? false : true,
     },
     { autoTouch: true },
   );
@@ -62,6 +73,10 @@ export const FilePathsForm = ({ formHandlers }: FilePathsFormProps) => {
 
   const onConfirm = async () => {
     form.saveProfile();
+    if (form.values.isNewSet) {
+      codeStoreActions.setActiveBundleId();
+      codeStoreActions.setBundleSession();
+    }
     codeStoreActions.setCurrentPaths(form.values.paths);
 
     if (location.pathname !== routes.front.pathsView) {
@@ -143,6 +158,21 @@ export const FilePathsForm = ({ formHandlers }: FilePathsFormProps) => {
         <div className='area-spacer'>
           <h1 className='area-title'>Set Root File Paths</h1>
           <div className='area-actions'>
+            <CheckboxField
+              id='newPathsSet'
+              label='New Set:'
+              checked={form.values.isNewSet}
+              wrapClass='label-left'
+              onChange={(checked) => {
+                if (checked) {
+                  form.setValue('isNewSet', true);
+                } else {
+                  const activeId = codeStoreActions.getActiveBundleId();
+                  if (activeId) form.setValue('isNewSet', false);
+                }
+              }}
+            />
+
             <ComboField
               id={'form-select'}
               label={'Presets:'}
@@ -173,32 +203,54 @@ export const FilePathsForm = ({ formHandlers }: FilePathsFormProps) => {
 
             return (
               <div key={`path-key-${idx}`} className='wrapper space-y-1'>
-                <InputField
-                  id={`query-input-${idx}`}
-                  label={`Path-${idx + 1}:`}
-                  value={entry.path}
-                  title={`Path-${idx}`}
-                  $status={
-                    form.submitAttempted && invalid ? 'error' : undefined
-                  }
-                  $notice={invalid ? 'Required' : undefined}
-                  onValueChange={(value) => {
-                    const updatedPaths = [...form.values.paths];
-                    updatedPaths[idx] = blankPath(value);
-                    form.setValue('paths', updatedPaths);
-                  }}
-                  placeholder='Enter Path'
-                />
+                <div className='one-line'>
+                  <InputField
+                    id={`path-input-${idx}`}
+                    label={`Path-${idx + 1}:`}
+                    value={entry.path}
+                    title={`Path-${idx + 1}`}
+                    $status={
+                      form.submitAttempted && invalid ? 'error' : undefined
+                    }
+                    $notice={invalid ? 'Required' : undefined}
+                    onValueChange={(value) => {
+                      const updatedPaths = [...form.values.paths];
+                      updatedPaths[idx] = { ...updatedPaths[idx], path: value };
+                      form.setValue('paths', updatedPaths);
+                    }}
+                    placeholder='Enter Path'
+                  />
+                  <NumberField
+                    id={`depth-input-${idx}`}
+                    label={`Depth-${idx + 1}:`}
+                    value={entry.depth}
+                    title={`Depth-${idx + 1}`}
+                    $status={
+                      form.submitAttempted && invalid ? 'error' : undefined
+                    }
+                    $notice={invalid ? 'Required' : undefined}
+                    onValueChange={(value) => {
+                      const updatedPaths = [...form.values.paths];
+                      const numericDepth = value ? Number(value) : undefined;
+                      updatedPaths[idx] = {
+                        ...updatedPaths[idx],
+                        depth: numericDepth,
+                      };
+                      form.setValue('paths', updatedPaths);
+                    }}
+                    placeholder='Enter Depth'
+                  />
 
-                {form.values.paths.length > 1 && (
-                  <button
-                    type='button'
-                    className='btn-icon'
-                    onClick={() => onRemovePath(idx)}
-                  >
-                    <SquareXIcon size={16} />
-                  </button>
-                )}
+                  {form.values.paths.length > 1 && (
+                    <button
+                      type='button'
+                      className='btn-square border-0 warn self-end mb-0.75 shadow-md'
+                      onClick={() => onRemovePath(idx)}
+                    >
+                      <SquareXIcon size={24} />
+                    </button>
+                  )}
+                </div>
               </div>
             );
           })}
