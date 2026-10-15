@@ -1,6 +1,11 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router';
-import { ListRestartIcon, FolderDotIcon, CirclePileIcon } from 'lucide-react';
+import {
+  LayersPlusIcon,
+  ListRestartIcon,
+  FolderDotIcon,
+  DatabasePlusIcon,
+} from 'lucide-react';
 import {
   useGetPaths,
   useCreateBundle,
@@ -126,18 +131,25 @@ export const PathsView = () => {
         <div className='page-toolbar'>
           <div className='page-title'>{`Paths View ${activeBundleId ? 'for bundle ' + activeBundleId : '(New Bundle)'}`}</div>
           <div className='page-actions'>
-            <button
-              className='btn'
-              onClick={activeBundleId ? onSetBundle : onCreateBundle}
-              title={
-                activeBundleId
-                  ? `Update Bundle ${activeBundleId}`
-                  : 'Create a new bundle'
-              }
-              data-status={activePrompt.length < 10 ? 'disabled' : undefined}
-            >
-              <CirclePileIcon size={24} />
-            </button>
+            {activeBundleId ? (
+              <button
+                className='btn'
+                onClick={activeBundleId ? onSetBundle : onCreateBundle}
+                title={`Update Bundle ${activeBundleId}`}
+                data-status={activePrompt.length < 10 ? 'disabled' : undefined}
+              >
+                <LayersPlusIcon size={24} />
+              </button>
+            ) : (
+              <button
+                className='btn'
+                onClick={onCreateBundle}
+                title={'Create a new bundle'}
+                data-status={activePrompt.length < 10 ? 'disabled' : undefined}
+              >
+                <DatabasePlusIcon size={24} />
+              </button>
+            )}
 
             <button
               className='btn-secondary'

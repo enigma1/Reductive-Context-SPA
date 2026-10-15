@@ -184,7 +184,6 @@ export const SetBundleRequestSchema = z.object({
 export type SetBundleRequest = z.infer<typeof SetBundleRequestSchema>;
 
 export const SetBundleResponseSchema = BasicResponseSchema.extend({
-  outputTokens: z.number().int().nonnegative(),
   inputTokens: z.number().int().nonnegative(),
   bundleId: z.number().int().positive(),
 });

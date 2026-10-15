@@ -22,12 +22,16 @@ The frontend does not directly access the filesystem or communicate with the LLM
 
 ## Current API
 
-| API Command          | Data Parameters                      | Result                                  |
-| -------------------- | ------------------------------------ | --------------------------------------- |
-| `POST /api/getPaths` | { root, config }                     | returns folders with files under        |
-| `POST /api/readFile` | { FileNode }                         | Return file contents                    |
-| `POST /api/select`   | { selected folders/files/functions } | returns assembled prompt + IDs          |
-| `POST /api/ask`      | { question, prompt }                 | returns raw LLM response + parsed edits |
+| API Command               | Data Parameters         | Result                                |
+| ------------------------- | ----------------------- | ------------------------------------- |
+| `POST /api/getPaths`      | { root, config }        | returns folders with files under      |
+| `POST /api/readFile`      | { FileNode }            | Return file contents                  |
+| `GET /api/getLanguages`   | n/a                     | Returns supported file languages      |
+| `GET /api/getBundleList`  | n/a                     | Returns all bundles from the database |
+| `POST /api/getBundle`     | { identifier }          | Return bundle details                 |
+| `POST /api/setBundle`     | { SetBundleRequest }    | Updates an existing bundle            |
+| `POST /api/deleteBundles` | [bundleIds]             | Deletes the specified bundles         |
+| `POST /api/submitBundle`  | { SubmitBundleRequest } | Sends the user bundle to the LLM      |
 
 ### Planned Workflow
 
@@ -54,6 +58,7 @@ The intended workflow is:
 - Custom Store: application state management with selector-based access
 - Custom Forms with state and presets support
 - Monaco Editor for code view and code merges
+- React Markdown for prompts, summary, reasoning
 - Axios API with manifest-driven mock setup and error resolution
 - TailwindCSS with custom multi-theme options
 
