@@ -97,4 +97,27 @@
   .animate-top-slide {
     animation: top-slide 400ms ease-out forwards;
   }
+
+  .content-flash {
+    position: relative;
+  }
+
+  .content-flash::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background-color: var(--state-flash);
+    animation: content-flash-overlay 1200ms ease-out forwards;
+    pointer-events: none;
+  }
+
+  @keyframes content-flash-overlay {
+    0% {
+      opacity: 1;
+    }
+
+    100% {
+      opacity: 0;
+    }
+  }
 }

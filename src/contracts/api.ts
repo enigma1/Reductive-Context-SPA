@@ -99,6 +99,20 @@ export const ReadFileContract = {
   responseSchema: ReadFileResponseSchema,
 };
 
+export const WriteFileRequestSchema = z.object({
+  path: z.string(),
+  name: z.string(),
+  content: z.string(),
+});
+export type WriteFileRequest = z.infer<typeof WriteFileRequestSchema>;
+
+export const WriteFileResponseSchema = BasicResponseSchema;
+export type WriteFileResponse = z.infer<typeof WriteFileResponseSchema>;
+export const WriteFileContract = {
+  requestSchema: WriteFileRequestSchema,
+  responseSchema: WriteFileResponseSchema,
+};
+
 const codeMode = ['code', 'signature'] as const;
 export type FileMode = (typeof codeMode)[number];
 

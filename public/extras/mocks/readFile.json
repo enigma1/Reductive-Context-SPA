@@ -1,6 +1,6 @@
 {
   "ok": true,
-  "message": "Paths and Files found",
+  "message": "File read successfully",
   "aiStatus": {
     "active": true,
     "model": "some-llm-v-1"

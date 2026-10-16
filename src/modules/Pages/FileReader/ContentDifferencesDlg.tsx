@@ -5,22 +5,20 @@
 import { useRef, useMemo, useEffect } from 'react';
 import { DiffEditor } from '@monaco-editor/react';
 import * as monaco from 'monaco-editor';
-import { RecommendedFile } from '>/contracts';
-import { useDialogStore } from '>/services/stores';
-import { useReadFile } from '>/services/queryHooks';
+import { RecommendedFile, WriteFileResponse } from '>/contracts';
+import { useDialogStore, messageStoreActions } from '>/services/stores';
+import { useReadFile, useWriteFile } from '>/services/queryHooks';
 import { cx, getLanguageFromFilename, getFileFromPath } from '>/services/utils';
 import { ScreenLoader, DialogContent, ErrorDetails } from '>/modules';
 import { CommonDialogHandlers } from '>/types';
 
 type ContentDifferencesProps = {
   recommendedFile: RecommendedFile;
-  onMerge: () => void;
   formHandlers: CommonDialogHandlers;
 };
 
 export const ContentDifferencesDlg = ({
   recommendedFile,
-  onMerge,
   formHandlers,
 }: ContentDifferencesProps) => {
   const diffRef = useRef<monaco.editor.IStandaloneDiffEditor | null>(null);
@@ -28,6 +26,30 @@ export const ContentDifferencesDlg = ({
   const onMount = (editor: monaco.editor.IStandaloneDiffEditor) => {
     diffRef.current = editor;
   };
+
+  const writeCallbacks = {
+    onSuccess: (data: WriteFileResponse) => {
+      if (data.ok) {
+      } else {
+      }
+    },
+    onError: () => {
+      messageStoreActions.addMessage({
+        content: {
+          text: `Write Operation Failed. Please check if file ${recommendedFile.path} exists and if it's writable.`,
+          duration: 8000,
+        },
+      });
+    },
+  };
+
+  const { mutate: mutateWriting, isPending: isPendingWriting } = useWriteFile(
+    ({ api, query }) => ({
+      isPending: query.isPending,
+      mutate: api.mutate,
+    }),
+    writeCallbacks,
+  );
 
   const {
     content: contentOriginal,
@@ -66,10 +88,24 @@ export const ContentDifferencesDlg = ({
       }
     };
   }, []);
+
+  const onConfirm = () => {
+    const pathFile = getFileFromPath(recommendedFile.path);
+    mutateWriting({
+      ...pathFile,
+      content: recommendedFile.content,
+    });
+  };
+
+  useEffect(() => {
+    formHandlers.confirm = onConfirm;
+  }, [onConfirm]);
+
   // ----------------
   // No-Hooks Section
   // ----------------
-  const isBusy = isFetchingOriginal;
+
+  const isBusy = isFetchingOriginal || isPendingWriting;
   if (isBusy) return <ScreenLoader />;
 
   const handleError = () => {

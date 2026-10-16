@@ -17,6 +17,7 @@ export const routes: AllRoutes = {
     invalid: '/api/invalid',
     getPaths: '/api/get-paths',
     readFile: '/api/read-file',
+    writeFile: '/api/write-file',
     createBundle: '/api/create-bundle',
     getBundle: '/api/get-bundle',
     setBundle: '/api/set-bundle',

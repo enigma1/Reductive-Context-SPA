@@ -9,6 +9,8 @@ import type {
   SubmitBundleRequest,
   DeleteBundlesRequest,
   DeleteBundlesResponse,
+  WriteFileRequest,
+  WriteFileResponse,
 } from '>/contracts';
 import { createMutationHook } from './mutationBuilder';
 import { queryKeys } from './defs';
@@ -78,6 +80,22 @@ export const useDeleteBundles = createMutationHook<
     cache: async (qc) => {
       await qc.invalidateQueries({
         queryKey: queryKeys.getBundleList(),
+      });
+    },
+  },
+});
+
+export const useWriteFile = createMutationHook<
+  MutationFunction<WriteFileResponse, WriteFileRequest>
+>({
+  fn: apiPoints.writeFile,
+  state: {
+    ...defaultResponse,
+  },
+  options: {
+    cache: async (qc, _, params) => {
+      await qc.invalidateQueries({
+        queryKey: queryKeys.readFile({ path: params.path, name: params.name }),
       });
     },
   },

@@ -8,6 +8,7 @@ import {
   GetTableDataContract,
   GetPathsContract,
   ReadFileContract,
+  WriteFileContract,
   CreateBundleContract,
   GetBundleContract,
   SetBundleContract,
@@ -24,6 +25,8 @@ import type {
   GetPathsResponse,
   ReadFileRequest,
   ReadFileResponse,
+  WriteFileRequest,
+  WriteFileResponse,
   CreateBundleRequest,
   CreateBundleResponse,
   GetBundleRequest,
@@ -99,6 +102,11 @@ const readFile = (data: ReadFileRequest) =>
     apiClient.post(routes.back.readFile, data, ReadFileContract),
   );
 
+const writeFile = (data: WriteFileRequest) =>
+  apiCall<WriteFileResponse>(() =>
+    apiClient.post(routes.back.writeFile, data, WriteFileContract),
+  );
+
 const createBundle = (data: CreateBundleRequest) =>
   apiCall<CreateBundleResponse>(() =>
     apiClient.post(routes.back.createBundle, data, CreateBundleContract),
@@ -160,6 +168,7 @@ export const apiPoints = {
   delayed,
   getPaths,
   readFile,
+  writeFile,
   createBundle,
   getBundle,
   setBundle,

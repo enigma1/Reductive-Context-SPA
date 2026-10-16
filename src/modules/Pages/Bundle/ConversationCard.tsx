@@ -5,7 +5,7 @@ import { useState } from 'react';
 import ReactMarkdown from 'react-markdown';
 import { CircleChevronLeftIcon, ScaleIcon, CopyIcon } from 'lucide-react';
 import { Conversation, RecommendedFile } from '>/contracts';
-import { parseBundleFiles } from '>/services/utils';
+import { cx, parseBundleFiles } from '>/services/utils';
 import {
   fixMarkdown,
   toLocalTime,
@@ -19,8 +19,9 @@ type ConversationCardProps = {
 };
 
 export const ConversationCard = ({ entry }: ConversationCardProps) => {
+  const [flashIndex, setFlashIndex] = useState<number | null>(null);
   const [isOpen, setIsOpen] = useState<boolean>(false);
-  const [contentDifferences, setContentDifferences] = useState<boolean>(false);
+
   const {
     filesJson,
     createdAt,
@@ -31,17 +32,20 @@ export const ConversationCard = ({ entry }: ConversationCardProps) => {
     reasoning,
   } = entry;
 
+  // ----------------
+  // No-Hooks Section
+  // ----------------
   const pathFiles = parseBundleFiles(filesJson);
   const entryTime = toLocalTime(createdAt);
 
-  const onCopy = () => {};
-
-  const onMerge = () => {};
+  const onCopy = (content: string, idx: number) => {
+    setFlashIndex(idx);
+    navigator.clipboard.writeText(content);
+  };
 
   const onContentCompare = (file: RecommendedFile) => {
-    setContentDifferences(true);
     dialogStoreActions.openDialog({
-      payload: dialogFactories.contentDifferences({ file, onMerge }),
+      payload: dialogFactories.contentDifferences({ file }),
     });
   };
 
@@ -94,19 +98,20 @@ export const ConversationCard = ({ entry }: ConversationCardProps) => {
             </h4>
           )}
 
-          {pathFiles.map((file, fileIndex) => {
+          {pathFiles.map((file, idx) => {
             const language = getLanguageFromFilename({
               filePath: file.path,
               view: 'markdown',
             });
 
             return (
-              <section key={`${file.path}-${fileIndex}`} className='max-w-none'>
+              <section key={`${file.path}-${idx}`} className='max-w-none'>
                 <div className='one-line'>
-                  <h4 className='wrapper py-2'>
-                    {`${fileIndex + 1}. ${file.path}`}
-                  </h4>
-                  <button className='btn-square' onClick={onCopy}>
+                  <h4 className='wrapper py-2'>{`${idx + 1}. ${file.path}`}</h4>
+                  <button
+                    className='btn-square'
+                    onClick={() => onCopy(file.content, idx)}
+                  >
                     <CopyIcon size={18} />
                   </button>
                   {!file.isNew && (
@@ -137,8 +142,12 @@ export const ConversationCard = ({ entry }: ConversationCardProps) => {
                           <CodeBlock
                             {...props}
                             language={language}
-                            wrapClasses='page-border'
+                            wrapClasses={cx(
+                              'page-border',
+                              flashIndex === idx && 'content-flash',
+                            )}
                             className={cName}
+                            onAnimationEnd={() => setFlashIndex(null)}
                           >
                             {children}
                           </CodeBlock>

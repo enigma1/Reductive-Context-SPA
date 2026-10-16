@@ -89,23 +89,18 @@ const setFilePaths = () => {
 
 type ContentDifferencesProps = {
   file: RecommendedFile;
-  onMerge: () => void;
 };
-const contentDifferences = ({ file, onMerge }: ContentDifferencesProps) => {
+const contentDifferences = ({ file }: ContentDifferencesProps) => {
   const handlers: CommonDialogHandlers = {
     confirm: () => {},
   };
 
   const labels = [undefined, 'Merge'];
   const payload: DialogPayload = {
-    initialSize: 'xl',
+    initialSize: 'xxl',
     caption: 'File Differences',
     component: (
-      <ContentDifferencesDlg
-        onMerge={onMerge}
-        recommendedFile={file}
-        formHandlers={handlers}
-      />
+      <ContentDifferencesDlg recommendedFile={file} formHandlers={handlers} />
     ),
     variant: 'warn',
     actions: dialogActions

@@ -1,0 +1,8 @@
+{
+  "ok": true,
+  "message": "File updated successfully",
+  "aiStatus": {
+    "active": true,
+    "model": "some-llm-v-1"
+  }
+}

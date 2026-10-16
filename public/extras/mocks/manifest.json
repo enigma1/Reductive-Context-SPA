@@ -4,6 +4,7 @@
   "getTableData": "/extras/mocks/getTableData.json",
   "getPaths": "/extras/mocks/getPaths.json",
   "readFile": "/extras/mocks/readFile.json",
+  "writeFile": "/extras/mocks/writeFile.json",
   "createBundle": "/extras/mocks/createBundle.json",
   "getBundle": "/extras/mocks/getBundle.json",
   "setBundle": "/extras/mocks/setBundle.json",
