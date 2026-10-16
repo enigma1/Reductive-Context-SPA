@@ -1,5 +1,5 @@
-export * from './BundleView';
-export * from './BundleList';
+export * from './BundleViewRoute';
+export * from './BundleListRoute';
 export * from './BundleAnswer';
 export * from './BundleInfoDlg';
 export * from './BundleSideList';

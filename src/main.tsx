@@ -14,13 +14,13 @@ import {
   AppBootstrap,
   Home,
   NetworkDown,
-  BundleView,
-  BundleList,
+  BundleViewRoute,
+  BundleListRoute,
   BundleAnswer,
-  PathsView,
+  PathsViewRoute,
   Reader,
   DataTable,
-  OpenRouterModelsView,
+  OpenRouterModelsViewRoute,
 } from '>/modules';
 
 const readFileLoader = () => {
@@ -43,11 +43,11 @@ export const browserRouter = createBrowserRouter([
       },
       {
         path: routes.front.pathsView,
-        element: <PathsView />,
+        element: <PathsViewRoute />,
       },
       {
         path: routes.front.bundleView,
-        element: <BundleView />,
+        element: <BundleViewRoute />,
       },
       {
         path: routes.front.readFile,
@@ -56,7 +56,7 @@ export const browserRouter = createBrowserRouter([
       },
       {
         path: routes.front.bundleList,
-        element: <BundleList />,
+        element: <BundleListRoute />,
       },
       {
         path: routes.front.bundleAnswer,
@@ -64,7 +64,7 @@ export const browserRouter = createBrowserRouter([
       },
       {
         path: routes.front.openRouterModelsView,
-        element: <OpenRouterModelsView />,
+        element: <OpenRouterModelsViewRoute />,
       },
 
       {

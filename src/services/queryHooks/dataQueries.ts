@@ -20,7 +20,7 @@ import type {
   GetOpenRouterModelsResponse,
 } from '>/contracts';
 import { apiPoints } from '>/services/api';
-import { getOnlyColumnsFromResult, snakeToCamel } from '>/services/utils';
+import { getOnlyColumnsFromResult } from '>/services/utils';
 import {
   defaultResponse,
   defaultTableResponse,
@@ -28,7 +28,7 @@ import {
   BUNDLE_ID,
   BUNDLE_PROMPT,
 } from '>/config';
-import type { Primitive, JsonArray, JsonTypes, JsonObject } from '>/types';
+import type { JsonArray } from '>/types';
 import { createDataQueryHook } from './dataQueryBuilder';
 import { queryKeys } from './defs';
 
@@ -85,7 +85,7 @@ export const useReadFile = createDataQueryHook<
   },
   initialData: () => ({
     ...defaultResponse,
-    code: '',
+    content: '',
   }),
   enabled: (fileNode) => !!fileNode,
 });
@@ -199,9 +199,3 @@ export const useOpenRouterModels = createDataQueryHook<
     models: [],
   }),
 });
-
-// // Call site — same signature as before
-// const { state, query } = useTableColumnsInfoHook(
-//   { database, table },
-//   // optional selector
-// );

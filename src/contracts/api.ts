@@ -80,14 +80,17 @@ export const GetPathsContract = {
   responseSchema: GetPathsResponseSchema,
 };
 
-export const ReadFileRequestSchema = z.object({
+export const FilePartsSchema = z.object({
   path: z.string(),
   name: z.string(),
 });
+export type FileParts = z.infer<typeof FilePartsSchema>;
+
+export const ReadFileRequestSchema = FilePartsSchema;
 export type ReadFileRequest = z.infer<typeof ReadFileRequestSchema>;
 
 export const ReadFileResponseSchema = BasicResponseSchema.extend({
-  code: z.string(),
+  content: z.string(),
 });
 export type ReadFileResponse = z.infer<typeof ReadFileResponseSchema>;
 

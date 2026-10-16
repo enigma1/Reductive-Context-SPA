@@ -8,7 +8,17 @@ export const HeaderMenu = () => {
   return (
     <div className='menu'>
       <DropdownMenu label='Pages'>
-        <button onClick={() => {}}>Some Page</button>
+        <button
+          title='Set Root Files'
+          onClick={() => {
+            dialogStoreActions.openDialog({
+              payload: dialogFactories.setFilePaths(),
+            });
+          }}
+        >
+          Set Root Files
+        </button>
+        <Link to={routes.front.bundleList}>All Bundles</Link>
         <Link to={routes.front.home}>Go Home</Link>
       </DropdownMenu>
       <div className='menu-separator'>|</div>

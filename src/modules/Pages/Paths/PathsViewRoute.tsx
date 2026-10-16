@@ -5,6 +5,7 @@ import {
   ListRestartIcon,
   FolderDotIcon,
   DatabasePlusIcon,
+  ArrowLeftToLineIcon,
 } from 'lucide-react';
 import {
   useGetPaths,
@@ -22,7 +23,7 @@ import { ScreenLoader, dialogFactories } from '>/modules';
 import type { CreateBundleResponse } from '>/contracts';
 import { FileSelector } from './FileSelector';
 
-export const PathsView = () => {
+export const PathsViewRoute = () => {
   const navigate = useNavigate();
 
   const {
@@ -113,6 +114,10 @@ export const PathsView = () => {
     );
   };
 
+  const onGoBack = () => {
+    navigate(routes.front.bundleList);
+  };
+
   const onRefresh = () => {
     refetch();
   };
@@ -129,7 +134,16 @@ export const PathsView = () => {
     <>
       <div className='page-heading'>
         <div className='page-toolbar'>
-          <div className='page-title'>{`Paths View ${activeBundleId ? 'for bundle ' + activeBundleId : '(New Bundle)'}`}</div>
+          <div className='inline-wrapper'>
+            <button
+              className='btn-micro'
+              title='Back to the Bundles List'
+              onClick={onGoBack}
+            >
+              <ArrowLeftToLineIcon size={18} />
+            </button>
+            <div className='page-title'>{`Paths View ${activeBundleId ? 'for bundle ' + activeBundleId : '(New Bundle)'}`}</div>
+          </div>
           <div className='page-actions'>
             {activeBundleId ? (
               <button

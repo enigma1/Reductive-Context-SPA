@@ -28,7 +28,7 @@ export const Reader = () => {
   const { code, isFetching, refetch } = useReadFile(
     activeFile,
     ({ state, query }) => ({
-      code: state.code,
+      code: state.content,
       isFetching: query.isFetching,
       refetch: query.refetch,
     }),

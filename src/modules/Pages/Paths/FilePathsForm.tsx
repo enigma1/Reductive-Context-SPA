@@ -1,4 +1,4 @@
-import { useEffect, useMemo } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import { useNavigate, useLocation } from 'react-router';
 import { ServerPlusIcon, SquareXIcon } from 'lucide-react';
 import { routes } from '>/config';
@@ -40,6 +40,7 @@ type FilePathsFormProps = {
 };
 
 export const FilePathsForm = ({ formHandlers }: FilePathsFormProps) => {
+  const [preset, setPreset] = useState<number>(0);
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -48,7 +49,7 @@ export const FilePathsForm = ({ formHandlers }: FilePathsFormProps) => {
       paths: getFormInitialPaths(),
       isNewSet: codeStoreActions.getActiveBundleId() ? false : true,
     },
-    { autoTouch: true },
+    { autoTouch: true, presetFields: ['paths'] },
   );
   const { setButtonStatus } = useModal();
   const { errorResponse, clearError } = useDialogStore(({ state, api }) => ({
@@ -115,7 +116,7 @@ export const FilePathsForm = ({ formHandlers }: FilePathsFormProps) => {
         };
       });
     return presets;
-  }, [form.profileId]);
+  }, [form]);
 
   const handleChange = (option: string) => {
     const entry = formsStoreActions.getProfileEntry(
@@ -128,9 +129,10 @@ export const FilePathsForm = ({ formHandlers }: FilePathsFormProps) => {
     }
     const paths = entry.paths as FolderPath[];
 
+    setPreset(Number(option));
     form.setValue(
       'paths',
-      paths.map(({ path }) => blankPath(path)),
+      paths.map(({ path, depth }) => blankPath(path, depth)),
     );
   };
 
@@ -176,6 +178,7 @@ export const FilePathsForm = ({ formHandlers }: FilePathsFormProps) => {
             <ComboField
               id={'form-select'}
               label={'Presets:'}
+              value={String(preset)}
               wrapLayout='inline'
               wrapClass='label-left'
               $editable={false}

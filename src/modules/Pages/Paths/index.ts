@@ -1,2 +1,2 @@
-export * from './PathsView';
+export * from './PathsViewRoute';
 export * from './FilePathsForm';

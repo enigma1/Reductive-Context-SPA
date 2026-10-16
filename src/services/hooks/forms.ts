@@ -5,6 +5,7 @@ import isEqual from 'lodash-es/isEqual';
 
 type SimpleFormOptions = {
   autoTouch?: boolean;
+  presetFields?: string[];
 };
 
 export const useSimpleForm = <T extends Record<string, unknown>>(
@@ -14,7 +15,17 @@ export const useSimpleForm = <T extends Record<string, unknown>>(
   const { autoTouch = false } = options;
   const [values, setValues] = useState<T>(initialValues);
   const [touched, setTouched] = useState<Set<string>>(new Set());
-  const [profileId] = useState(() => keys(initialValues));
+  const [profileId] = useState(() => {
+    const { presetFields } = options;
+    if (!presetFields) return keys(initialValues);
+    const specificValues = presetFields.reduce((acc, item) => {
+      return {
+        ...acc,
+        [item]: initialValues[item],
+      };
+    }, {});
+    return keys(specificValues);
+  });
   const [submitAttempted, setSubmitAttempted] = useState(false);
 
   const saveProfile = useCallback(

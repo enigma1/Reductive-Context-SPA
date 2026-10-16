@@ -13,7 +13,7 @@ export const ConversationEntries = ({
   bundleId,
 }: ConversationEntriesProps) => {
   return (
-    <div className='space-y-2'>
+    <>
       {conversations.map((entry, idx) => {
         return (
           <ConversationCard
@@ -22,6 +22,6 @@ export const ConversationEntries = ({
           />
         );
       })}
-    </div>
+    </>
   );
 };

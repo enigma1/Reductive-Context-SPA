@@ -1,3 +1,7 @@
+/* File: BundleViewRoute.tsx
+  Route for showing a specified bundle's contents
+  including prompt, llm response, summary, reasoning, files
+*/
 import { useEffect } from 'react';
 import { useNavigate } from 'react-router';
 import { useConfigStore, useCodeStore } from '>/services/stores';
@@ -9,7 +13,7 @@ import { BundleEditors } from './BundleEditors';
 import { ConversationEntries } from './ConversationEntries';
 import { BundleHeader } from './BundleHeader';
 
-export const BundleView = () => {
+export const BundleViewRoute = () => {
   const navigate = useNavigate();
   const { conversationMode, setConversationMode } = useConfigStore(
     ({ state, api }) => ({
@@ -43,10 +47,14 @@ export const BundleView = () => {
   } = useBundleActions();
 
   useEffect(() => {
-    if (conversationMode === 'listing' && conversations.length === 0) {
+    if (
+      conversationMode === 'listing' &&
+      conversations.length === 0 &&
+      !isFetching
+    ) {
       setConversationMode('initial');
     }
-  }, [conversationMode, conversations]);
+  }, [conversationMode, conversations, isFetching]);
 
   // ----------------
   // No-Hooks Section

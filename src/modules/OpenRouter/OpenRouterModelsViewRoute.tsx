@@ -12,7 +12,7 @@ import {
 } from '>/modules';
 import type { ViewRow, JsonArray } from '>/types';
 
-export const OpenRouterModelsView = () => {
+export const OpenRouterModelsViewRoute = () => {
   const resizeLineRef = useRef<HTMLDivElement | null>(null);
   const tableRef = useRef<HTMLTableElement>(null);
   const outerRef = useRef<HTMLDivElement>(null);

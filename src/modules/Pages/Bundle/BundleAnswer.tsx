@@ -1,10 +1,14 @@
+import { useNavigate } from 'react-router';
 import ReactMarkdown from 'react-markdown';
-import { ArrowLeftToLineIcon, ListRestartIcon } from 'lucide-react';
-import { useCodeStore } from '>/services/stores';
+import { ArrowLeftToLineIcon } from 'lucide-react';
+import { useCodeStore, configStoreActions } from '>/services/stores';
+import { routes } from '>/config';
 import { ScreenLoader, FileBlock, MarkdownComponents } from '>/modules';
 import { fixMarkdown } from '>/services/utils';
 
 export const BundleAnswer = () => {
+  const navigate = useNavigate();
+
   const { bundleResponse, bundleStream } = useCodeStore(({ state }) => ({
     bundleResponse: state.bundleResponse,
     bundleStream: state.bundleStream,
@@ -13,8 +17,10 @@ export const BundleAnswer = () => {
   const { completed, files, reasoning, summary, clarification } =
     bundleResponse;
 
-  const onGoBack = () => {};
-  const onRefresh = () => {};
+  const onGoBack = () => {
+    configStoreActions.setConversationMode('listing');
+    navigate(routes.front.bundleView);
+  };
 
   const isBusy = bundleStream === 'processing';
   if (isBusy) {
@@ -36,15 +42,6 @@ export const BundleAnswer = () => {
             <div className='page-title' title='Generated Bundle'>
               Response Received
             </div>
-          </div>
-          <div className='page-actions'>
-            <button
-              className='btn-secondary'
-              onClick={onRefresh}
-              title='Restore Bundle'
-            >
-              <ListRestartIcon size={24} />
-            </button>
           </div>
         </div>
       </div>

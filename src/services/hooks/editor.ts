@@ -1,11 +1,11 @@
 /* File src/services/hooks/editor.ts
-  Identifies file language
   Implements monaco editor hooks for file editing/reading
 */
 import isEqual from 'lodash-es/isEqual';
 import { useState, useRef } from 'react';
 import type { OnMount } from '@monaco-editor/react';
 import { CodeRange, FileNode } from '>/contracts';
+import { getLanguageFromFilename } from '>/services/utils';
 
 type CodeRangesComparison = {
   original: CodeRange[];
@@ -35,43 +35,14 @@ const areRangesEqual = ({ original, modified }: CodeRangesComparison) =>
     mergeRanges({ original: [], modified: modified }),
   );
 
-const extToLanguage: Record<string, string> = {
-  ts: 'typescript',
-  tsx: 'typescript',
-  astro: 'html',
-  js: 'javascript',
-  jsx: 'javascript',
-  json: 'json',
-  css: 'css',
-  scss: 'scss',
-  less: 'less',
-  html: 'html',
-  htm: 'html',
-  md: 'markdown',
-  py: 'python',
-  rs: 'rust',
-  go: 'go',
-  java: 'java',
-  sql: 'sql',
-  sh: 'shell',
-  yaml: 'yaml',
-  yml: 'yaml',
-  toml: 'ini',
-  xml: 'xml',
-  svg: 'xml',
-};
-
-const getMonacoLanguage = (filePath: string): string => {
-  const ext = filePath.split('.').pop()?.toLowerCase() ?? '';
-  return extToLanguage[ext] ?? 'plaintext';
-};
-
 export const useViewerSelection = (file?: FileNode) => {
   const editorRef = useRef<Parameters<OnMount>[0] | null>(null);
   const [isDirty, setIsDirty] = useState(false);
-  const getContent = () => editorRef.current?.getValue() ?? '';
-  const language = file ? getMonacoLanguage(file.name) : undefined;
 
+  const getContent = () => editorRef.current?.getValue() ?? '';
+  const language = file
+    ? getLanguageFromFilename({ filePath: file.name, view: 'monaco' })
+    : undefined;
   const getSelections = (): CodeRange[] => {
     const selections = editorRef.current?.getSelections();
 
@@ -150,7 +121,9 @@ export const useEditorBundle = () => {
 
 export const useEditor = (filename?: string) => {
   const editorRef = useRef<Parameters<OnMount>[0] | null>(null);
-  const language = filename ? getMonacoLanguage(filename) : undefined;
+  const language = filename
+    ? getLanguageFromFilename({ filePath: filename, view: 'monaco' })
+    : undefined;
   const getContent = () => editorRef.current?.getValue() ?? '';
   const onMount: OnMount = (editor) => {
     editorRef.current = editor;

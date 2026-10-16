@@ -21,7 +21,7 @@ import { getSingleColumnFromResult, intoViewRows } from '>/services/utils';
 import { JsonArray } from '>/types';
 import { BundleInfoDlg } from './BundleInfoDlg';
 
-export const BundleList = () => {
+export const BundleListRoute = () => {
   const navigate = useNavigate();
   const resizeLineRef = useRef<HTMLDivElement | null>(null);
   const tableRef = useRef<HTMLTableElement>(null);

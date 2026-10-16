@@ -3,23 +3,24 @@
 */
 import { useState } from 'react';
 import ReactMarkdown from 'react-markdown';
-import { CircleChevronLeftIcon } from 'lucide-react';
-import { Conversation } from '>/contracts';
+import { CircleChevronLeftIcon, ScaleIcon, CopyIcon } from 'lucide-react';
+import { Conversation, RecommendedFile } from '>/contracts';
 import { parseBundleFiles } from '>/services/utils';
 import {
   fixMarkdown,
   toLocalTime,
   getLanguageFromFilename,
 } from '>/services/utils';
-import { CodeBlock, MarkdownComponents } from '>/modules';
+import { dialogStoreActions } from '>/services/stores';
+import { CodeBlock, MarkdownComponents, dialogFactories } from '>/modules';
 
 type ConversationCardProps = {
   entry: Conversation;
 };
 
 export const ConversationCard = ({ entry }: ConversationCardProps) => {
-  const [isOpen, setIsOpen] = useState(false);
-
+  const [isOpen, setIsOpen] = useState<boolean>(false);
+  const [contentDifferences, setContentDifferences] = useState<boolean>(false);
   const {
     filesJson,
     createdAt,
@@ -32,6 +33,17 @@ export const ConversationCard = ({ entry }: ConversationCardProps) => {
 
   const pathFiles = parseBundleFiles(filesJson);
   const entryTime = toLocalTime(createdAt);
+
+  const onCopy = () => {};
+
+  const onMerge = () => {};
+
+  const onContentCompare = (file: RecommendedFile) => {
+    setContentDifferences(true);
+    dialogStoreActions.openDialog({
+      payload: dialogFactories.contentDifferences({ file, onMerge }),
+    });
+  };
 
   return (
     <div className='space-y-2 page-section'>
@@ -90,14 +102,31 @@ export const ConversationCard = ({ entry }: ConversationCardProps) => {
 
             return (
               <section key={`${file.path}-${fileIndex}`} className='max-w-none'>
-                <h4 className='wrapper py-2'>
-                  {`${fileIndex + 1}. ${file.path}`}
-                </h4>
-
+                <div className='one-line'>
+                  <h4 className='wrapper py-2'>
+                    {`${fileIndex + 1}. ${file.path}`}
+                  </h4>
+                  <button className='btn-square' onClick={onCopy}>
+                    <CopyIcon size={18} />
+                  </button>
+                  {!file.isNew && (
+                    <button
+                      className='btn-square'
+                      onClick={() => onContentCompare(file)}
+                    >
+                      <ScaleIcon size={18} />
+                    </button>
+                  )}
+                </div>
                 <ReactMarkdown
                   components={{
-                    code: ({ node, className, children, ...props }: any) => {
-                      const match = /language-(\w+)/.exec(className || '');
+                    code: ({
+                      node,
+                      className: cName,
+                      children,
+                      ...props
+                    }: any) => {
+                      const match = /language-(\w+)/.exec(cName || '');
                       const isBlock =
                         !!match ||
                         node?.position?.start?.line !==
@@ -109,14 +138,14 @@ export const ConversationCard = ({ entry }: ConversationCardProps) => {
                             {...props}
                             language={language}
                             wrapClasses='page-border'
-                            className={className}
+                            className={cName}
                           >
                             {children}
                           </CodeBlock>
                         );
                       }
 
-                      return <code className={className}>{children}</code>;
+                      return <code className={cName}>{children}</code>;
                     },
                   }}
                 >

@@ -1,21 +1,23 @@
 /* File src/services/strings.ts
-  String common support functions
+  Strings support functions
 */
 import { MAX_TEXT_STRING } from '>/config';
+import type { FileParts } from '>/contracts';
+import { getExtensionLanguages } from '>/config';
 
+export const isNonEmptyString = (s: unknown): s is string =>
+  typeof s === 'string' && s.trim().length > 0;
 export const isEmptyString = (s: unknown): s is string =>
   typeof s === 'string' && s.length === 0;
 export const isAlphanumeric = (key: string) => /^[a-z0-9]+$/i.test(key);
 export const kebabCase = (str: string) =>
   str.replace(/([a-z0-9])([A-Z])/g, '$1-$2').toLowerCase();
+export const snakeToCamel = (str: string): string =>
+  str.replace(/_([a-z])/g, (_, char) => char.toUpperCase());
 
 export const trimString = (query: string) => query.replace(/\s+/g, ' ').trim();
-
 export const truncateString = (value: string, max = MAX_TEXT_STRING) =>
   value.length > max ? value.slice(0, max) + '...' : value;
-
-export const isNonEmptyString = (s: unknown): s is string =>
-  typeof s === 'string' && s.trim().length > 0;
 
 type HasitProps = {
   input: string;
@@ -49,13 +51,43 @@ export const formatSize = (bytes: number): string => {
   return `${value.toFixed(1)} ${units[unit]}`;
 };
 
+export const getFileFromPath = (filePath: string): FileParts => {
+  const segments = filePath.split(/[\\/]/);
+  const name = segments.pop() ?? '';
+
+  return {
+    path: segments.join('/'),
+    name,
+  };
+};
+
+type FileViewerType = 'monaco' | 'markdown';
+type GetLanguageFromFileProps = {
+  filePath: string;
+  view: FileViewerType;
+};
+export const getLanguageFromFilename = ({
+  filePath,
+  view,
+}: GetLanguageFromFileProps) => {
+  const extToLanguage = getExtensionLanguages();
+  const filename = filePath.split(/[\/]/).pop()?.toLowerCase() ?? '';
+
+  if (filename === 'dockerfile') return extToLanguage['dockerfile'][view];
+  if (filename === 'makefile')
+    return view === 'markdown' ? 'makefile' : 'makefile';
+  if (filename === '.gitignore')
+    return view === 'markdown' ? 'gitignore' : 'gitignore';
+  if (filename === '.env') return view === 'markdown' ? 'bash' : 'bash';
+
+  const ext = filename.includes('.') ? (filename.split('.').pop() ?? '') : '';
+  return extToLanguage[ext]?.[view] ?? 'plaintext';
+};
+
 export const truncateText = (text: string, maxChars: number): string => {
   if (text.length <= maxChars) return text;
   return `${text.slice(0, maxChars)}...`;
 };
-
-export const snakeToCamel = (str: string): string =>
-  str.replace(/_([a-z])/g, (_, char) => char.toUpperCase());
 
 export const fixMarkdown = (md: string): string =>
   md.replace(/([^\n])(```)/g, '$1\n\n$2').replace(/(```)([^\n])/g, '$1\n\n$2');
