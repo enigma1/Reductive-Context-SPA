@@ -8,6 +8,7 @@ import {
   ScaleIcon,
   CopyIcon,
   FilePlusIcon,
+  CheckIcon,
 } from 'lucide-react';
 import { Conversation, RecommendedFile } from '>/contracts';
 import { cx, parseBundleFiles } from '>/services/utils';
@@ -46,6 +47,7 @@ export const ConversationCard = ({ entry }: ConversationCardProps) => {
   const onCopy = (content: string, idx: number) => {
     setFlashIndex(idx);
     navigator.clipboard.writeText(content);
+    setTimeout(() => setFlashIndex(null), 2000);
   };
 
   const onWriteNew = (file: RecommendedFile) => {
@@ -69,8 +71,10 @@ export const ConversationCard = ({ entry }: ConversationCardProps) => {
         <span className='truncate'>{`${entryTime}: ${summary}`}</span>
 
         <CircleChevronLeftIcon
-          size={24}
-          className={isOpen ? '-rotate-90' : ''}
+          size={20}
+          className={`shrink-0 icon-muted transition-transform duration-300 ${
+            isOpen ? '-rotate-90' : ''
+          }`}
         />
       </h3>
 
@@ -105,7 +109,7 @@ export const ConversationCard = ({ entry }: ConversationCardProps) => {
 
           {pathFiles.length > 0 && (
             <h4 className='wrapper pt-4'>
-              {`Files sent: ${pathFiles.length}`}
+              {`Files Received: ${pathFiles.length}`}
             </h4>
           )}
 
@@ -117,13 +121,17 @@ export const ConversationCard = ({ entry }: ConversationCardProps) => {
 
             return (
               <section key={`${file.path}-${idx}`} className='max-w-none'>
-                <div className='one-line'>
+                <div className='one-line  mb-sep'>
                   <h4 className='wrapper py-2'>{`${idx + 1}. ${file.path}`}</h4>
                   <button
                     className='btn-square'
                     onClick={() => onCopy(file.content, idx)}
                   >
-                    <CopyIcon size={18} />
+                    {flashIndex !== null ? (
+                      <CheckIcon size={18} />
+                    ) : (
+                      <CopyIcon size={18} />
+                    )}
                   </button>
                   {file.isNew ? (
                     <button
@@ -149,20 +157,20 @@ export const ConversationCard = ({ entry }: ConversationCardProps) => {
                       children,
                       ...props
                     }: any) => {
-                      let language = /language-(\w+)/.exec(
+                      let cLanguage = /language-(\w+)/.exec(
                         cInputName || '',
                       )?.[1];
                       let code = String(children).trim();
-                      if (!language) {
+                      if (!cLanguage) {
                         const firstLine = code.match(/^\s*([\w+-]+)\s*\n/);
 
                         if (firstLine) {
-                          language = firstLine[1];
+                          cLanguage = firstLine[1];
                           code = code.slice(firstLine[0].length);
                         }
                       }
                       const isBlock =
-                        !!language ||
+                        !!cLanguage ||
                         node?.position?.start?.line !==
                           node?.position?.end?.line;
 
@@ -170,11 +178,12 @@ export const ConversationCard = ({ entry }: ConversationCardProps) => {
                         return (
                           <CodeBlock
                             {...props}
-                            language={language ?? 'text'}
+                            language={cLanguage ?? 'text'}
                             wrapClasses={cx(
                               'page-border',
                               flashIndex === idx && 'content-flash',
                             )}
+                            showCopyButton={language === 'markdown'}
                             className={cInputName}
                             onAnimationEnd={() => setFlashIndex(null)}
                           >

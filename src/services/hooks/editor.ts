@@ -43,6 +43,7 @@ export const useViewerSelection = (file?: FileNode) => {
   const language = file
     ? getLanguageFromFilename({ filePath: file.name, view: 'monaco' })
     : undefined;
+
   const getSelections = (): CodeRange[] => {
     const selections = editorRef.current?.getSelections();
 

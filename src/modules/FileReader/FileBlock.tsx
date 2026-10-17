@@ -8,7 +8,6 @@ import { dialogFactories } from '>/modules';
 type FileBlockProps = {
   file: RecommendedFile;
 };
-
 export const FileBlock = ({ file }: FileBlockProps) => {
   const { onMount, language } = useEditor(file.path);
   const path = `${file.path} ${file.isNew ? '(New File)' : ''}`;

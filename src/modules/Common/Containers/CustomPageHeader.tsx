@@ -21,7 +21,7 @@ export const CustomPageHeader = ({
 }: CustomPageHeaderProps) => {
   return (
     <>
-      <div className='page-heading'>
+      <div className='page-heading mb-sep'>
         <div className='page-toolbar'>
           <div className='inline-wrapper'>
             {onBack && (

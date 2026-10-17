@@ -1,0 +1,10 @@
+@layer components {
+  .b-sep {
+    @apply border-b;
+    border-color: var(--color-border-separate)
+  }
+
+  .mb-sep {
+    @apply border-b mb-2;
+  }
+}
