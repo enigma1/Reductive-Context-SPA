@@ -1,7 +1,12 @@
 import { ReactNode } from 'react';
 import { RecommendedFile } from '>/contracts';
 import { dialogStoreActions } from '>/services/stores';
-import { Preferences, FilePathsForm, ContentDifferencesDlg } from '>/modules';
+import {
+  Preferences,
+  FilePathsForm,
+  ContentDifferencesDlg,
+  WriteFileDlg,
+} from '>/modules';
 import { DialogPayload, WizardHandlers, CommonDialogHandlers } from '>/types';
 import { dialogActions } from './dialogActions';
 import { DialogContent } from './DialogContent';
@@ -118,17 +123,48 @@ const contentDifferences = ({ file }: ContentDifferencesProps) => {
   return payload;
 };
 
+type WriteFileProps = {
+  file: RecommendedFile;
+};
+const writeFile = ({ file }: WriteFileProps) => {
+  const handlers: CommonDialogHandlers = {
+    confirm: () => {},
+  };
+
+  const labels = [undefined, 'Save'];
+  const payload: DialogPayload = {
+    initialSize: 'xxl',
+    caption: 'Review Content to Write',
+    component: <WriteFileDlg recommendedFile={file} formHandlers={handlers} />,
+    variant: 'warn',
+    actions: dialogActions
+      .confirmCancel({
+        onConfirm: () => {
+          handlers.confirm();
+          dialogStoreActions.closeDialog();
+        },
+      })
+      .map((control, idx) => ({
+        ...control,
+        label: labels[idx] ?? control.label,
+      })),
+  };
+  return payload;
+};
+
 type Factory<TArgs> = (args: TArgs) => DialogPayload;
 type DialogFactories = {
   confirmation: Factory<ConfirmationProps>;
   editPreferences: Factory<void>;
   setFilePaths: Factory<void>;
   contentDifferences: Factory<ContentDifferencesProps>;
+  writeFile: Factory<ContentDifferencesProps>;
 };
 
 export const dialogFactories: DialogFactories = {
   confirmation,
   editPreferences,
   contentDifferences,
+  writeFile,
   setFilePaths,
 };

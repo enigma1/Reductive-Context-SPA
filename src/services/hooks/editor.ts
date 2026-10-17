@@ -121,16 +121,22 @@ export const useEditorBundle = () => {
 
 export const useEditor = (filename?: string) => {
   const editorRef = useRef<Parameters<OnMount>[0] | null>(null);
+  const [isDirty, setIsDirty] = useState(false);
+
   const language = filename
     ? getLanguageFromFilename({ filePath: filename, view: 'monaco' })
     : undefined;
   const getContent = () => editorRef.current?.getValue() ?? '';
   const onMount: OnMount = (editor) => {
     editorRef.current = editor;
+    editor.onDidChangeModelContent(() => {
+      setIsDirty(true);
+    });
   };
 
   return {
     onMount,
+    isDirty,
     language,
     getContent,
   };

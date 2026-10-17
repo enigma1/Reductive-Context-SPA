@@ -6,7 +6,7 @@ import { routes } from '>/config';
 import { ScreenLoader, FileBlock, MarkdownComponents } from '>/modules';
 import { fixMarkdown } from '>/services/utils';
 
-export const BundleAnswer = () => {
+export const BundleAnswerRoute = () => {
   const navigate = useNavigate();
 
   const { bundleResponse, bundleStream } = useCodeStore(({ state }) => ({

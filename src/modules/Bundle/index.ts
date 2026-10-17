@@ -1,6 +1,6 @@
 export * from './BundleViewRoute';
 export * from './BundleListRoute';
-export * from './BundleAnswer';
+export * from './BundleAnswerRoute';
 export * from './BundleInfoDlg';
 export * from './BundleSideList';
 export * from './BundleEditors';

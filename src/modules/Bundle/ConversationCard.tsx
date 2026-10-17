@@ -3,7 +3,12 @@
 */
 import { useState } from 'react';
 import ReactMarkdown from 'react-markdown';
-import { CircleChevronLeftIcon, ScaleIcon, CopyIcon } from 'lucide-react';
+import {
+  CircleChevronLeftIcon,
+  ScaleIcon,
+  CopyIcon,
+  FilePlusIcon,
+} from 'lucide-react';
 import { Conversation, RecommendedFile } from '>/contracts';
 import { cx, parseBundleFiles } from '>/services/utils';
 import {
@@ -41,6 +46,12 @@ export const ConversationCard = ({ entry }: ConversationCardProps) => {
   const onCopy = (content: string, idx: number) => {
     setFlashIndex(idx);
     navigator.clipboard.writeText(content);
+  };
+
+  const onWriteNew = (file: RecommendedFile) => {
+    dialogStoreActions.openDialog({
+      payload: dialogFactories.writeFile({ file }),
+    });
   };
 
   const onContentCompare = (file: RecommendedFile) => {
@@ -114,7 +125,14 @@ export const ConversationCard = ({ entry }: ConversationCardProps) => {
                   >
                     <CopyIcon size={18} />
                   </button>
-                  {!file.isNew && (
+                  {file.isNew ? (
+                    <button
+                      className='btn-square'
+                      onClick={() => onWriteNew(file)}
+                    >
+                      <FilePlusIcon size={18} />
+                    </button>
+                  ) : (
                     <button
                       className='btn-square'
                       onClick={() => onContentCompare(file)}
@@ -127,13 +145,24 @@ export const ConversationCard = ({ entry }: ConversationCardProps) => {
                   components={{
                     code: ({
                       node,
-                      className: cName,
+                      className: cInputName,
                       children,
                       ...props
                     }: any) => {
-                      const match = /language-(\w+)/.exec(cName || '');
+                      let language = /language-(\w+)/.exec(
+                        cInputName || '',
+                      )?.[1];
+                      let code = String(children).trim();
+                      if (!language) {
+                        const firstLine = code.match(/^\s*([\w+-]+)\s*\n/);
+
+                        if (firstLine) {
+                          language = firstLine[1];
+                          code = code.slice(firstLine[0].length);
+                        }
+                      }
                       const isBlock =
-                        !!match ||
+                        !!language ||
                         node?.position?.start?.line !==
                           node?.position?.end?.line;
 
@@ -141,24 +170,25 @@ export const ConversationCard = ({ entry }: ConversationCardProps) => {
                         return (
                           <CodeBlock
                             {...props}
-                            language={language}
+                            language={language ?? 'text'}
                             wrapClasses={cx(
                               'page-border',
                               flashIndex === idx && 'content-flash',
                             )}
-                            className={cName}
+                            className={cInputName}
                             onAnimationEnd={() => setFlashIndex(null)}
                           >
-                            {children}
+                            {code}
                           </CodeBlock>
                         );
                       }
-
-                      return <code className={cName}>{children}</code>;
+                      return <code className={cInputName}>{children}</code>;
                     },
                   }}
                 >
-                  {fixMarkdown(`\`\`\`${language}\n${file.content}\n\`\`\``)}
+                  {language === 'markdown'
+                    ? fixMarkdown(file.content)
+                    : fixMarkdown(`\`\`\`${language}\n${file.content}\n\`\`\``)}
                 </ReactMarkdown>
               </section>
             );

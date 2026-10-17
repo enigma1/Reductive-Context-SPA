@@ -1,10 +1,10 @@
 import { useSubmitBundle } from '>/services/queryHooks';
 import { messageStoreActions, useCodeStore } from '>/services/stores';
-import { useEditorBundle } from './editor';
+import { useEditor } from './editor';
 
 export const useBundleActions = () => {
-  const promptEditor = useEditorBundle();
-  const contentEditor = useEditorBundle();
+  const promptEditor = useEditor();
+  const contentEditor = useEditor();
 
   const {
     bundleId = 0,

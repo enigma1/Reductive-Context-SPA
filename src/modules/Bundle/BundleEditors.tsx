@@ -1,5 +1,5 @@
 import Editor from '@monaco-editor/react';
-import { useEditorBundle, useResizableSplit } from '>/services/hooks';
+import { useEditor, useResizableSplit } from '>/services/hooks';
 
 const editorOptions = {
   automaticLayout: true,
@@ -20,8 +20,8 @@ const editorOptions = {
 type BundleEditorsProps = {
   prompt: string;
   content: string;
-  onPromptMount: ReturnType<typeof useEditorBundle>['onMount'];
-  onContentMount: ReturnType<typeof useEditorBundle>['onMount'];
+  onPromptMount: ReturnType<typeof useEditor>['onMount'];
+  onContentMount: ReturnType<typeof useEditor>['onMount'];
 };
 
 export const BundleEditors = ({
