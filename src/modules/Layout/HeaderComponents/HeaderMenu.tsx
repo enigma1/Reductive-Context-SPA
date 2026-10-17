@@ -1,7 +1,6 @@
-import { useRef } from 'react';
-import { Outlet, Link, Navigate, useLocation } from 'react-router';
+import { Link } from 'react-router';
 import { dialogStoreActions } from '>/services/stores';
-import { DropdownMenu, dialogFactories, GuardedLink } from '>/modules';
+import { DropdownMenu, dialogFactories } from '>/modules';
 import { routes } from '>/config';
 
 export const HeaderMenu = () => {

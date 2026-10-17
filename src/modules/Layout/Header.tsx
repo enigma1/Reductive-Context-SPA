@@ -1,15 +1,12 @@
-import { HeaderTop, HeaderMenu, HeaderMessageList } from './HeaderComponents';
+import { MessageList } from '>/modules';
+import { HeaderTop, HeaderMenu } from './HeaderComponents';
 
 export const Header = () => {
   return (
-    <div className='app-header wrapper'>
-      <div>
-        <HeaderTop />
-      </div>
-      <div>
-        <HeaderMessageList />
-      </div>
-      <div className='wrapper start full'>
+    <div className='wrapper'>
+      <HeaderTop />
+      <MessageList mode='header' />
+      <div className='wrapper start full menu-container'>
         <HeaderMenu />
       </div>
     </div>

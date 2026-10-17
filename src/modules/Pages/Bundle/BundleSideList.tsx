@@ -7,21 +7,14 @@ import { useGetBundleList, useDeleteBundles } from '>/services/queryHooks';
 import { ScreenLoader } from '>/modules';
 
 export const BundleSideList = () => {
-  const {
-    rows,
-    columnsOrder,
-    isFetching,
-    refetch,
-    getBundleNames,
-    getBundleFields,
-  } = useGetBundleList(undefined, ({ state, query, api }) => ({
-    rows: state.rows,
-    columnsOrder: state.columnsOrder,
-    isFetching: query.isFetching,
-    refetch: query.refetch,
-    getBundleNames: api.getBundleNames,
-    getBundleFields: api.getBundleFields,
-  }));
+  const { rows, isFetching, refetch, getBundleNames, getBundleFields } =
+    useGetBundleList(undefined, ({ state, query, api }) => ({
+      rows: state.rows,
+      isFetching: query.isFetching,
+      refetch: query.refetch,
+      getBundleNames: api.getBundleNames,
+      getBundleFields: api.getBundleFields,
+    }));
 
   const { activeBundleId, setActiveBundleId } = useCodeStore(
     ({ state, api }) => ({

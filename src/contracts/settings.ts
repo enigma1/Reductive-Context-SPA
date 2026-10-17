@@ -26,6 +26,7 @@ export const UserPrefsConfigSchema = z.object({
   theme: noTrim('theme').min(1).max(256),
   sidebarWidth: z.number().int().positive(),
   promptSplit: z.number().int().positive(),
+  headerVisibility: z.boolean(),
   layout: LayoutPrefsSchema,
   conversationMode: z.enum(conversationMode),
 });

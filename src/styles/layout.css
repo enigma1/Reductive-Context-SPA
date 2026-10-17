@@ -9,7 +9,7 @@
   }
 
   .app-header {
-    @apply flex items-center justify-between border-b;
+    @apply flex flex-row w-full items-center justify-between border-b;
     border-color: var(--color-border-separate)
   }
 
