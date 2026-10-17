@@ -1,11 +1,6 @@
 @layer components {
   .app {
     @apply h-screen min-h-screen flex flex-col;
-
-    & footer {
-      @apply items-center;
-      background-color: var(--color-success-bg)
-    }
   }
 
   .app-header {
@@ -48,7 +43,7 @@
   }
 
   .inline-wrapper {
-    @apply flex flex-[0_0_auto] flex-wrap gap-1 pr-3
+    @apply flex flex-[0_0_auto] flex-wrap items-center gap-1 pr-3
   }
 
   label.full {
@@ -62,5 +57,10 @@
     >div {
       @apply m-3;
     }
+  }
+
+  footer {
+    @apply p-2 flex items-start;
+    background: linear-gradient(54deg in oklch, var(--color-srf-muted) 35%, var(--color-effect) 95%);
   }
 }

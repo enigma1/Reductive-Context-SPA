@@ -1,7 +1,7 @@
 {
   "author": "Mark Samios",
   "name": "Reductive-Context-SPA",
-  "version": "0.0.29",
+  "version": "0.0.30",
   "license": "GPL-3.0",
   "description": "LLM Context Control with Human-in-the-loop workspace for curating and reducing content context",
   "keywords": [
@@ -24,7 +24,7 @@
     "classnames": "^2.5.1",
     "clsx": "^2.1.1",
     "lodash-es": "^4.18.1",
-    "lucide-react": "^1.48.0",
+    "lucide-react": "^1.59.0",
     "object-hash": "^3.0.0",
     "react": "^19.2.8",
     "react-dom": "^19.2.8",
