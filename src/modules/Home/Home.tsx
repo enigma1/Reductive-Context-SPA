@@ -29,7 +29,7 @@ export const Home = () => {
           </button>
           <Link to={routes.front.bundleList}>Existing Bundles</Link>
           <Link to={routes.front.tableData}>Data Table</Link>
-          <Link to={routes.front.down}>Maintenance</Link>
+          <Link to={routes.front.networkDown}>Maintenance</Link>
         </div>
         <div className='page-section items-start'>
           <h2 className='stand'>Dialogs</h2>

@@ -1,11 +1,7 @@
-import { useEffect, useState } from 'react';
+import { useMemo, useEffect, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router';
-import {
-  messageStoreActions,
-  useAppStore,
-  configStoreActions,
-} from '>/services/stores';
-import { NumberField } from '>/modules';
+import Logo from '>/assets/images/reductive-context-xp.svg?react';
+import { messageStoreActions, useAppStore } from '>/services/stores';
 import { routes } from '>/config';
 
 const formatDuration = (d: Temporal.Duration) => {
@@ -23,10 +19,11 @@ export const NetworkDown = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const online = useAppStore(({ state }) => state.online);
-  const redirectPath =
-    location.state?.from && location.state.from !== routes.front.networkDown
-      ? location.state.from
-      : routes.front.home;
+
+  const redirectPath = useMemo(() => {
+    const from = location.state?.from;
+    return from && from !== routes.front.networkDown ? from : routes.front.home;
+  }, [location.state]);
 
   useEffect(() => {
     const id = setInterval(() => {
@@ -63,12 +60,18 @@ export const NetworkDown = () => {
     <>
       <div className='page-container items-center justify-center h-screen'>
         <div className='page-content justify-center items-center'>
-          <h1 className='page-title text-4xl font-bold'>Network Down</h1>
+          <a
+            href='https://github.com/enigma1/Reductive-Context-SPA'
+            target='_blank'
+          >
+            <Logo className='text-logo' />
+          </a>
+          <h1 className='page-title text-2xl font-bold mt-4'>Network Down</h1>
           <div className='page-section bg-transparent max-w-lg'>
             <p className='central'>
-              It seems like you're offline or the system is misconfigured and
-              cannot connect to a back endpoint. System will automatically
-              reconnect once connectivity is restored.
+              Backend is offline or misconfigured and cannot connect to a valid
+              back endpoint. System will automatically reconnect once
+              connectivity is restored.
             </p>
           </div>
           <p className='flex justify-center text-3xl font-mono'>

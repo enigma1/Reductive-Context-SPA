@@ -1,5 +1,6 @@
+import { useState } from 'react';
 import Editor from '@monaco-editor/react';
-import { ScaleIcon, CopyIcon } from 'lucide-react';
+import { ScaleIcon, CopyIcon, CheckIcon } from 'lucide-react';
 import { useEditor } from '>/services/hooks';
 import { RecommendedFile } from '>/contracts';
 import { dialogStoreActions } from '>/services/stores';
@@ -7,13 +8,17 @@ import { dialogFactories } from '>/modules';
 
 type FileBlockProps = {
   file: RecommendedFile;
+  idx: number;
 };
-export const FileBlock = ({ file }: FileBlockProps) => {
+export const FileBlock = ({ file, idx }: FileBlockProps) => {
+  const [copied, setCopied] = useState(false);
   const { onMount, language } = useEditor(file.path);
   const path = `${file.path} ${file.isNew ? '(New File)' : ''}`;
 
   const onCopy = (content: string) => {
+    setCopied(true);
     navigator.clipboard.writeText(content);
+    setTimeout(() => setCopied(false), 2000);
   };
 
   const onContentCompare = (file: RecommendedFile) => {
@@ -24,10 +29,10 @@ export const FileBlock = ({ file }: FileBlockProps) => {
 
   return (
     <>
-      <div className='one-line'>
-        <h4 className='wrapper py-2'>{path}</h4>
+      <div className='one-line mb-sep sub-heading-bg'>
+        <h4 className='wrapper py-2'>{`${idx}. ${path}`}</h4>
         <button className='btn-square' onClick={() => onCopy(file.content)}>
-          <CopyIcon size={18} />
+          {copied ? <CheckIcon size={16} /> : <CopyIcon size={16} />}
         </button>
         {!file.isNew && (
           <button className='btn-square' onClick={() => onContentCompare(file)}>

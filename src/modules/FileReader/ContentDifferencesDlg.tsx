@@ -147,6 +147,7 @@ export const ContentDifferencesDlg = ({
             modified={recommendedFile.content}
             language={language}
             options={{
+              ignoreTrimWhitespace: true,
               renderSideBySide: true,
               automaticLayout: true,
               minimap: { enabled: false },

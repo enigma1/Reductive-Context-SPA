@@ -17,8 +17,8 @@ export const App = () => {
   const { layout } = useConfigStore(({ state }) => ({
     layout: state.layout,
   }));
-  const location = useLocation();
 
+  const location = useLocation();
   if (!online && location.pathname !== routes.front.networkDown) {
     return <Navigate to={routes.front.networkDown} replace />;
   }
@@ -26,15 +26,23 @@ export const App = () => {
     <>
       <div className='app'>
         <AliveMonitor />
-        {layout.showHeader && <Header />}
-        <div className='app-content'>
-          {layout.showLeftSide && <SideWrapper component={LeftSide} />}
+        {online ? (
+          <>
+            {layout.showHeader && <Header />}
+            <div className='app-content'>
+              {layout.showLeftSide && <SideWrapper component={LeftSide} />}
+              <main>
+                <Outlet />
+              </main>
+              {layout.showRightSide && <SideWrapper component={RightSide} />}
+            </div>
+            {layout.showFooter && <Footer />}
+          </>
+        ) : (
           <main>
             <Outlet />
           </main>
-          {layout.showRightSide && <SideWrapper component={RightSide} />}
-        </div>
-        {layout.showFooter && <Footer />}
+        )}
       </div>
       <GlobalDialog />
       <GlobalDialogError />

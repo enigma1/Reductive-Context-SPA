@@ -17,7 +17,7 @@ export const AliveMonitor = () => {
         if (!rsp.ok) {
           messageStoreActions.addMessage({
             content: {
-              text: 'Invalid Session Detected - Please login again',
+              text: `Error: ${rsp.message}`,
               duration: 3000,
             },
           });
@@ -28,17 +28,17 @@ export const AliveMonitor = () => {
         failures = 0;
 
         if (!appStoreActions.getAppStatus()) {
-          appStoreActions.setAppStatus(true);
           onlineManager.setOnline(true);
+          appStoreActions.setAppStatus(true);
         }
-        nextDelay = 20000;
+        nextDelay = 5000;
       } catch {
         failures++;
 
         if (failures >= 3) {
-          appStoreActions.setAppStatus(false);
           onlineManager.setOnline(false);
-          nextDelay = 5000;
+          appStoreActions.setAppStatus(false);
+          nextDelay = 1000;
         }
       }
 

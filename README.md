@@ -26,6 +26,7 @@ The frontend does not directly access the filesystem or communicate with the LLM
 | ------------------------- | ----------------------- | ------------------------------------- |
 | `POST /api/getPaths`      | { root, config }        | returns folders with files under      |
 | `POST /api/readFile`      | { FileNode }            | Return file contents                  |
+| `POST /api/writeFile`     | { FileNode }            | Write file contents                   |
 | `GET /api/getLanguages`   | n/a                     | Returns supported file languages      |
 | `GET /api/getBundleList`  | n/a                     | Returns all bundles from the database |
 | `POST /api/getBundle`     | { identifier }          | Return bundle details                 |
@@ -37,8 +38,8 @@ The frontend does not directly access the filesystem or communicate with the LLM
 
 The intended workflow is:
 
-1. The user provides a project or filesystem root.
-2. The backend scans the root and produces a file tree with contextual information and token estimates.
+1. The user provides one or more file folders.
+2. The backend scans the paths and produces a file tree with contextual information and token estimates.
 3. Additional scan/configuration options can constrain the amount of content considered.
 4. The frontend presents the resulting tree to the user.
 5. The user selects the folders and files relevant to the request.

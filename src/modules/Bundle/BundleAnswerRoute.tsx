@@ -63,9 +63,9 @@ export const BundleAnswerRoute = () => {
                 </ReactMarkdown>
               </div>
             </div>
-            {files?.map((file) => (
+            {files?.map((file, idx) => (
               <div key={file.path} className='page-section flex-1 space-y-2'>
-                <FileBlock file={file} />
+                <FileBlock file={file} idx={idx + 1} />
               </div>
             ))}
           </>

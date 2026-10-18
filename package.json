@@ -1,7 +1,7 @@
 {
   "author": "Mark Samios",
   "name": "Reductive-Context-SPA",
-  "version": "0.0.33",
+  "version": "0.0.34",
   "license": "GPL-3.0",
   "description": "LLM Context Control with Human-in-the-loop workspace for curating and reducing content context",
   "keywords": [
@@ -36,6 +36,7 @@
     "zod": "^4.4.3"
   },
   "devDependencies": {
+    "@playwright/test": "^1.63.0",
     "@eslint/js": "^10.0.1",
     "@tailwindcss/vite": "^4.3.3",
     "@testing-library/dom": "^10.4.1",
@@ -80,6 +81,8 @@
     "preview": "vite preview",
     "build:single": "vite build --config vite.single.config.ts",
     "lint": "eslint .",
+    "test": "vitest",
+    "test:e2e": "playwright test",
     "tsc": "tsc --noEmit"
   },
   "browserslist": {

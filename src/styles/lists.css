@@ -6,7 +6,6 @@
   .info-list-item {
     @apply flex items-center gap-2 p-3 rounded-lg border;
     background-color: var(--color-srf-elevated);
-    border-color: var(--color-border);
   }
 
   .info-list-item-number {
@@ -31,7 +30,6 @@
   .selection-section {
     @apply flex items-center p-3 rounded-lg border;
     background-color: var(--color-srf-elevated);
-    border-color: var(--color-border);
   }
 
   .selection-outer {
@@ -64,4 +62,9 @@
       @apply flex-1 min-w-0;
     }
   }
+
+  .sub-heading-bg {
+    background: linear-gradient(54deg in oklch, var(--color-srf) 39%, var(--color-srf-dim) 100%);
+  }
+
 }

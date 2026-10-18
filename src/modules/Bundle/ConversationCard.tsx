@@ -121,7 +121,7 @@ export const ConversationCard = ({ entry }: ConversationCardProps) => {
 
             return (
               <section key={`${file.path}-${idx}`} className='max-w-none'>
-                <div className='one-line  mb-sep'>
+                <div className='one-line  mb-sep sub-heading-bg'>
                   <h4 className='wrapper py-2'>{`${idx + 1}. ${file.path}`}</h4>
                   <button
                     className='btn-square'
