@@ -6,7 +6,9 @@ import {
   FilePathsForm,
   ContentDifferencesDlg,
   WriteFileDlg,
+  ActionPreview,
 } from '>/modules';
+import type { TableData } from '>/contracts';
 import { DialogPayload, WizardHandlers, CommonDialogHandlers } from '>/types';
 import { dialogActions } from './dialogActions';
 import { DialogContent } from './DialogContent';
@@ -152,6 +154,47 @@ const writeFile = ({ file }: WriteFileProps) => {
   return payload;
 };
 
+type DeleteTableEntriesProps = TableData & {
+  onConfirm: () => void;
+};
+const deleteTableEntries = ({
+  onConfirm,
+  rows,
+  columnsOrder,
+}: DeleteTableEntriesProps) => {
+  const handlers: CommonDialogHandlers = {
+    confirm: () => {
+      onConfirm();
+    },
+  };
+
+  const labels = [undefined, 'Confirm Removal'];
+  const payload: DialogPayload = {
+    initialSize: 'lg',
+    caption: 'Bundles Removal',
+    component: (
+      <ActionPreview
+        rows={rows}
+        columnsOrder={columnsOrder}
+        message='The following entries will be permanently removed'
+      />
+    ),
+    variant: 'warn',
+    actions: dialogActions
+      .confirmCancel({
+        onConfirm: () => {
+          handlers.confirm();
+          dialogStoreActions.closeDialog();
+        },
+      })
+      .map((control, idx) => ({
+        ...control,
+        label: labels[idx] ?? control.label,
+      })),
+  };
+  return payload;
+};
+
 type Factory<TArgs> = (args: TArgs) => DialogPayload;
 type DialogFactories = {
   confirmation: Factory<ConfirmationProps>;
@@ -159,6 +202,7 @@ type DialogFactories = {
   setFilePaths: Factory<void>;
   contentDifferences: Factory<ContentDifferencesProps>;
   writeFile: Factory<ContentDifferencesProps>;
+  deleteTableEntries: Factory<DeleteTableEntriesProps>;
 };
 
 export const dialogFactories: DialogFactories = {
@@ -167,4 +211,5 @@ export const dialogFactories: DialogFactories = {
   contentDifferences,
   writeFile,
   setFilePaths,
+  deleteTableEntries,
 };

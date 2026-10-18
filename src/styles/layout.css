@@ -11,20 +11,39 @@
   .app-content {
     @apply flex flex-1 min-h-0 overflow-hidden;
 
-    & .left-side {
-      @apply h-full w-[15%];
-      background-color: var(--color-info-bg)
-    }
+    >.sidebar-wrapper {
+      @apply relative flex border-r min-w-3 max-w-[90%];
 
-    & .right-side {
-      @apply h-full w-[15%];
-      background-color: var(--color-warn-bg)
+      >aside {
+        @apply flex-1 overflow-y-auto overflow-x-hidden;
+        border-color: var(--color-border-separate);
+
+      }
+
+      >.resize-handle {
+        @apply absolute top-0 right-0 w-2 h-full cursor-col-resize;
+
+        &::after {
+          @apply content-[''] absolute right-0 w-px h-full;
+          background-color: var(--color-border-focus);
+          opacity: 0.3;
+          transition:
+            background-color 120ms ease,
+            opacity 120ms ease;
+        }
+
+        &:hover::after {
+          background-color: var(--color-text);
+          opacity: 1;
+        }
+      }
     }
 
     >main {
       @apply flex flex-col flex-1 min-h-0 overflow-hidden;
     }
   }
+
 
   .wrapper {
     @apply flex flex-col;

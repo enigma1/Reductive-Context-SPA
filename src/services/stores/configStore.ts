@@ -16,6 +16,7 @@ export type ConfigStoreActions = {
   setLayoutPrefs: (prefs: Partial<LayoutPrefs>) => void;
   getConversationMode: () => ConversationMode;
   setConversationMode: (mode: ConversationMode) => void;
+  setSidebarWidth: (width: number) => void;
 };
 
 // type ConfigStore = ConfigStoreState & ConfigStoreActions;
@@ -54,6 +55,10 @@ export const configStoreActions: ConfigStoreActions = {
   getConversationMode: () => get().conversationMode,
   setConversationMode: (mode) => {
     setAuto({ conversationMode: mode });
+  },
+
+  setSidebarWidth: (width) => {
+    setAuto({ sidebarWidth: width });
   },
 };
 

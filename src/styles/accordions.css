@@ -1,7 +1,6 @@
 @layer components {
   .side-accordion {
-    @apply flex flex-col min-h-0 border-be last:border-0;
-    width: 250px;
+    @apply flex flex-col min-h-0 border-be last:border-0 w-full;
     border-color: var(--color-border);
   }
 

@@ -1,10 +1,10 @@
 import { useNavigate, useLocation } from 'react-router';
 import { FileXIcon } from 'lucide-react';
 import { routes } from '>/config';
-
-import { useCodeStore } from '>/services/stores';
+import { useCodeStore, dialogStoreActions } from '>/services/stores';
 import { useGetBundleList, useDeleteBundles } from '>/services/queryHooks';
-import { ScreenLoader } from '>/modules';
+import { ScreenLoader, dialogFactories } from '>/modules';
+import { BUNDLE_ID, BUNDLE_PROMPT } from '>/config';
 
 export const BundleSideList = () => {
   const { rows, isFetching, refetch, getBundleNames, getBundleFields } =
@@ -31,6 +31,7 @@ export const BundleSideList = () => {
   // ----------------
   // No-Hooks Section
   // ----------------
+  const isBusy = isFetching || isPending;
   const navigate = useNavigate();
   const location = useLocation();
   const names = getBundleNames();
@@ -38,10 +39,24 @@ export const BundleSideList = () => {
 
   const onDeleteBundle = (idx: number) => {
     const bundleId = fieldEntries[idx].bundleId;
-    // mutate({ bundleIds: [bundleId] });
-  };
+    const columnsOrder = [BUNDLE_ID, BUNDLE_PROMPT];
+    const rows = [[bundleId, names[idx]]];
 
-  const isBusy = isFetching || isPending;
+    const onConfirm = () => {
+      dialogStoreActions.closeDialog();
+      mutate({ bundleIds: [bundleId] });
+      if (location.pathname !== routes.front.bundleList)
+        navigate(routes.front.bundleList);
+    };
+
+    dialogStoreActions.openDialog({
+      payload: dialogFactories.deleteTableEntries({
+        columnsOrder,
+        rows,
+        onConfirm,
+      }),
+    });
+  };
 
   return (
     <div className='relative'>
@@ -53,15 +68,18 @@ export const BundleSideList = () => {
               const entry = fieldEntries[idx];
               const isSelected = activeBundleId === entry.bundleId;
               return (
-                <div className='btn-group side-list-item' key={`${row}-${idx}`}>
+                <div
+                  className='btn-group side-list-item min-w-0'
+                  key={`${row}-${idx}`}
+                >
                   <button
-                    className='btn-square border-0 error'
+                    className='btn-square border-0 error shrink-0'
                     onClick={() => onDeleteBundle(idx)}
                   >
                     <FileXIcon size={16} />
                   </button>
                   <button
-                    className='truncate'
+                    className='truncate min-w-0 flex-1 text-left'
                     data-active={isSelected}
                     onClick={() => {
                       setActiveBundleId(entry.bundleId);

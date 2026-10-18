@@ -1,5 +1,5 @@
 import { useState, useEffect, type ReactNode } from 'react';
-import { useNavigate, useLocation, Link } from 'react-router';
+import { useNavigate, useLocation } from 'react-router';
 import { MessageSquarePlusIcon, CircleChevronLeftIcon } from 'lucide-react';
 import {
   dialogStoreActions,

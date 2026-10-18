@@ -9,6 +9,7 @@ import {
 } from '>/services/stores';
 import {
   dialogActions,
+  dialogFactories,
   ScreenLoader,
   TableContainer,
   PageHeader,
@@ -18,6 +19,7 @@ import {
 } from '>/modules';
 import { routes, BUNDLE_ID, BUNDLE_PROMPT } from '>/config';
 import { getSingleColumnFromResult, intoViewRows } from '>/services/utils';
+import { DeleteBundlesResponse } from '>/contracts';
 import { JsonArray } from '>/types';
 import { BundleInfoDlg } from './BundleInfoDlg';
 
@@ -44,14 +46,40 @@ export const BundleListRoute = () => {
     }),
   );
 
-  const { isPending, mutate } = useDeleteBundles(({ query, state, api }) => ({
-    isPending: query.isPending,
-    mutate: api.mutate,
-  }));
+  const deleteCallbacks = {
+    onSuccess: (data: DeleteBundlesResponse) => {
+      if (data.ok) {
+        codeStoreActions.setBundleSession();
+        codeStoreActions.setActiveFile();
+      } else {
+      }
+    },
+    onError: () => {
+      messageStoreActions.addMessage({
+        content: {
+          text: `Delete Operation Failed.`,
+          duration: 8000,
+        },
+      });
+    },
+  };
+
+  const { isPending, mutate } = useDeleteBundles(
+    ({ query, api }) => ({
+      isPending: query.isPending,
+      mutate: api.mutate,
+    }),
+    deleteCallbacks,
+  );
 
   const viewRows = useMemo(() => {
     return intoViewRows(rows as JsonArray[]);
   }, [rows]);
+
+  // ----------------
+  // No-Hooks Section
+  // ----------------
+  const isBusy = isFetching || isPending;
 
   const headerActions = {
     onRefetch: () => {
@@ -69,27 +97,17 @@ export const BundleListRoute = () => {
         field: BUNDLE_ID,
       }).map((r) => Number(r));
 
+      const onConfirm = () => {
+        dialogStoreActions.closeDialog();
+        mutate({ bundleIds });
+      };
+
       dialogStoreActions.openDialog({
-        payload: {
-          caption: 'Bundles Removal',
-          variant: 'error',
-          component: (
-            <ActionPreview
-              rows={rows}
-              columnsOrder={columnsOrder}
-              message='The following bundles will be permanently removed'
-            />
-          ),
-          actions: dialogActions.confirmCancel({
-            onConfirm: () => {
-              dialogStoreActions.closeDialog();
-              tableStore.api.clearSelected();
-              codeStoreActions.clearSelectedFiles();
-              codeStoreActions.setActiveBundleId();
-              mutate({ bundleIds });
-            },
-          }),
-        },
+        payload: dialogFactories.deleteTableEntries({
+          columnsOrder,
+          rows,
+          onConfirm,
+        }),
       });
     },
   };
@@ -124,7 +142,6 @@ export const BundleListRoute = () => {
     },
   };
 
-  const isBusy = isFetching || isPending;
   return (
     <>
       {isBusy && <ScreenLoader />}

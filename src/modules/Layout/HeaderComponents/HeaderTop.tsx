@@ -21,9 +21,13 @@ export const HeaderTop = () => {
       </div>
       {headerVisibility && (
         <header className='app-header p-2'>
-          <div className='app-logo flex items-center'>
+          <a
+            className='app-logo flex items-center'
+            href='https://github.com/enigma1/Reductive-Context-SPA'
+            target='_blank'
+          >
             <Logo className='text-logo' />
-          </div>
+          </a>
           <nav className='flex items-center gap-4'>
             <ComboField
               id='header-theme-select'

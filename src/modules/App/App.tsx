@@ -9,6 +9,7 @@ import {
   Footer,
   GlobalDialog,
   GlobalDialogError,
+  SideWrapper,
 } from '>/modules';
 
 export const App = () => {
@@ -27,11 +28,11 @@ export const App = () => {
         <AliveMonitor />
         {layout.showHeader && <Header />}
         <div className='app-content'>
-          {layout.showLeftSide && <LeftSide />}
+          {layout.showLeftSide && <SideWrapper component={LeftSide} />}
           <main>
             <Outlet />
           </main>
-          {layout.showRightSide && <RightSide />}
+          {layout.showRightSide && <SideWrapper component={RightSide} />}
         </div>
         {layout.showFooter && <Footer />}
       </div>
