@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import Editor from '@monaco-editor/react';
 import { ScaleIcon, CopyIcon, CheckIcon } from 'lucide-react';
+import { editorOptions } from '>/config';
 import { useEditor } from '>/services/hooks';
 import { RecommendedFile } from '>/contracts';
 import { dialogStoreActions } from '>/services/stores';
@@ -46,19 +47,7 @@ export const FileBlock = ({ file, idx }: FileBlockProps) => {
         value={file.content}
         language={language}
         options={{
-          automaticLayout: true,
-          minimap: { enabled: false },
-          contextmenu: true,
-          domReadOnly: false,
-          copyWithSyntaxHighlighting: true,
-          accessibilitySupport: 'on',
-          occurrencesHighlight: 'off',
-          glyphMargin: false,
-          quickSuggestions: false,
-          parameterHints: { enabled: false },
-          wordBasedSuggestions: 'off',
-          folding: true,
-          renderValidationDecorations: 'off',
+          ...editorOptions,
         }}
       />
     </>

@@ -5,6 +5,7 @@
 import { useRef, useMemo, useEffect } from 'react';
 import { DiffEditor } from '@monaco-editor/react';
 import * as monaco from 'monaco-editor';
+import { editorOptions } from '>/config';
 import { RecommendedFile, WriteFileResponse } from '>/contracts';
 import { useDialogStore, messageStoreActions } from '>/services/stores';
 import { useReadFile, useWriteFile } from '>/services/queryHooks';
@@ -147,20 +148,9 @@ export const ContentDifferencesDlg = ({
             modified={recommendedFile.content}
             language={language}
             options={{
+              ...editorOptions,
               ignoreTrimWhitespace: true,
               renderSideBySide: true,
-              automaticLayout: true,
-              minimap: { enabled: false },
-              contextmenu: true,
-              domReadOnly: false,
-              copyWithSyntaxHighlighting: true,
-              accessibilitySupport: 'on',
-              occurrencesHighlight: 'off',
-              glyphMargin: false,
-              quickSuggestions: false,
-              parameterHints: { enabled: false },
-              folding: true,
-              renderValidationDecorations: 'off',
             }}
           />
         </div>

@@ -1,5 +1,5 @@
 import cloneDeep from 'lodash-es/cloneDeep';
-import { type ReactNode, useState, useEffect } from 'react';
+import { type ReactNode, useState } from 'react';
 import {
   ChevronLeftIcon,
   ChevronDownIcon,
@@ -9,7 +9,7 @@ import {
 import { configStoreActions } from '>/services/stores';
 import type { UserPrefs } from '>/contracts';
 import { CommonDialogHandlers } from '>/types';
-import { ThemeSelect } from './Prefs';
+import { ThemeSelect } from './Sections';
 
 const sections = ['theme'] as const;
 
@@ -19,7 +19,7 @@ type PreferenceSectionProps = {
   title: string;
   collapsed: boolean;
   onToggle: () => void;
-  children: React.ReactNode;
+  children: ReactNode;
 };
 
 export const PreferenceSection = ({
@@ -33,7 +33,6 @@ export const PreferenceSection = ({
       <div className='wrapper rounded-sm'>
         <div className='preference-section-header'>
           <span className='one-line'>{title}</span>
-
           <button
             className='btn-micro'
             onClick={onToggle}
@@ -47,7 +46,6 @@ export const PreferenceSection = ({
           </button>
         </div>
       </div>
-
       {!collapsed && children}
     </>
   );

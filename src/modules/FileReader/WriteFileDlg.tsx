@@ -4,6 +4,7 @@
 */
 import { useEffect } from 'react';
 import Editor from '@monaco-editor/react';
+import { editorOptions } from '>/config';
 import { RecommendedFile, WriteFileResponse } from '>/contracts';
 import { useDialogStore, messageStoreActions } from '>/services/stores';
 import { useWriteFile } from '>/services/queryHooks';
@@ -104,18 +105,7 @@ export const WriteFileDlg = ({
             value={recommendedFile.content}
             language={language}
             options={{
-              automaticLayout: true,
-              minimap: { enabled: false },
-              contextmenu: true,
-              domReadOnly: false,
-              copyWithSyntaxHighlighting: true,
-              accessibilitySupport: 'on',
-              occurrencesHighlight: 'off',
-              glyphMargin: false,
-              quickSuggestions: false,
-              parameterHints: { enabled: false },
-              folding: true,
-              renderValidationDecorations: 'off',
+              ...editorOptions,
             }}
           />
         </div>

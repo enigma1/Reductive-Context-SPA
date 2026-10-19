@@ -38,3 +38,28 @@ export const defaultFrontRequest: FrontRequest = {
 export const defaultLanguagesResponse = {
   languages: {},
 };
+
+export const defaultResponseOk: BasicResponse = {
+  ok: true,
+  message: DUMMY_RESPONSE_MESSAGE,
+  aiStatus: {
+    active: false,
+    model: '',
+  },
+};
+
+export const editorOptions = {
+  automaticLayout: true,
+  minimap: { enabled: false },
+  contextmenu: true,
+  domReadOnly: false,
+  copyWithSyntaxHighlighting: true,
+  accessibilitySupport: 'on' as const,
+  occurrencesHighlight: 'off' as const,
+  glyphMargin: false,
+  quickSuggestions: false,
+  parameterHints: { enabled: false },
+  wordBasedSuggestions: 'off' as const,
+  folding: true,
+  renderValidationDecorations: 'off' as const,
+};

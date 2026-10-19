@@ -40,6 +40,7 @@ import type {
   GetLanguagesResponse,
   GetOpenRouterModelsResponse,
 } from '>/contracts';
+import { defaultResponseOk } from '>/config';
 
 import { bundlePostResponse, streamPost } from './sse';
 import { apiErrorResolver } from './apiErrors';
@@ -83,10 +84,9 @@ const apiCallRaw = <T = void>(fn: () => Promise<T>) =>
 
 const abort = () =>
   apiCall<AbortResponse>(() => apiClient.get(routes.back.abort));
-const ping = () =>
-  apiCall<BasicResponse>(() => apiClient.get(routes.back.ping));
-const checkSession = () =>
-  apiCall<BasicResponse>(() => apiClient.get(routes.back.checkSession));
+// const checkSession = () =>
+//   apiCall<BasicResponse>(() => apiClient.get(routes.back.checkSession));
+const checkSession = () => defaultResponseOk;
 const delayed = (data: DelayedRequest, { signal }: ApiOptions) =>
   apiCall<DelayedResponse>(() =>
     apiClient.post(routes.back.delayed, data, { timeout: 300_000, signal }),
@@ -162,7 +162,6 @@ const loadSettings = () =>
   apiCall<LoadSettingsResponse>(() => apiClient.get(routes.back.loadSettings));
 
 export const apiPoints = {
-  ping,
   checkSession,
   abort,
   delayed,

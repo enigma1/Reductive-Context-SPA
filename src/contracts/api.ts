@@ -72,6 +72,8 @@ export type GetPathsRequest = z.infer<typeof GetPathsRequestSchema>;
 
 export const GetPathsResponseSchema = BasicResponseSchema.extend({
   paths: z.record(z.string(), z.array(z.string())),
+  unresolved: z.array(z.string()),
+  textTrees: z.record(z.string(), z.string()),
 });
 export type GetPathsResponse = z.infer<typeof GetPathsResponseSchema>;
 

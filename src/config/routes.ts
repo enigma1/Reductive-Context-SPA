@@ -11,7 +11,6 @@ export type AllRoutes = {
 export const routes: AllRoutes = {
   back: {
     checkSession: '/api/check-session',
-    ping: '/api/ping',
     abort: '/api/abort',
     delayed: '/api/delayed',
     invalid: '/api/invalid',

@@ -1,21 +1,6 @@
 import Editor from '@monaco-editor/react';
 import { useEditor, useResizableSplit } from '>/services/hooks';
-
-const editorOptions = {
-  automaticLayout: true,
-  minimap: { enabled: false },
-  contextmenu: true,
-  domReadOnly: false,
-  copyWithSyntaxHighlighting: true,
-  accessibilitySupport: 'on' as const,
-  occurrencesHighlight: 'off' as const,
-  glyphMargin: false,
-  quickSuggestions: false,
-  parameterHints: { enabled: false },
-  wordBasedSuggestions: 'off' as const,
-  folding: true,
-  renderValidationDecorations: 'off' as const,
-};
+import { editorOptions } from '>/config';
 
 type BundleEditorsProps = {
   prompt: string;
@@ -38,7 +23,7 @@ export const BundleEditors = ({
       className='flex flex-col h-full w-full relative overflow-hidden'
     >
       <div
-        style={{ height: `${upperHeight}%` }}
+        style={{ height: `${content ? upperHeight : 100}%` }}
         className='w-full overflow-hidden'
       >
         <Editor
@@ -48,27 +33,30 @@ export const BundleEditors = ({
           options={editorOptions}
         />
       </div>
+      {content && (
+        <>
+          <div
+            onMouseDown={handleMouseDown}
+            className='page-splitter-resize'
+            title='Drag to resize editors'
+          >
+            <div className='handle' />
+          </div>
 
-      <div
-        onMouseDown={handleMouseDown}
-        className='page-splitter-resize'
-        title='Drag to resize editors'
-      >
-        <div className='handle' />
-      </div>
-
-      <div
-        style={{ height: `${100 - upperHeight}%` }}
-        className='w-full overflow-hidden'
-      >
-        <div className='page-title p-3'>Files Context Submitted</div>
-        <Editor
-          onMount={onContentMount}
-          value={content}
-          language='markdown'
-          options={editorOptions}
-        />
-      </div>
+          <div
+            style={{ height: `${100 - upperHeight}%` }}
+            className='w-full overflow-hidden'
+          >
+            <div className='page-title p-3'>Files Context Submitted</div>
+            <Editor
+              onMount={onContentMount}
+              value={content}
+              language='markdown'
+              options={editorOptions}
+            />
+          </div>
+        </>
+      )}
     </div>
   );
 };

@@ -10,7 +10,7 @@ export const AliveMonitor = () => {
     let failures = 0;
 
     const check = async () => {
-      let nextDelay = 5000;
+      let nextDelay = 8000;
 
       try {
         const rsp = await apiPoints.checkSession();
@@ -18,7 +18,7 @@ export const AliveMonitor = () => {
           messageStoreActions.addMessage({
             content: {
               text: `Error: ${rsp.message}`,
-              duration: 3000,
+              duration: 4000,
             },
           });
         }
@@ -31,14 +31,16 @@ export const AliveMonitor = () => {
           onlineManager.setOnline(true);
           appStoreActions.setAppStatus(true);
         }
-        nextDelay = 5000;
+        nextDelay = 20_000;
       } catch {
         failures++;
 
-        if (failures >= 3) {
+        if (failures >= 2) {
           onlineManager.setOnline(false);
           appStoreActions.setAppStatus(false);
-          nextDelay = 1000;
+          nextDelay = 3000;
+        } else {
+          nextDelay = nextDelay >> failures;
         }
       }
 

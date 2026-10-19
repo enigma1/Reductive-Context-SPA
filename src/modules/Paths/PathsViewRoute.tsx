@@ -6,6 +6,7 @@ import {
   FolderDotIcon,
   DatabasePlusIcon,
   ArrowLeftToLineIcon,
+  BrushCleaningIcon,
 } from 'lucide-react';
 import {
   useGetPaths,
@@ -30,22 +31,26 @@ export const PathsViewRoute = () => {
     activeBundleId,
     activePrompt,
     currentPaths,
-    getSelectedFiles,
+    selectedFiles,
     setActiveBundleId,
     getActivePrompt,
+    clearSelectedFiles,
   } = useCodeStore(({ state, api }) => ({
     activeBundleId: state.activeBundleId,
     activePrompt: state.activePrompt,
     currentPaths: state.activePaths,
-    getSelectedFiles: api.getAllSelectedFiles,
+    selectedFiles: state.selectedFiles,
     setActiveBundleId: api.setActiveBundleId,
+    clearSelectedFiles: api.clearSelectedFiles,
     getActivePrompt: api.getActivePrompt,
   }));
 
-  const { paths, isPathFetching, refetch } = useGetPaths(
+  const { paths, isPathFetching, refetch, textTrees } = useGetPaths(
     { paths: currentPaths },
     ({ state, query }) => ({
       paths: state.paths,
+      unresolved: state.unresolved,
+      textTrees: state.textTrees,
       isPathFetching: query.isFetching,
       refetch: query.refetch,
     }),
@@ -95,7 +100,7 @@ export const PathsViewRoute = () => {
   const onCreateBundle = () => {
     const prompt = getActivePrompt();
     mutateCreate(
-      { rootPaths: currentPaths, paths: getSelectedFiles(), prompt },
+      { rootPaths: currentPaths, paths: selectedFiles, prompt },
       callbacks,
     );
   };
@@ -107,7 +112,7 @@ export const PathsViewRoute = () => {
       {
         bundleId: activeBundleId,
         rootPaths: currentPaths,
-        paths: getSelectedFiles(),
+        paths: selectedFiles,
         prompt,
       },
       callbacks,
@@ -128,7 +133,7 @@ export const PathsViewRoute = () => {
     });
   };
 
-  const hasPaths = currentPaths.length > 0;
+  const hasPaths = currentPaths.length > 0 && Object.keys(paths).length > 0;
 
   return (
     <>
@@ -176,6 +181,14 @@ export const PathsViewRoute = () => {
             <button className='btn' onClick={onSetFilePaths} title='Set Paths'>
               <FolderDotIcon size={24} />
             </button>
+            <button
+              className='btn'
+              onClick={clearSelectedFiles}
+              title='Clear Currently Selected Files'
+              disabled={selectedFiles.length === 0}
+            >
+              <BrushCleaningIcon size={24} />
+            </button>
           </div>
         </div>
       </div>
@@ -192,11 +205,13 @@ export const PathsViewRoute = () => {
             </>
           ) : (
             <p>
-              Currently there are no paths defined to fetch files from. Click{' '}
+              Currently there are no valid paths defined to fetch files from.
+              Click{' '}
               <button className='btn-micro inline' onClick={onSetFilePaths}>
                 Set Paths
               </button>{' '}
-              to add one or more paths.
+              to add one or more paths. Or click the clear selected paths to
+              remove older invalid paths.
             </p>
           )}
         </div>

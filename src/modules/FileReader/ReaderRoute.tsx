@@ -9,7 +9,7 @@ import {
   CombineIcon,
   ArrowLeftToLineIcon,
 } from 'lucide-react';
-import { routes } from '>/config';
+import { routes, editorOptions } from '>/config';
 import { useCodeStore } from '>/services/stores';
 import { useReadFile } from '>/services/queryHooks';
 import { useViewerSelection } from '>/services/hooks';
@@ -107,19 +107,7 @@ export const Reader = () => {
           value={code}
           language={language}
           options={{
-            automaticLayout: true,
-            minimap: { enabled: false },
-            contextmenu: true,
-            domReadOnly: false,
-            copyWithSyntaxHighlighting: true,
-            accessibilitySupport: 'on',
-            occurrencesHighlight: 'off',
-            glyphMargin: false,
-            quickSuggestions: false,
-            parameterHints: { enabled: false },
-            wordBasedSuggestions: 'off',
-            folding: true,
-            renderValidationDecorations: 'off',
+            ...editorOptions,
           }}
         />
       </div>
