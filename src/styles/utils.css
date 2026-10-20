@@ -9,6 +9,10 @@
 }
 
 @layer utilities {
+  .center {
+    @apply flex items-center justify-center;
+  }
+
   .animate-fade-out {
     animation: fadeOut 6s ease-out forwards;
   }

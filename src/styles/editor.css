@@ -1,7 +1,7 @@
 @layer components {
   .field {
     & textarea {
-      @apply resize-y min-h-[3lh];
+      @apply resize-y min-h-20 h-40;
       background-color: var(--color-srf);
     }
   }

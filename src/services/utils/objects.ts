@@ -1,5 +1,4 @@
 import { merge, cloneDeep } from 'lodash-es';
-// export const defaultFilterColumnRequest: FilterColumnsRequest = {};
 
 export const hasObjectProps = <K extends string>(
   obj: unknown,
@@ -8,8 +7,7 @@ export const hasObjectProps = <K extends string>(
   if (typeof obj !== 'object' || obj === null || Array.isArray(obj)) {
     return false;
   }
-
-  return props.every((key) => key in obj);
+  return props.every((key) => Object.hasOwn(obj, key));
 };
 
 export const hasStringPropValue = <K extends string, V extends string>(

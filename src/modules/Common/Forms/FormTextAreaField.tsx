@@ -1,3 +1,6 @@
+/* File src/modules/Common/Forms/FormTextAreaField.tsx
+  Provides TextAreaField component for forms
+*/
 import { FormFieldWrapper } from './FormCommon';
 
 export type TextAreaProps =

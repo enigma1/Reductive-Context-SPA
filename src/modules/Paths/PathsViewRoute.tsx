@@ -7,6 +7,8 @@ import {
   DatabasePlusIcon,
   ArrowLeftToLineIcon,
   BrushCleaningIcon,
+  ChevronRightIcon,
+  ChevronDownIcon,
 } from 'lucide-react';
 import {
   useGetPaths,
@@ -23,6 +25,47 @@ import { routes } from '>/config';
 import { ScreenLoader, dialogFactories } from '>/modules';
 import type { CreateBundleResponse } from '>/contracts';
 import { FileSelector } from './FileSelector';
+
+const CollapsibleTextTree = ({
+  root,
+  textTree,
+}: {
+  root: string;
+  textTree: string;
+}) => {
+  const [isExpanded, setIsExpanded] = useState(false);
+
+  const toggleExpand = () => {
+    setIsExpanded((prev) => !prev);
+  };
+
+  return (
+    <div className='border border-base-300 rounded-md mb-2 overflow-hidden'>
+      <div
+        onClick={toggleExpand}
+        className='flex items-center justify-between p-2 cursor-pointer bg-base-200 select-none'
+      >
+        <span className='stand'>{root}</span>
+        <button
+          className='btn-micro'
+          type='button'
+          aria-label={isExpanded ? 'Collapse' : 'Expand'}
+        >
+          {isExpanded ? (
+            <ChevronDownIcon size={18} />
+          ) : (
+            <ChevronRightIcon size={18} />
+          )}
+        </button>
+      </div>
+      {isExpanded && (
+        <div className='pl-2'>
+          <pre className='whitespace-pre-wrap overflow-x-auto'>{textTree}</pre>
+        </div>
+      )}
+    </div>
+  );
+};
 
 export const PathsViewRoute = () => {
   const navigate = useNavigate();
@@ -196,11 +239,17 @@ export const PathsViewRoute = () => {
         <div className='page-section'>
           {hasPaths ? (
             <>
-              <p>
-                Enter the prmopt and select the files to create a bundle. You
-                can also select multiple sets of lines of code by viewing each
-                selected file.
-              </p>
+              <div>
+                {Object.entries(textTrees).map(([root, textTree], idx) => {
+                  return (
+                    <CollapsibleTextTree
+                      key={`text-tree-${idx}`}
+                      root={root}
+                      textTree={textTree}
+                    />
+                  );
+                })}
+              </div>
               <FileSelector filesByFolder={paths} />
             </>
           ) : (

@@ -22,11 +22,15 @@ import { CodeBlock, MarkdownComponents, dialogFactories } from '>/modules';
 
 type ConversationCardProps = {
   entry: Conversation;
+  initialOpen?: boolean;
 };
 
-export const ConversationCard = ({ entry }: ConversationCardProps) => {
+export const ConversationCard = ({
+  entry,
+  initialOpen,
+}: ConversationCardProps) => {
   const [flashIndex, setFlashIndex] = useState<number | null>(null);
-  const [isOpen, setIsOpen] = useState<boolean>(false);
+  const [isOpen, setIsOpen] = useState<boolean>(initialOpen ? true : false);
 
   const {
     filesJson,
@@ -107,10 +111,8 @@ export const ConversationCard = ({ entry }: ConversationCardProps) => {
             </ReactMarkdown>
           </div>
 
-          {pathFiles.length > 0 && (
-            <h4 className='wrapper pt-4'>
-              {`Files Received: ${pathFiles.length}`}
-            </h4>
+          {pathFiles.length > 1 && (
+            <h4 className='wrapper pt-4'>{`LLM Files: ${pathFiles.length}`}</h4>
           )}
 
           {pathFiles.map((file, idx) => {
@@ -122,7 +124,7 @@ export const ConversationCard = ({ entry }: ConversationCardProps) => {
             return (
               <section key={`${file.path}-${idx}`} className='max-w-none'>
                 <div className='one-line  mb-sep sub-heading-bg'>
-                  <h4 className='wrapper py-2'>{`${idx + 1}. ${file.path}`}</h4>
+                  <h4 className='wrapper py-2'>{`${pathFiles.length > 1 ? idx + 1 + '. ' : ''}${file.path}`}</h4>
                   <button
                     className='btn-square'
                     onClick={() => onCopy(file.content, idx)}

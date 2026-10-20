@@ -19,6 +19,7 @@ export const ConversationEntries = ({
           <ConversationCard
             key={`${entry.createdAt}-${bundleId}-${idx}`}
             entry={entry}
+            initialOpen={conversations.length === 1 ? true : undefined}
           />
         );
       })}

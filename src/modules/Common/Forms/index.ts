@@ -4,3 +4,4 @@ export * from './FormInputField';
 export * from './FormTextAreaField';
 export * from './FormComboField';
 export * from './FormFileField';
+export * from './FormRadioField';

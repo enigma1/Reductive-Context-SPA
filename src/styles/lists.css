@@ -42,7 +42,7 @@
   }
 
   .selection-group {
-    @apply flex flex-col gap-2 pl-3;
+    @apply flex flex-col;
 
     & label {
       @apply font-bold;

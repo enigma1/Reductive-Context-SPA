@@ -65,6 +65,8 @@ export const useGetPaths = createDataQueryHook<
   initialData: () => ({
     ...defaultResponse,
     paths: {},
+    textTrees: {},
+    unresolved: [],
   }),
   staleTime: 30_000,
   enabled: (req) => {

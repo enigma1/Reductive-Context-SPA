@@ -21,6 +21,7 @@ const addSelectedFile = (allFiles: FileNode[], file: FileNode) => {
       ? {
           ...item,
           ranges: file.ranges,
+          mode: file.mode,
         }
       : item,
   );

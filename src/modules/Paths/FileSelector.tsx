@@ -1,11 +1,13 @@
 import { useNavigate } from 'react-router';
-import { DeleteIcon, ViewIcon } from 'lucide-react';
+import { DeleteIcon, EyeIcon } from 'lucide-react';
 import { useCodeStore } from '>/services/stores';
 import { routes } from '>/config';
-import { CheckboxField, TextAreaField } from '>/modules';
-import type { FileNode, CodeRange } from '>/contracts';
+import { CheckboxField, TextAreaField, RadioFields } from '>/modules';
+import type { FileNode, FileMode, CodeRange } from '>/contracts';
 import type { FilesByFolder } from '>/types';
-import { FileItem } from './FileItem';
+
+const getRadioMode = (mode?: FileMode) =>
+  mode === undefined ? undefined : mode === 'signature' ? '1' : '0';
 
 type FileSelectorProps = {
   filesByFolder: FilesByFolder;
@@ -16,19 +18,27 @@ export const FileSelector = ({ filesByFolder }: FileSelectorProps) => {
   const {
     selectedFiles,
     addSelectedFiles,
+    removeSelectedFile,
     removeSelectedFiles,
+    clearSelectedFiles,
     setViewFile,
     addSelectedFile,
     setActivePrompt,
     activePrompt,
+    getCurrentPaths,
+    getAllSelectedFiles,
   } = useCodeStore(({ state, api }) => ({
     activePrompt: state.activePrompt,
     selectedFiles: state.selectedFiles,
     addSelectedFiles: api.addSelectedFiles,
+    removeSelectedFile: api.removeSelectedFile,
     removeSelectedFiles: api.removeSelectedFiles,
+    clearSelectedFiles: api.clearSelectedFiles,
     setViewFile: api.setViewFile,
     addSelectedFile: api.addSelectedFile,
     setActivePrompt: api.setActivePrompt,
+    getCurrentPaths: api.getCurrentPaths,
+    getAllSelectedFiles: api.getAllSelectedFiles,
   }));
 
   const getFolderSelectionState = (
@@ -38,14 +48,29 @@ export const FileSelector = ({ filesByFolder }: FileSelectorProps) => {
     const selectedCount = files.filter((file) =>
       selectedFiles.some(
         (selected) =>
-          selected.path === file.path && selected.name === file.name,
+          selected.path === file.path &&
+          selected.name === file.name &&
+          selected.mode === file.mode,
       ),
     ).length;
 
     return {
       checked: selectedCount === files.length,
       indeterminate: selectedCount > 0 && selectedCount < files.length,
+      mode:
+        selectedCount === 0 || selectedCount !== files.length
+          ? undefined
+          : files[0].mode,
     };
+  };
+
+  const getRootSelectionMode = (): FileMode | undefined => {
+    if (selectedFiles.length === 0) return undefined;
+
+    const firstMode = selectedFiles[0].mode;
+    return selectedFiles.every((file) => file.mode === firstMode)
+      ? firstMode
+      : undefined;
   };
 
   const onEdit = (file: FileNode) => {
@@ -65,6 +90,57 @@ export const FileSelector = ({ filesByFolder }: FileSelectorProps) => {
     });
   };
 
+  const onSetFile = (file: FileNode, mode?: string) => {
+    if (mode === undefined) {
+      console.log('removing', file.path, file.name);
+      removeSelectedFile(file);
+      return;
+    }
+    addSelectedFile({
+      ...file,
+      mode: (Number(mode) === 0 ? 'content' : 'signature') as FileMode,
+    });
+  };
+
+  const onSetGroup = (files: FileNode[], mode?: string) => {
+    if (mode === undefined) {
+      removeSelectedFiles(files);
+      return;
+    }
+
+    const groupFiles = files.map((file) => ({
+      ...file,
+      mode: (Number(mode) === 0 ? 'content' : 'signature') as FileMode,
+    }));
+    addSelectedFiles(groupFiles);
+  };
+
+  const onSetAll = (mode?: string) => {
+    if (mode === undefined) {
+      clearSelectedFiles();
+      return;
+    }
+
+    let allFiles: FileNode[] = [];
+    Object.entries(filesByFolder).map(([folder, files]) => {
+      files.map((name) => {
+        const selectedFile = selectedFiles.find(
+          (selected) => selected.path === folder && selected.name === name,
+        );
+        allFiles.push({
+          path: folder,
+          name,
+          ranges: selectedFile?.ranges,
+          mode: Number(mode) === 0 ? 'content' : 'signature',
+        });
+      });
+    });
+    clearSelectedFiles();
+    addSelectedFiles(allFiles);
+  };
+
+  const topMode = getRootSelectionMode();
+
   return (
     <>
       <div className='my-2'>
@@ -78,6 +154,16 @@ export const FileSelector = ({ filesByFolder }: FileSelectorProps) => {
         />
       </div>
       <div className='selection-list'>
+        <div className='selection-section inline-wrapper'>
+          <div className='selection-outer'>
+            <RadioFields
+              label='Select All/None with Content/Signature'
+              value={getRadioMode(topMode)}
+              wrapLayout='inline'
+              onChange={onSetAll}
+            />
+          </div>
+        </div>
         {Object.entries(filesByFolder).map(([folder, files], idx) => {
           const folderFiles: FileNode[] = files.map((name) => {
             const selectedFile = selectedFiles.find(
@@ -87,48 +173,46 @@ export const FileSelector = ({ filesByFolder }: FileSelectorProps) => {
               path: folder,
               name,
               ranges: selectedFile?.ranges,
-              mode: 'code',
+              mode: selectedFile?.mode,
             };
           });
 
-          const { checked, indeterminate } = getFolderSelectionState(
-            folderFiles,
-            selectedFiles,
-          );
+          const { mode } = getFolderSelectionState(folderFiles, selectedFiles);
 
           return (
             <div className='selection-section' key={folder}>
-              <div className='selection-outer space-y-1'>
-                <CheckboxField
-                  id={`${folder}-${idx}`}
-                  label={folder}
-                  checked={checked}
-                  indeterminate={indeterminate}
-                  onChange={(checked) => {
-                    if (checked) {
-                      addSelectedFiles(folderFiles);
-                    } else {
-                      removeSelectedFiles(folderFiles);
-                    }
-                  }}
-                />
+              <div className='selection-outer'>
+                <div className='inline-wrapper'>
+                  <RadioFields
+                    label={folder}
+                    wrapLayout='inline'
+                    value={getRadioMode(mode)}
+                    onChange={(mode) => onSetGroup(folderFiles, mode)}
+                  />
+                </div>
                 <div className='selection-group'>
                   {folderFiles.map((file, idxf) => {
-                    const fileBoxClass = `${file.ranges ? 'light-borders -ml-3' : ''}`;
+                    const fileBoxClass = `${file.ranges ? 'light-borders' : ''}`;
+
                     return (
                       <div
-                        className={fileBoxClass}
+                        className={`${fileBoxClass} selection-outer`}
                         key={`${file.path}-${file.name}-${idxf}`}
                       >
                         <div className='inline-wrapper'>
                           <button
-                            className='btn-square'
+                            className='btn-micro'
                             onClick={() => onEdit(file)}
                             title='View file and select code lines'
                           >
-                            <ViewIcon size={14} />
+                            <EyeIcon size={14} />
                           </button>
-                          <FileItem name={file.name} path={file.path} />
+                          <RadioFields
+                            label={file.name}
+                            wrapLayout='inline'
+                            value={getRadioMode(file.mode)}
+                            onChange={(mode) => onSetFile(file, mode)}
+                          />
                         </div>
                         <div className='space-y-1'>
                           {file.ranges?.map((range, idxl) => (

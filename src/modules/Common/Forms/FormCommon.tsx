@@ -34,10 +34,14 @@ export const FormFieldWrapper = ({
   if (wrapLayout === 'inline') {
     return (
       <div className={['field', wrapClass].join(' ')} data-layout={wrapLayout}>
-        {label && (
+        {label ? (
           <label data-status={$status} className={labelClass}>
             {children}
             {label}
+          </label>
+        ) : (
+          <label data-status={$status} className={labelClass}>
+            {children}
           </label>
         )}
         <FootNotice $status={$status} $notice={$notice} />

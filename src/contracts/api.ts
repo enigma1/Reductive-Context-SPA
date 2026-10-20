@@ -115,8 +115,8 @@ export const WriteFileContract = {
   responseSchema: WriteFileResponseSchema,
 };
 
-const codeMode = ['code', 'signature'] as const;
-export type FileMode = (typeof codeMode)[number];
+const contentMode = ['content', 'signature'] as const;
+export type FileMode = (typeof contentMode)[number];
 
 const CodeRangeSchema = z.object({
   startLine: z.number().int().positive().min(1),
@@ -127,7 +127,7 @@ export type CodeRange = z.infer<typeof CodeRangeSchema>;
 export const FileNodeSchema = z.object({
   path: z.string(),
   name: z.string(),
-  mode: z.enum(codeMode).optional(),
+  mode: z.enum(contentMode).optional(),
   ranges: z.array(CodeRangeSchema).optional(),
 });
 export type FileNode = z.infer<typeof FileNodeSchema>;
