@@ -33,6 +33,9 @@ export const useCreateBundle = createMutationHook<
       await qc.invalidateQueries({
         queryKey: queryKeys.getBundle({ bundleId: data.bundleId }),
       });
+      await qc.invalidateQueries({
+        queryKey: queryKeys.getBundleList(),
+      });
     },
   },
 });

@@ -118,17 +118,17 @@ export const WriteFileContract = {
 const contentMode = ['content', 'signature'] as const;
 export type FileMode = (typeof contentMode)[number];
 
-const CodeRangeSchema = z.object({
+const ContentRangeSchema = z.object({
   startLine: z.number().int().positive().min(1),
   endLine: z.number().int().positive().min(1),
 });
-export type CodeRange = z.infer<typeof CodeRangeSchema>;
+export type ContentRange = z.infer<typeof ContentRangeSchema>;
 
 export const FileNodeSchema = z.object({
   path: z.string(),
   name: z.string(),
   mode: z.enum(contentMode).optional(),
-  ranges: z.array(CodeRangeSchema).optional(),
+  ranges: z.array(ContentRangeSchema).optional(),
 });
 export type FileNode = z.infer<typeof FileNodeSchema>;
 
@@ -172,8 +172,9 @@ export const RootPathSchema = z.object({
 });
 export type RootPath = z.infer<typeof RootPathSchema>;
 
-export const UserFileSchema = CodeRangeSchema.partial().extend({
+export const UserFileSchema = ContentRangeSchema.partial().extend({
   filePath: z.string(),
+  contentMode: z.enum(contentMode),
 });
 export type UserFile = z.infer<typeof UserFileSchema>;
 

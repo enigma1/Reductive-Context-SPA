@@ -48,11 +48,9 @@ export const BundleListRoute = () => {
 
   const deleteCallbacks = {
     onSuccess: (data: DeleteBundlesResponse) => {
-      if (data.ok) {
-        codeStoreActions.setBundleSession();
-        codeStoreActions.setActiveFile();
-      } else {
-      }
+      tableStore.api.clearSelected();
+      codeStoreActions.setBundleSession();
+      codeStoreActions.setActiveFile();
     },
     onError: () => {
       messageStoreActions.addMessage({

@@ -9,6 +9,7 @@ export const transformUserFiles = (userFiles: UserFile[]) =>
 
     return {
       path,
+      mode: uf.contentMode,
       name,
       ...(uf.startLine != null && uf.endLine != null
         ? { ranges: [{ startLine: uf.startLine, endLine: uf.endLine }] }

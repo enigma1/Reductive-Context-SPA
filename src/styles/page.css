@@ -59,7 +59,7 @@
   }
 
   .page-border {
-    @apply my-3 rounded-lg border shadow-md;
+    @apply my-2 rounded-lg border shadow-md;
     border-color: var(--color-accent);
 
     >pre {

@@ -4,19 +4,19 @@
 import isEqual from 'lodash-es/isEqual';
 import { useState, useRef } from 'react';
 import type { OnMount } from '@monaco-editor/react';
-import { CodeRange, FileNode } from '>/contracts';
+import { ContentRange, FileNode } from '>/contracts';
 import { getLanguageFromFilename } from '>/services/utils';
 
 type CodeRangesComparison = {
-  original: CodeRange[];
-  modified: CodeRange[];
+  original: ContentRange[];
+  modified: ContentRange[];
 };
 
 const mergeRanges = ({ original, modified }: CodeRangesComparison) => {
   const allRanges = [...original, ...modified].sort(
     (a, b) => a.startLine - b.startLine,
   );
-  const merged: CodeRange[] = [];
+  const merged: ContentRange[] = [];
 
   for (const range of allRanges) {
     const last = merged[merged.length - 1];
@@ -44,7 +44,7 @@ export const useViewerSelection = (file?: FileNode) => {
     ? getLanguageFromFilename({ filePath: file.name, view: 'monaco' })
     : undefined;
 
-  const getSelections = (): CodeRange[] => {
+  const getSelections = (): ContentRange[] => {
     const selections = editorRef.current?.getSelections();
 
     if (!selections) {

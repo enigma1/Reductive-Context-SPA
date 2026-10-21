@@ -3,7 +3,7 @@ import { DeleteIcon, EyeIcon } from 'lucide-react';
 import { useCodeStore } from '>/services/stores';
 import { routes } from '>/config';
 import { CheckboxField, TextAreaField, RadioFields } from '>/modules';
-import type { FileNode, FileMode, CodeRange } from '>/contracts';
+import type { FileNode, FileMode, ContentRange } from '>/contracts';
 import type { FilesByFolder } from '>/types';
 
 const getRadioMode = (mode?: FileMode) =>
@@ -78,7 +78,7 @@ export const FileSelector = ({ filesByFolder }: FileSelectorProps) => {
     navigate(routes.front.readFile);
   };
 
-  const onRangeRemove = (file: FileNode, range: CodeRange) => {
+  const onRangeRemove = (file: FileNode, range: ContentRange) => {
     const ranges = (file.ranges ?? []).filter(
       (item) =>
         item.startLine !== range.startLine || item.endLine !== range.endLine,
@@ -92,7 +92,6 @@ export const FileSelector = ({ filesByFolder }: FileSelectorProps) => {
 
   const onSetFile = (file: FileNode, mode?: string) => {
     if (mode === undefined) {
-      console.log('removing', file.path, file.name);
       removeSelectedFile(file);
       return;
     }
@@ -180,7 +179,7 @@ export const FileSelector = ({ filesByFolder }: FileSelectorProps) => {
           const { mode } = getFolderSelectionState(folderFiles, selectedFiles);
 
           return (
-            <div className='selection-section' key={folder}>
+            <div className='selection-section' key={`${folder}-${idx}`}>
               <div className='selection-outer'>
                 <div className='inline-wrapper'>
                   <RadioFields

@@ -3,22 +3,12 @@
 */
 import { useState } from 'react';
 import ReactMarkdown from 'react-markdown';
-import {
-  CircleChevronLeftIcon,
-  ScaleIcon,
-  CopyIcon,
-  FilePlusIcon,
-  CheckIcon,
-} from 'lucide-react';
-import { Conversation, RecommendedFile } from '>/contracts';
-import { cx, parseBundleFiles } from '>/services/utils';
-import {
-  fixMarkdown,
-  toLocalTime,
-  getLanguageFromFilename,
-} from '>/services/utils';
-import { dialogStoreActions } from '>/services/stores';
-import { CodeBlock, MarkdownComponents, dialogFactories } from '>/modules';
+import { CircleChevronLeftIcon } from 'lucide-react';
+import { Conversation } from '>/contracts';
+import { parseBundleFiles } from '>/services/utils';
+import { fixMarkdown, toLocalTime } from '>/services/utils';
+import { MarkdownComponents } from '>/modules';
+import { MarkdownBlock } from './MarkdownBlock';
 
 type ConversationCardProps = {
   entry: Conversation;
@@ -29,7 +19,6 @@ export const ConversationCard = ({
   entry,
   initialOpen,
 }: ConversationCardProps) => {
-  const [flashIndex, setFlashIndex] = useState<number | null>(null);
   const [isOpen, setIsOpen] = useState<boolean>(initialOpen ? true : false);
 
   const {
@@ -42,29 +31,11 @@ export const ConversationCard = ({
     reasoning,
   } = entry;
 
-  // ----------------
+  // -------------
   // No-Hooks Section
-  // ----------------
+  // -------------
   const pathFiles = parseBundleFiles(filesJson);
   const entryTime = toLocalTime(createdAt);
-
-  const onCopy = (content: string, idx: number) => {
-    setFlashIndex(idx);
-    navigator.clipboard.writeText(content);
-    setTimeout(() => setFlashIndex(null), 2000);
-  };
-
-  const onWriteNew = (file: RecommendedFile) => {
-    dialogStoreActions.openDialog({
-      payload: dialogFactories.writeFile({ file }),
-    });
-  };
-
-  const onContentCompare = (file: RecommendedFile) => {
-    dialogStoreActions.openDialog({
-      payload: dialogFactories.contentDifferences({ file }),
-    });
-  };
 
   return (
     <div className='space-y-2 page-section'>
@@ -115,95 +86,14 @@ export const ConversationCard = ({
             <h4 className='wrapper pt-4'>{`LLM Files: ${pathFiles.length}`}</h4>
           )}
 
-          {pathFiles.map((file, idx) => {
-            const language = getLanguageFromFilename({
-              filePath: file.path,
-              view: 'markdown',
-            });
-
-            return (
-              <section key={`${file.path}-${idx}`} className='max-w-none'>
-                <div className='one-line  mb-sep sub-heading-bg'>
-                  <h4 className='wrapper py-2'>{`${pathFiles.length > 1 ? idx + 1 + '. ' : ''}${file.path}`}</h4>
-                  <button
-                    className='btn-square'
-                    onClick={() => onCopy(file.content, idx)}
-                  >
-                    {flashIndex !== null ? (
-                      <CheckIcon size={18} />
-                    ) : (
-                      <CopyIcon size={18} />
-                    )}
-                  </button>
-                  {file.isNew ? (
-                    <button
-                      className='btn-square'
-                      onClick={() => onWriteNew(file)}
-                    >
-                      <FilePlusIcon size={18} />
-                    </button>
-                  ) : (
-                    <button
-                      className='btn-square'
-                      onClick={() => onContentCompare(file)}
-                    >
-                      <ScaleIcon size={18} />
-                    </button>
-                  )}
-                </div>
-                <ReactMarkdown
-                  components={{
-                    code: ({
-                      node,
-                      className: cInputName,
-                      children,
-                      ...props
-                    }: any) => {
-                      let cLanguage = /language-(\w+)/.exec(
-                        cInputName || '',
-                      )?.[1];
-                      let code = String(children).trim();
-                      if (!cLanguage) {
-                        const firstLine = code.match(/^\s*([\w+-]+)\s*\n/);
-
-                        if (firstLine) {
-                          cLanguage = firstLine[1];
-                          code = code.slice(firstLine[0].length);
-                        }
-                      }
-                      const isBlock =
-                        !!cLanguage ||
-                        node?.position?.start?.line !==
-                          node?.position?.end?.line;
-
-                      if (isBlock) {
-                        return (
-                          <CodeBlock
-                            {...props}
-                            language={cLanguage ?? 'text'}
-                            wrapClasses={cx(
-                              'page-border',
-                              flashIndex === idx && 'content-flash',
-                            )}
-                            showCopyButton={language === 'markdown'}
-                            className={cInputName}
-                            onAnimationEnd={() => setFlashIndex(null)}
-                          >
-                            {code}
-                          </CodeBlock>
-                        );
-                      }
-                      return <code className={cInputName}>{children}</code>;
-                    },
-                  }}
-                >
-                  {language === 'markdown'
-                    ? fixMarkdown(file.content)
-                    : fixMarkdown(`\`\`\`${language}\n${file.content}\n\`\`\``)}
-                </ReactMarkdown>
-              </section>
-            );
-          })}
+          {pathFiles.map((file, idx) => (
+            <MarkdownBlock
+              key={`${file.path}-${idx}`}
+              file={file}
+              idx={idx}
+              totalFilesCount={pathFiles.length}
+            />
+          ))}
         </div>
       )}
     </div>

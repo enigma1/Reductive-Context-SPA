@@ -3,8 +3,9 @@ import ReactMarkdown from 'react-markdown';
 import { ArrowLeftToLineIcon } from 'lucide-react';
 import { useCodeStore, configStoreActions } from '>/services/stores';
 import { routes } from '>/config';
-import { ScreenLoader, FileBlock, MarkdownComponents } from '>/modules';
+import { ScreenLoader, MarkdownComponents } from '>/modules';
 import { fixMarkdown } from '>/services/utils';
+import { MarkdownBlock } from './MarkdownBlock';
 
 export const BundleAnswerRoute = () => {
   const navigate = useNavigate();
@@ -17,15 +18,15 @@ export const BundleAnswerRoute = () => {
   const { completed, files, reasoning, summary, clarification } =
     bundleResponse;
 
-  const onGoBack = () => {
-    configStoreActions.setConversationMode('listing');
-    navigate(routes.front.bundleView);
-  };
-
   const isBusy = bundleStream === 'processing';
   if (isBusy) {
     return <ScreenLoader />;
   }
+
+  const onGoBack = () => {
+    configStoreActions.setConversationMode('listing');
+    navigate(routes.front.bundleView);
+  };
 
   return (
     <>
@@ -64,9 +65,12 @@ export const BundleAnswerRoute = () => {
               </div>
             </div>
             {files?.map((file, idx) => (
-              <div key={file.path} className='page-section flex-1 space-y-2'>
-                <FileBlock file={file} idx={idx + 1} />
-              </div>
+              <MarkdownBlock
+                key={`${file.path}-${idx}`}
+                file={file}
+                idx={idx}
+                totalFilesCount={files.length}
+              />
             ))}
           </>
         )}

@@ -138,7 +138,7 @@ export const ContentDifferencesDlg = ({
         )}
       >
         <div className='area-spacer'>
-          <h1 className='area-title'>Comparing Files</h1>
+          <h1 className='area-title'>{`Comparing: ${recommendedFile.path}`}</h1>
           <div className='area-actions'></div>
         </div>
         <div className='area-content'>
