@@ -17,6 +17,8 @@ export type ConfigStoreActions = {
   getConversationMode: () => ConversationMode;
   setConversationMode: (mode: ConversationMode) => void;
   setSidebarWidth: (width: number) => void;
+  getCurrentRole: () => string;
+  setCurrentRole: (role: string) => void;
 };
 
 // type ConfigStore = ConfigStoreState & ConfigStoreActions;
@@ -59,6 +61,13 @@ export const configStoreActions: ConfigStoreActions = {
 
   setSidebarWidth: (width) => {
     setAuto({ sidebarWidth: width });
+  },
+
+  getCurrentRole: () => {
+    return get().currentRole;
+  },
+  setCurrentRole: (role) => {
+    setAuto({ currentRole: role });
   },
 };
 

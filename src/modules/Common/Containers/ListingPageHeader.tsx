@@ -4,7 +4,7 @@
 import { type ReactNode } from 'react';
 import { SquareArrowLeftIcon } from 'lucide-react';
 
-export type CustomPageHeaderProps = {
+export type ListingPageHeaderProps = {
   title: ReactNode;
   notice?: ReactNode;
   actions?: ReactNode & { onBack?: () => void };
@@ -12,13 +12,13 @@ export type CustomPageHeaderProps = {
   onBack?: () => void;
 };
 
-export const CustomPageHeader = ({
+export const ListingPageHeader = ({
   actions,
   title,
   notice,
   backTitle = 'Go Back',
   onBack,
-}: CustomPageHeaderProps) => {
+}: ListingPageHeaderProps) => {
   return (
     <>
       <div className='page-heading mb-sep'>

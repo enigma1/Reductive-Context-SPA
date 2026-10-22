@@ -1,5 +1,5 @@
 export * from './ActionPreview';
 export * from './Card';
 export * from './Tables';
-export * from './PageHeader';
-export * from './CustomPageHeader';
+export * from './TablePageHeader';
+export * from './ListingPageHeader';

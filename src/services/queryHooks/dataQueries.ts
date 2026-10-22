@@ -14,6 +14,10 @@ import type {
   GetBundleResponse,
   GetBundleListRequest,
   GetBundleListResponse,
+  GetRoleListRequest,
+  GetRoleListResponse,
+  GetRoleRequest,
+  GetRoleResponse,
   GetLanguagesResponse,
   GetLanguagesRequest,
   GetOpenRouterModelsRequest,
@@ -168,6 +172,45 @@ export const useGetBundleList = createDataQueryHook<
       return names;
     },
   }),
+});
+
+export const useGetRoleList = createDataQueryHook<
+  GetRoleListResponse,
+  GetRoleListRequest,
+  {}
+>({
+  queryKey: () => queryKeys.getRoleList(),
+  queryFn: async () => {
+    const rsp = await apiPoints.getRoleList();
+    return rsp;
+  },
+  initialData: () => ({
+    ...defaultResponse,
+    roles: [],
+  }),
+});
+
+export const useGetRole = createDataQueryHook<
+  GetRoleResponse,
+  GetRoleRequest,
+  {}
+>({
+  queryKey: (req) => queryKeys.getRole(req),
+  queryFn: async (req) => {
+    const rsp = await apiPoints.getRole(req);
+    return rsp;
+  },
+  initialData: (req) => ({
+    ...defaultResponse,
+    name: '',
+    roleMain: '',
+    contentRules: '',
+    contentExamples: '',
+    scopePrompt: '',
+    scopeRules: '',
+    scopeExamples: '',
+  }),
+  enabled: (req) => !!req.name,
 });
 
 export const useGetLanguages = createDataQueryHook<

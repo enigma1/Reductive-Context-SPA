@@ -13,6 +13,7 @@ import {
   GetPathsRequest,
   ReadFileRequest,
   GetBundleRequest,
+  GetRoleRequest,
 } from '>/contracts';
 import { appStoreActions } from '>/services/stores';
 import { createNetworkError } from '>/services/api/apiErrors';
@@ -107,7 +108,9 @@ export const queryKeys = {
   getPaths: (paths: GetPathsRequest) => ['get-paths', { ...paths }],
   readFile: (req: ReadFileRequest) => ['read-file', { ...req }],
   getBundle: (req: GetBundleRequest) => ['get-bundle', { ...req }],
-  getBundleList: () => ['get-bundle-list'],
+  getRole: (req: GetRoleRequest) => ['get-role', { ...req }],
+  getBundleList: () => ['get-bundles'],
+  getRoleList: () => ['get-roles'],
   getLanguages: () => ['get-languages'],
   getOpenRouterModels: () => ['get-open-router-models'],
 };

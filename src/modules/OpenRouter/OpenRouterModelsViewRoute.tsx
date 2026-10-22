@@ -6,7 +6,7 @@ import {
   ScreenLoader,
   EffectiveTableWrapper,
   TableContainer,
-  PageHeader,
+  TablePageHeader,
   FilterColumns,
   EmptyPage,
 } from '>/modules';
@@ -66,7 +66,7 @@ export const OpenRouterModelsViewRoute = () => {
 
   return (
     <>
-      <PageHeader
+      <TablePageHeader
         store={tableStore}
         title='Open Router use the id after openai-compatible:'
         expansionRef={tableRef}

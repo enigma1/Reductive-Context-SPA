@@ -29,6 +29,7 @@ export const UserPrefsConfigSchema = z.object({
   headerVisibility: z.boolean(),
   layout: LayoutPrefsSchema,
   conversationMode: z.enum(conversationMode),
+  currentRole: z.string().min(1),
 });
 export type UserPrefs = z.infer<typeof UserPrefsConfigSchema>;
 

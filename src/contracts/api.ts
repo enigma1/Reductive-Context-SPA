@@ -233,6 +233,17 @@ export const SubmitBundleContract = {
   responseSchema: SubmitBundleResponseSchema,
 };
 
+export const ResumeBundleRequestSchema = SubmitBundleRequestSchema;
+export type ResumeBundleRequest = z.infer<typeof ResumeBundleRequestSchema>;
+
+export const ResumeBundleResponseSchema = SubmitBundleResponseSchema;
+export type ResumeBundleResponse = z.infer<typeof ResumeBundleResponseSchema>;
+
+export const ResumeBundleContract = {
+  requestSchema: ResumeBundleRequestSchema,
+  responseSchema: ResumeBundleResponseSchema,
+};
+
 export const GetTableDataRequestSchema = z.object({
   table: z.string(),
 });
@@ -273,6 +284,71 @@ export type DeleteBundlesResponse = z.infer<typeof DeleteBundlesResponseSchema>;
 export const DeleteBundlesContract = {
   requestSchema: DeleteBundlesRequestSchema,
   responseSchema: DeleteBundlesResponseSchema,
+};
+
+export const AssistantRoleSchema = z.object({
+  name: z.string().min(1),
+  roleMain: z.string(),
+});
+
+export const AssistantRoleDetailedSchema = AssistantRoleSchema.extend({
+  contentRules: z.string(),
+  contentExamples: z.string(),
+  scopePrompt: z.string(),
+  scopeRules: z.string(),
+  scopeExamples: z.string(),
+});
+
+export const GetRoleListRequestSchema = z.void();
+export type GetRoleListRequest = z.infer<typeof GetRoleListRequestSchema>;
+export const GetRoleListResponseSchema = BasicResponseSchema.extend({
+  roles: z.array(AssistantRoleSchema),
+});
+
+export type GetRoleListResponse = z.infer<typeof GetRoleListResponseSchema>;
+
+export const GetRoleListContract = {
+  requestSchema: GetRoleListRequestSchema,
+  responseSchema: GetRoleListResponseSchema,
+};
+
+export const GetRoleRequestSchema = z.object({
+  name: z.string().min(1),
+});
+export type GetRoleRequest = z.infer<typeof GetRoleRequestSchema>;
+
+export const GetRoleResponseSchema = BasicResponseSchema.extend({
+  ...AssistantRoleDetailedSchema.shape,
+});
+export type GetRoleResponse = z.infer<typeof GetRoleResponseSchema>;
+
+export const GetRoleContract = {
+  requestSchema: GetRoleRequestSchema,
+  responseSchema: GetRoleResponseSchema,
+};
+
+export const SetRoleRequestSchema = AssistantRoleDetailedSchema;
+export type SetRoleRequest = z.infer<typeof SetRoleRequestSchema>;
+
+export const SetRoleResponseSchema = BasicResponseSchema;
+export type SetRoleResponse = z.infer<typeof SetRoleResponseSchema>;
+
+export const SetRoleContract = {
+  requestSchema: SetRoleRequestSchema,
+  responseSchema: SetRoleResponseSchema,
+};
+
+export const DeleteRolesRequestSchema = z.object({
+  roleNames: z.array(z.string()).min(1),
+});
+export type DeleteRolesRequest = z.infer<typeof DeleteRolesRequestSchema>;
+
+export const DeleteRolesResponseSchema = BasicResponseSchema;
+export type DeleteRolesResponse = z.infer<typeof DeleteRolesResponseSchema>;
+
+export const DeleteRolesContract = {
+  requestSchema: DeleteRolesRequestSchema,
+  responseSchema: DeleteRolesResponseSchema,
 };
 
 export const GetLanguagesRequestSchema = z.void();

@@ -35,7 +35,7 @@ export type ColumnIndicators = {
   hasHiddenColumns: boolean;
 };
 
-export type PageHeaderProps = {
+export type TablePageHeaderProps = {
   title: ReactNode;
   store: ContextTableStore;
   actions?: PageHeaderActions;
@@ -44,14 +44,14 @@ export type PageHeaderProps = {
   expansionRef?: RefObject<HTMLTableElement | null>;
 };
 
-export const PageHeader = ({
+export const TablePageHeader = ({
   store,
   actions,
   title,
   indicators,
   notice,
   expansionRef,
-}: PageHeaderProps) => {
+}: TablePageHeaderProps) => {
   const { useContextTableStore } = store;
   const { hasSelects, clearSelected } = useContextTableStore(
     ({ state, api }) => ({

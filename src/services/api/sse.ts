@@ -72,10 +72,16 @@ export const bundlePostResponse = (msg: StreamMessage) => {
   }
   if (msg.node === 'classifyScope') {
     codeStoreActions.setBundleStream('processing');
-    // optionally store the scope if you need it
+    return;
   }
+  if (msg.node === 'awaitingClarification') {
+    // flag to switch on modal dialog and redirect to paths view for clarification
+    codeStoreActions.setBundleStream('awaiting');
+    return;
+  }
+
   if (msg.node === 'generateCode') {
     codeStoreActions.setBundleResponse(msg.frontRequest as FrontRequest);
-    //                        ^^^^^^^^^^^^^ actual field in the frame
+    return;
   }
 };

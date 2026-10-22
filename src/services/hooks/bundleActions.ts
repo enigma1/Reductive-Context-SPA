@@ -1,4 +1,4 @@
-import { useSubmitBundle } from '>/services/queryHooks';
+import { useSubmitBundle, useResumeBundle } from '>/services/queryHooks';
 import { messageStoreActions, useCodeStore } from '>/services/stores';
 import { useEditor } from './editor';
 
@@ -24,40 +24,60 @@ export const useBundleActions = () => {
     }),
   );
 
+  const { mutate: resumeBundle, isPending: isResuming } = useResumeBundle(
+    ({ query, api }) => ({
+      isPending: query.isPending,
+      mutate: api.mutate,
+    }),
+  );
+
+  const callbacks = {
+    onSuccess: () => {
+      if (bundleStream === 'awaiting') {
+        setBundleStream('clarify');
+        messageStoreActions.addMessage({
+          content: {
+            text: 'Provide addition information to continue',
+            duration: 5000,
+          },
+        });
+      }
+
+      if (bundleStream === 'processing') {
+        setBundleStream('done');
+      }
+    },
+    onError: () => {
+      if (bundleStream === 'processing') {
+        setBundleStream('error');
+      }
+
+      messageStoreActions.addMessage({
+        content: {
+          text: 'Bundle processing failed',
+          duration: 5000,
+        },
+      });
+    },
+  };
+
   const onSubmitBundle = () => {
+    const processBundle =
+      bundleStream === 'clarify' ? resumeBundle : submitBundle;
     setBundleStream('processing');
-    submitBundle(
+    processBundle(
       {
         bundleId,
         bundleContent: contentEditor.getContent(),
         prompt: promptEditor.getContent(),
       },
-      {
-        onSuccess: () => {
-          if (bundleStream === 'processing') {
-            setBundleStream('done');
-          }
-        },
-        onError: () => {
-          if (bundleStream === 'processing') {
-            setBundleStream('error');
-          }
-
-          messageStoreActions.addMessage({
-            content: {
-              text: 'Processing the Bundle failed',
-              duration: 5000,
-            },
-          });
-        },
-      },
+      callbacks,
     );
   };
 
   return {
     onSubmitBundle,
-    isSubmitting,
-
+    isSubmitting: isSubmitting || isResuming,
     onPromptMount: promptEditor.onMount,
     isPromptDirty: promptEditor.isDirty,
     onContentMount: contentEditor.onMount,

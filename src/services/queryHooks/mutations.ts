@@ -7,10 +7,13 @@ import type {
   SetBundleRequest,
   SetBundleResponse,
   SubmitBundleRequest,
+  ResumeBundleRequest,
   DeleteBundlesRequest,
   DeleteBundlesResponse,
   WriteFileRequest,
   WriteFileResponse,
+  SetRoleRequest,
+  SetRoleResponse,
 } from '>/contracts';
 import { createMutationHook } from './mutationBuilder';
 import { queryKeys } from './defs';
@@ -29,10 +32,7 @@ export const useCreateBundle = createMutationHook<
     ...defaultCreateBundle,
   },
   options: {
-    cache: async (qc, data) => {
-      await qc.invalidateQueries({
-        queryKey: queryKeys.getBundle({ bundleId: data.bundleId }),
-      });
+    cache: async (qc) => {
       await qc.invalidateQueries({
         queryKey: queryKeys.getBundleList(),
       });
@@ -55,9 +55,9 @@ export const useSetBundle = createMutationHook<
     ...defaultSetBundle,
   },
   options: {
-    cache: async (qc, data) => {
+    cache: async (qc, data, req) => {
       await qc.invalidateQueries({
-        queryKey: queryKeys.getBundle({ bundleId: data.bundleId }),
+        queryKey: queryKeys.getBundle({ bundleId: req.bundleId }),
       });
     },
   },
@@ -67,6 +67,15 @@ export const useSubmitBundle = createMutationHook<
   MutationFunction<unknown, SubmitBundleRequest>
 >({
   fn: apiPoints.submitBundle,
+  state: {
+    ...defaultResponse,
+  },
+});
+
+export const useResumeBundle = createMutationHook<
+  MutationFunction<unknown, ResumeBundleRequest>
+>({
+  fn: apiPoints.resumeBundle,
   state: {
     ...defaultResponse,
   },
@@ -84,6 +93,9 @@ export const useDeleteBundles = createMutationHook<
       await qc.invalidateQueries({
         queryKey: queryKeys.getBundleList(),
       });
+      // await qc.invalidateQueries({
+      //   queryKey: queryKeys.getBundle(),
+      // });
     },
   },
 });
@@ -99,6 +111,25 @@ export const useWriteFile = createMutationHook<
     cache: async (qc, _, params) => {
       await qc.invalidateQueries({
         queryKey: queryKeys.readFile({ path: params.path, name: params.name }),
+      });
+    },
+  },
+});
+
+const defaultSetRole = {};
+
+export const useSetRole = createMutationHook<
+  MutationFunction<SetRoleResponse, SetRoleRequest>
+>({
+  fn: apiPoints.setRole,
+  state: {
+    ...defaultResponse,
+    ...defaultSetRole,
+  },
+  options: {
+    cache: async (qc, data, req) => {
+      await qc.invalidateQueries({
+        queryKey: queryKeys.getRole({ name: req.name }),
       });
     },
   },

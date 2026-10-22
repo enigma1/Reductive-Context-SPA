@@ -3,7 +3,6 @@
 */
 import type { AxiosResponse } from 'axios';
 import { routes } from '>/config';
-
 import {
   GetTableDataContract,
   GetPathsContract,
@@ -13,6 +12,10 @@ import {
   GetBundleContract,
   SetBundleContract,
   GetBundleListContract,
+  GetRoleListContract,
+  GetRoleContract,
+  SetRoleContract,
+  DeleteRolesContract,
   DeleteBundlesContract,
   GetLanguagesContract,
   GetOpenRouterModelsContract,
@@ -34,7 +37,15 @@ import type {
   SetBundleRequest,
   SetBundleResponse,
   SubmitBundleRequest,
+  ResumeBundleRequest,
   GetBundleListResponse,
+  GetRoleListResponse,
+  GetRoleRequest,
+  GetRoleResponse,
+  SetRoleRequest,
+  SetRoleResponse,
+  DeleteRolesRequest,
+  DeleteRolesResponse,
   DeleteBundlesRequest,
   DeleteBundlesResponse,
   GetLanguagesResponse,
@@ -101,7 +112,6 @@ const readFile = (data: ReadFileRequest) =>
   apiCall<ReadFileResponse>(() =>
     apiClient.post(routes.back.readFile, data, ReadFileContract),
   );
-
 const writeFile = (data: WriteFileRequest) =>
   apiCall<WriteFileResponse>(() =>
     apiClient.post(routes.back.writeFile, data, WriteFileContract),
@@ -111,17 +121,14 @@ const createBundle = (data: CreateBundleRequest) =>
   apiCall<CreateBundleResponse>(() =>
     apiClient.post(routes.back.createBundle, data, CreateBundleContract),
   );
-
 const getBundle = (data: GetBundleRequest) =>
   apiCall<GetBundleResponse>(() =>
     apiClient.post(routes.back.getBundle, data, GetBundleContract),
   );
-
 const setBundle = (data: SetBundleRequest) =>
   apiCall<SetBundleResponse>(() =>
     apiClient.post(routes.back.setBundle, data, SetBundleContract),
   );
-
 const submitBundle = (data: SubmitBundleRequest) =>
   apiCallRaw<void>(() =>
     streamPost<SubmitBundleRequest>(
@@ -131,14 +138,39 @@ const submitBundle = (data: SubmitBundleRequest) =>
     ),
   );
 
+const resumeBundle = (data: ResumeBundleRequest) =>
+  apiCallRaw<void>(() =>
+    streamPost<ResumeBundleRequest>(
+      constructClientUrl(routes.back.resumeBundle),
+      data,
+      bundlePostResponse,
+    ),
+  );
+
 const getBundleList = () =>
   apiCall<GetBundleListResponse>(() =>
     apiClient.get(routes.back.getBundleList, GetBundleListContract),
   );
-
 const deleteBundles = (data: DeleteBundlesRequest) =>
   apiCall<DeleteBundlesResponse>(() =>
     apiClient.post(routes.back.deleteBundles, data, DeleteBundlesContract),
+  );
+
+const getRoleList = () =>
+  apiCall<GetRoleListResponse>(() =>
+    apiClient.get(routes.back.getRoleList, GetRoleListContract),
+  );
+const getRole = (data: GetRoleRequest) =>
+  apiCall<GetRoleResponse>(() =>
+    apiClient.post(routes.back.getRole, data, GetRoleContract),
+  );
+const setRole = (data: SetRoleRequest) =>
+  apiCall<SetRoleResponse>(() =>
+    apiClient.post(routes.back.setRole, data, SetRoleContract),
+  );
+const deleteRoles = (data: DeleteRolesRequest) =>
+  apiCall<DeleteRolesResponse>(() =>
+    apiClient.post(routes.back.deleteRoles, data, DeleteRolesContract),
   );
 
 const getTableData = (data: GetTableDataRequest) =>
@@ -168,12 +200,17 @@ export const apiPoints = {
   getPaths,
   readFile,
   writeFile,
+  getBundleList,
   createBundle,
   getBundle,
   setBundle,
   submitBundle,
-  getBundleList,
+  resumeBundle,
   deleteBundles,
+  getRoleList,
+  getRole,
+  setRole,
+  deleteRoles,
   getTableData,
   getLanguages,
   getOpenRouterModels,

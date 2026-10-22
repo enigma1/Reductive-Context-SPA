@@ -12,7 +12,7 @@ import {
   dialogFactories,
   ScreenLoader,
   TableContainer,
-  PageHeader,
+  TablePageHeader,
   EffectiveTableWrapper,
   ActionPreview,
   DialogContent,
@@ -143,7 +143,7 @@ export const BundleListRoute = () => {
   return (
     <>
       {isBusy && <ScreenLoader />}
-      <PageHeader
+      <TablePageHeader
         actions={headerActions}
         store={tableStore}
         expansionRef={tableRef}

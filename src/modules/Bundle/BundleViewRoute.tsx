@@ -8,7 +8,7 @@ import { useConfigStore, useCodeStore } from '>/services/stores';
 import { routes } from '>/config';
 import { useBundleActions } from '>/services/hooks';
 import { useGetBundle } from '>/services/queryHooks';
-import { ScreenLoader, CustomPageHeader } from '>/modules';
+import { ScreenLoader, ListingPageHeader } from '>/modules';
 import { BundleEditors } from './BundleEditors';
 import { ConversationEntries } from './ConversationEntries';
 import { BundleHeader } from './BundleHeader';
@@ -81,7 +81,7 @@ export const BundleViewRoute = () => {
   const isDirty = isPromptDirty || isContentDirty;
   return (
     <>
-      <CustomPageHeader
+      <ListingPageHeader
         title={pageTitle}
         onBack={onGoBack}
         actions={

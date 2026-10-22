@@ -36,7 +36,8 @@ const removeSelectedFile = (
   );
 };
 
-export type BundleStream = 'done' | 'processing' | 'error' | 'idle';
+export type BundleStream =
+  'done' | 'processing' | 'error' | 'idle' | 'awaiting' | 'clarify';
 
 type BundleSession = {
   selectedFiles: FileNode[];
