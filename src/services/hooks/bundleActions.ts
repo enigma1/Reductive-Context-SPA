@@ -31,48 +31,15 @@ export const useBundleActions = () => {
     }),
   );
 
-  const callbacks = {
-    onSuccess: () => {
-      if (bundleStream === 'awaiting') {
-        setBundleStream('clarify');
-        messageStoreActions.addMessage({
-          content: {
-            text: 'Provide addition information to continue',
-            duration: 5000,
-          },
-        });
-      }
-
-      if (bundleStream === 'processing') {
-        setBundleStream('done');
-      }
-    },
-    onError: () => {
-      if (bundleStream === 'processing') {
-        setBundleStream('error');
-      }
-
-      messageStoreActions.addMessage({
-        content: {
-          text: 'Bundle processing failed',
-          duration: 5000,
-        },
-      });
-    },
-  };
-
   const onSubmitBundle = () => {
     const processBundle =
-      bundleStream === 'clarify' ? resumeBundle : submitBundle;
+      bundleStream === 'awaiting' ? resumeBundle : submitBundle;
     setBundleStream('processing');
-    processBundle(
-      {
-        bundleId,
-        bundleContent: contentEditor.getContent(),
-        prompt: promptEditor.getContent(),
-      },
-      callbacks,
-    );
+    processBundle({
+      bundleId,
+      bundleContent: contentEditor.getContent(),
+      prompt: promptEditor.getContent(),
+    });
   };
 
   return {

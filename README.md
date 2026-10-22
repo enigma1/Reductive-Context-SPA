@@ -43,10 +43,10 @@ written by: Mark Samios [@enigma1](https://github.com/enigma1)
 | `POST /api/deleteBundles`      | `{ DeleteBundlesRequest }` | Deletes the specified bundles         |
 | `POST /api/submitBundle`       | `{ SubmitBundleRequest }`  | Sends the user bundle to the LLM      |
 | `POST /api/resumeBundle`       | `{ ResumeBundleRequest }`  | Resumes bundle processing             |
-| `GET /api/getRoleList`         | n/a                        | Returns all roles                     |
-| `POST /api/getRole`            | `{ GetRoleRequest }`       | Returns role details                  |
-| `POST /api/setRole`            | `{ SetRoleRequest }`       | Creates or updates a role             |
-| `POST /api/deleteRoles`        | `{ DeleteRolesRequest }`   | Deletes the specified roles           |
+| `GET /api/getRoleList`         | n/a                        | Returns all AI roles                  |
+| `POST /api/getRole`            | `{ GetRoleRequest }`       | Returns AI role details               |
+| `POST /api/setRole`            | `{ SetRoleRequest }`       | Creates or updates an AI role         |
+| `POST /api/deleteRoles`        | `{ DeleteRolesRequest }`   | Deletes the specified AI roles        |
 | `POST /api/getTableData`       | `{ GetTableDataRequest }`  | Returns table data                    |
 | `GET /api/getOpenRouterModels` | n/a                        | Returns available OpenRouter models   |
 | `POST /api/saveSettings`       | `{ SaveSettingsRequest }`  | Saves application settings            |
@@ -57,18 +57,18 @@ written by: Mark Samios [@enigma1](https://github.com/enigma1)
 The intended workflow is:
 
 1. The user selects the required **role** for the LLM.
-1. The user provides one or more file folders.
-1. The backend scans the paths and produces a file tree with contextual information and token estimates.
-1. Additional scan/configuration options can constrain the amount of content considered.
-1. The frontend presents the resulting tree to the user.
-1. The user selects the folders and files relevant to the request.
-1. For large files, the user can further select individual functions or code segments.
-1. The backend assembles the selected content into the context for the request.
-1. The backend verifies that the resulting context fits within the configured model constraints.
-1. The user submits a question/request together with the selected context.
-1. The backend dispatches the request to the configured LLM.
-1. In case of clarification the user is informed to provide additional information
-1. The response can be presented to the user for review and, where applicable, proposed code changes can be inspected and merged.
+2. The user provides one or more file folders.
+3. The backend scans the paths and produces a file tree with contextual information and token estimates.
+4. Additional scan/configuration options can constrain the amount of content considered.
+5. The frontend presents the resulting tree to the user.
+6. The user selects the folders and files relevant to the request.
+7. For large files, the user can further select individual functions or code segments.
+8. The backend assembles the selected content into the context for the request.
+9. The backend verifies that the resulting context fits within the configured model constraints.
+10. The user submits a question/request together with the selected context.
+11. The backend dispatches the request to the configured LLM.
+12. In case of clarification the user is informed to provide additional information
+13. The response can be presented to the user for review and, where applicable, proposed code changes can be inspected and merged.
 
 ### Tech Stack
 

@@ -14,6 +14,8 @@ import {
   AppBootstrap,
   Home,
   NetworkDown,
+  RoleListRoute,
+  RoleViewRoute,
   BundleViewRoute,
   BundleListRoute,
   BundleAnswerRoute,
@@ -42,12 +44,17 @@ export const browserRouter = createBrowserRouter([
         element: <Home />,
       },
       {
-        path: routes.front.pathsView,
-        element: <PathsViewRoute />,
+        path: routes.front.roleList,
+        element: <RoleListRoute />,
       },
       {
-        path: routes.front.bundleView,
-        element: <BundleViewRoute />,
+        path: routes.front.roleView,
+        element: <RoleViewRoute />,
+      },
+
+      {
+        path: routes.front.pathsView,
+        element: <PathsViewRoute />,
       },
       {
         path: routes.front.readFile,
@@ -59,6 +66,10 @@ export const browserRouter = createBrowserRouter([
         element: <BundleListRoute />,
       },
       {
+        path: routes.front.bundleView,
+        element: <BundleViewRoute />,
+      },
+      {
         path: routes.front.bundleAnswer,
         element: <BundleAnswerRoute />,
       },
@@ -66,7 +77,6 @@ export const browserRouter = createBrowserRouter([
         path: routes.front.openRouterModelsView,
         element: <OpenRouterModelsViewRoute />,
       },
-
       {
         path: routes.front.tableData,
         element: <DataTable />,

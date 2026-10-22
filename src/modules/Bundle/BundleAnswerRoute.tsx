@@ -50,6 +50,16 @@ export const BundleAnswerRoute = () => {
         {bundleStream === 'error' && (
           <div className='page-section'>Request failed</div>
         )}
+        {bundleStream === 'awaiting' && clarification && (
+          <div className='page-section'>
+            <h2>Clarification Needed:</h2>
+            <div className='prose max-w-none'>
+              <ReactMarkdown components={MarkdownComponents}>
+                {fixMarkdown(clarification)}
+              </ReactMarkdown>
+            </div>
+          </div>
+        )}
         {(bundleStream === 'done' || bundleStream === 'idle') && (
           <>
             <div className='page-section'>

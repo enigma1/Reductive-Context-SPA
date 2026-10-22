@@ -80,6 +80,8 @@ export type CodeStoreActions = {
   setBundleResponse: (response: FrontRequest) => void;
 
   setBundleSession: (session?: BundleSession) => void;
+
+  setClarification: (clarification: string) => void;
 };
 
 export type CodeStore = StoreState & CodeStoreActions;
@@ -222,10 +224,28 @@ export const codeStoreActions: CodeStoreActions = {
   },
 
   setBundleStream: (mode) => {
-    setAuto({ bundleStream: mode });
+    setAuto((state) => ({
+      ...state,
+      bundleStream: mode,
+      bundleResponse:
+        state.bundleStream === 'awaiting' && mode !== 'awaiting'
+          ? { ...state.bundleResponse, clarification: undefined }
+          : state.bundleResponse,
+    }));
   },
+
   setBundleResponse: (response) => {
     setAuto({ bundleResponse: response });
+  },
+
+  setClarification: (clarification) => {
+    setAuto((state) => ({
+      ...state,
+      bundleResponse: {
+        ...state.bundleResponse,
+        clarification,
+      },
+    }));
   },
 };
 

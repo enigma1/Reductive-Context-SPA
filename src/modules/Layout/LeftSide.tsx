@@ -6,7 +6,7 @@ import {
   useConfigStore,
   useCodeStore,
 } from '>/services/stores';
-import { dialogFactories, BundleSideList } from '>/modules';
+import { dialogFactories, BundleSideList, RoleSideList } from '>/modules';
 import { routes } from '>/config';
 
 export const LeftSide = () => {
@@ -33,6 +33,26 @@ export const LeftSide = () => {
   };
 
   const sideSections: SidebarSection[] = [
+    {
+      id: 'roles',
+      getTitle: () => {
+        return 'Roles';
+      },
+      getRoute: () => routes.front.roleList,
+      component: <RoleSideList />,
+      icon: (
+        <span title='New Role'>
+          <MessageSquarePlusIcon
+            size={20}
+            onClick={() => {
+              dialogStoreActions.openDialog({
+                payload: dialogFactories.setFilePaths(),
+              });
+            }}
+          />
+        </span>
+      ),
+    },
     {
       id: 'conversations',
       getTitle: () => {
@@ -64,7 +84,7 @@ export const LeftSide = () => {
   };
 
   useEffect(() => {
-    toggleSection(sideSections[0]);
+    // toggleSection(sideSections[0]);
   }, []);
 
   return (

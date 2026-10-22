@@ -59,6 +59,7 @@ export const streamPost = async <TData>(
 };
 
 export const bundlePostResponse = (msg: StreamMessage) => {
+  console.log('stream-msgs', msg);
   if (msg.error) {
     codeStoreActions.setBundleStream('error');
     const error = new Error(msg.error) as ApiError;
@@ -74,13 +75,19 @@ export const bundlePostResponse = (msg: StreamMessage) => {
     codeStoreActions.setBundleStream('processing');
     return;
   }
-  if (msg.node === 'awaitingClarification') {
-    // flag to switch on modal dialog and redirect to paths view for clarification
+
+  // Check awaitingClarification as a top-level flag (no `node` field)
+  if (msg.awaitingClarification) {
     codeStoreActions.setBundleStream('awaiting');
     return;
   }
 
   if (msg.node === 'generateCode') {
+    if (msg.clarification) {
+      // Clarification path — no frontRequest, store the question
+      codeStoreActions.setClarification(msg.clarification as string);
+      return;
+    }
     codeStoreActions.setBundleResponse(msg.frontRequest as FrontRequest);
     return;
   }

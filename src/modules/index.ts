@@ -5,6 +5,7 @@ export * from './Common';
 export * from './Navigation';
 export * from './OpenRouter';
 export * from './Home';
+export * from './Roles';
 export * from './Paths';
 export * from './Bundle';
 export * from './DataTable';

@@ -21,6 +21,7 @@ export const routes: AllRoutes = {
     getBundle: '/api/get-bundle',
     setBundle: '/api/set-bundle',
     submitBundle: '/api/submit-bundle',
+    resumeBundle: '/api/resume-bundle',
     getBundleList: '/api/get-bundle-list',
     deleteBundles: '/api/delete-bundles',
     createRole: 'api/create-role',
