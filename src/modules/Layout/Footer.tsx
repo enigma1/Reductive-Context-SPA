@@ -1,9 +1,15 @@
 import { GraphStarIcon } from 'lucide-react';
 
 export const Footer = () => {
+  const initialYear = 2026;
   const currentYear = new Date().getFullYear();
+  const timeRange =
+    initialYear === currentYear
+      ? initialYear
+      : `${initialYear} - ${currentYear}`;
+
   return (
-    <footer className='inline-wrapper'>
+    <footer className='inline-wrapper text-sm'>
       <a
         target='_blank'
         href='https://github.com/enigma1/Reductive-Context-SPA'
@@ -11,7 +17,7 @@ export const Footer = () => {
       >
         <GraphStarIcon size={16} />
       </a>
-      {`Reductive Context Workspace - Copyright (c) ${currentYear} Mark Samios`}
+      {`Reductive Context Workspace - Copyright (c) ${timeRange} Mark Samios`}
     </footer>
   );
 };

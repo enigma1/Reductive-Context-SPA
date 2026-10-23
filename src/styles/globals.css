@@ -36,6 +36,7 @@
       var(--tone-5) 65%,
       var(--color-effect));
   --color-border-separate: var(--separator);
+  --color-border-light: var(--tone-4);
   --color-accent: var(--tone-6);
 
   /* types */

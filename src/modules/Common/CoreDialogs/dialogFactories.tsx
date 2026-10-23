@@ -4,6 +4,7 @@ import { dialogStoreActions } from '>/services/stores';
 import {
   Preferences,
   FilePathsForm,
+  RoleForm,
   ContentDifferencesDlg,
   WriteFileDlg,
   ActionPreview,
@@ -55,6 +56,32 @@ const editPreferences = () => {
     variant: 'info',
     actions: dialogActions
       .confirmCancel({
+        onConfirm: () => {
+          handlers.confirm();
+          dialogStoreActions.closeDialog();
+        },
+      })
+      .map((control, idx) => ({
+        ...control,
+        label: labels[idx] ?? control.label,
+      })),
+  };
+  return payload;
+};
+
+const setRole = () => {
+  const handlers: CommonDialogHandlers = {
+    confirm: () => {},
+  };
+
+  const labels = [undefined, 'Set Role'];
+  const payload: DialogPayload = {
+    initialSize: 'xxl',
+    caption: 'Set Roles',
+    component: <RoleForm formHandlers={handlers} />,
+    variant: 'info',
+    actions: dialogActions
+      .enabledConfirmCancel({
         onConfirm: () => {
           handlers.confirm();
           dialogStoreActions.closeDialog();
@@ -199,6 +226,7 @@ type Factory<TArgs> = (args: TArgs) => DialogPayload;
 type DialogFactories = {
   confirmation: Factory<ConfirmationProps>;
   editPreferences: Factory<void>;
+  setRole: Factory<void>;
   setFilePaths: Factory<void>;
   contentDifferences: Factory<ContentDifferencesProps>;
   writeFile: Factory<ContentDifferencesProps>;
@@ -208,8 +236,9 @@ type DialogFactories = {
 export const dialogFactories: DialogFactories = {
   confirmation,
   editPreferences,
+  setRole,
+  setFilePaths,
   contentDifferences,
   writeFile,
-  setFilePaths,
   deleteTableEntries,
 };

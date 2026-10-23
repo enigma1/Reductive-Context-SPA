@@ -37,7 +37,7 @@ export const BundleHeader = ({
   const switchNote =
     conversationMode === 'listing'
       ? 'Switch To Conversation'
-      : 'Switch to Original Prompt';
+      : 'Switch to User Prompt';
 
   const commonActions = (
     <>

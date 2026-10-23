@@ -63,3 +63,12 @@ export const editorOptions = {
   folding: true,
   renderValidationDecorations: 'off' as const,
 };
+
+export const editorSimpleOptions = {
+  ...editorOptions,
+  lineNumbers: 'off' as const,
+  glyphMargin: false,
+  lineDecorationsWidth: 0,
+  lineNumbersMinChars: 0,
+  folding: false,
+};

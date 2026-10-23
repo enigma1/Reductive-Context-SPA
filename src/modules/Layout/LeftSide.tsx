@@ -1,6 +1,10 @@
 import { useState, useEffect, type ReactNode } from 'react';
 import { useNavigate, useLocation } from 'react-router';
-import { MessageSquarePlusIcon, CircleChevronLeftIcon } from 'lucide-react';
+import {
+  CircleChevronLeftIcon,
+  PackagePlusIcon,
+  UserRoundPlusIcon,
+} from 'lucide-react';
 import {
   dialogStoreActions,
   useConfigStore,
@@ -42,11 +46,11 @@ export const LeftSide = () => {
       component: <RoleSideList />,
       icon: (
         <span title='New Role'>
-          <MessageSquarePlusIcon
+          <UserRoundPlusIcon
             size={20}
             onClick={() => {
               dialogStoreActions.openDialog({
-                payload: dialogFactories.setFilePaths(),
+                payload: dialogFactories.setRole(),
               });
             }}
           />
@@ -56,13 +60,13 @@ export const LeftSide = () => {
     {
       id: 'conversations',
       getTitle: () => {
-        return activeBundleId ? `Bundle: ${activeBundleId}` : 'Conversations';
+        return activeBundleId ? `Bundle: ${activeBundleId}` : 'Bundles';
       },
       getRoute: () => routes.front.bundleList,
       component: <BundleSideList />,
       icon: (
-        <span title='New Conversation'>
-          <MessageSquarePlusIcon
+        <span title='New Bundle'>
+          <PackagePlusIcon
             size={20}
             onClick={() => {
               dialogStoreActions.openDialog({

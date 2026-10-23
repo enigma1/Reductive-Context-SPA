@@ -47,7 +47,7 @@ export const BundleEditors = ({
             style={{ height: `${100 - upperHeight}%` }}
             className='w-full overflow-hidden'
           >
-            <div className='page-title p-3'>Files Context Submitted</div>
+            <div className='page-title p-3'>Bundled Context to Submit</div>
             <Editor
               onMount={onContentMount}
               value={content}

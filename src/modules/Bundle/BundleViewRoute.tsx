@@ -77,7 +77,7 @@ export const BundleViewRoute = () => {
     navigate(routes.front.bundleList);
   };
 
-  const pageTitle = `Bundle [${bundleId}] in ${conversationMode} mode ${conversationMode === 'listing' ? ' - Entries (' + conversations.length + ')' : ''}`;
+  const pageTitle = `Bundle [${bundleId}] in ${conversationMode === 'listing' ? 'LLM' : 'User'} mode ${conversationMode === 'listing' ? ' - Entries (' + conversations.length + ')' : ''}`;
   const isDirty = isPromptDirty || isContentDirty;
   return (
     <>

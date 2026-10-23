@@ -42,22 +42,26 @@ export const RoleListRoute = () => {
         title='Profiles & Roles'
         actions={<RoleListHeader {...headerActions} />}
       />
-      {roles.length === 0 ? (
-        <div>There are currently no roles</div>
-      ) : (
-        <div className='flex flex-wrap gap-4 p-4 overflow-auto w-full'>
-          {roles.map(({ name, roleMain }, idx) => {
-            return (
-              <div key={idx} style={{ minWidth: '250px', flex: '1 1 250px' }}>
-                <Card
-                  title={<span>Role #{name}</span>}
-                  content={<div className='wrapper p-4 gap-2'>{roleMain}</div>}
-                />
-              </div>
-            );
-          })}
-        </div>
-      )}
+      <div className='page-content'>
+        {roles.length === 0 ? (
+          <p className='pad'>There are currently no roles</p>
+        ) : (
+          <div className='flex flex-wrap gap-4 p-4 overflow-auto w-full'>
+            {roles.map(({ name, roleMain }, idx) => {
+              return (
+                <div key={idx} style={{ minWidth: '250px', flex: '1 1 250px' }}>
+                  <Card
+                    title={<span>Role #{name}</span>}
+                    content={
+                      <div className='wrapper p-4 gap-2'>{roleMain}</div>
+                    }
+                  />
+                </div>
+              );
+            })}
+          </div>
+        )}
+      </div>
     </>
   );
 };
