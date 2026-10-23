@@ -69,16 +69,20 @@ const editPreferences = () => {
   return payload;
 };
 
-const setRole = () => {
+type SetRoleProps = {
+  name: string;
+};
+const setRole = (props: SetRoleProps | void) => {
+  const { name } = props ?? {};
   const handlers: CommonDialogHandlers = {
     confirm: () => {},
   };
 
-  const labels = [undefined, 'Set Role'];
+  const labels = [undefined, name ? 'Update' : 'Create'];
   const payload: DialogPayload = {
     initialSize: 'xxl',
     caption: 'Set Roles',
-    component: <RoleForm formHandlers={handlers} />,
+    component: <RoleForm name={name} formHandlers={handlers} />,
     variant: 'info',
     actions: dialogActions
       .enabledConfirmCancel({
@@ -226,7 +230,7 @@ type Factory<TArgs> = (args: TArgs) => DialogPayload;
 type DialogFactories = {
   confirmation: Factory<ConfirmationProps>;
   editPreferences: Factory<void>;
-  setRole: Factory<void>;
+  setRole: Factory<SetRoleProps | void>;
   setFilePaths: Factory<void>;
   contentDifferences: Factory<ContentDifferencesProps>;
   writeFile: Factory<ContentDifferencesProps>;

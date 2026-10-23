@@ -2,10 +2,15 @@ import { useEffect, useState } from 'react';
 import { useNavigate, useLocation } from 'react-router';
 import Editor from '@monaco-editor/react';
 import { CircleChevronLeftIcon } from 'lucide-react';
+import { BasicResponse } from '>/contracts';
 import { editorSimpleOptions, routes } from '>/config';
-import { useGetRole } from '>/services/queryHooks';
-import { useDialogStore } from '>/services/stores';
-import { useEditor, useSimpleForm } from '>/services/hooks';
+import { useGetRole, useSetRole, useCreateRole } from '>/services/queryHooks';
+import {
+  useDialogStore,
+  messageStoreActions,
+  configStoreActions,
+} from '>/services/stores';
+import { useEditor, useSimpleForm, useModal } from '>/services/hooks';
 import { cx } from '>/services/utils';
 import {
   DialogContent,
@@ -30,11 +35,11 @@ type EditorSectionKey =
   | 'scopeExamples';
 
 export const RoleForm = ({ name, formHandlers }: RoleFormProps) => {
+  const [openSection, setOpenSection] = useState<EditorSectionKey>('roleMain');
   const location = useLocation();
   const navigate = useNavigate();
 
-  const [openSection, setOpenSection] = useState<EditorSectionKey>('roleMain');
-
+  const { setButtonStatus } = useModal();
   const { errorResponse, clearError } = useDialogStore(({ state, api }) => ({
     errorResponse: state.response,
     clearError: api.clearError,
@@ -60,6 +65,7 @@ export const RoleForm = ({ name, formHandlers }: RoleFormProps) => {
 
   const form = useSimpleForm({
     isNewSet: !name,
+    orgName: name,
     name,
     roleMain,
     contentRules,
@@ -69,16 +75,74 @@ export const RoleForm = ({ name, formHandlers }: RoleFormProps) => {
     scopeExamples,
   });
 
-  const onConfirm = async () => {
-    if (!name) {
-      // codeStoreActions.setActiveBundleId();
-      // codeStoreActions.setBundleSession();
-    }
-    // codeStoreActions.setCurrentPaths(form.values.paths);
+  useEffect(() => {
+    const disabled = errorResponse || !form.values.name;
+    setButtonStatus('confirm', disabled ? 'disabled' : undefined);
+  }, [form.values, errorResponse]);
 
-    if (location.pathname !== routes.front.pathsView) {
-      navigate(routes.front.pathsView);
+  const actionMade = form.values.isNewSet ? 'creat' : 'updat';
+  const callbacks = {
+    onSuccess: (data: BasicResponse) => {
+      if (data.ok) {
+        messageStoreActions.addMessage({
+          content: {
+            type: 'success',
+            text: `Role ${form.values.name} successfully ${actionMade}ed`,
+            duration: 8000,
+          },
+        });
+        configStoreActions.setCurrentRole(form.values.name!);
+        if (location.pathname !== routes.front.roleList) {
+          navigate(routes.front.roleList);
+        }
+      } else {
+        messageStoreActions.addMessage({
+          content: {
+            type: 'warn',
+            text: `There was a problem with ${actionMade}ing role ${form.values.name}`,
+            duration: 8000,
+          },
+        });
+      }
+    },
+    onError: () => {
+      messageStoreActions.addMessage({
+        content: {
+          text: `There was an error ${actionMade}ing role ${form.values.name}`,
+          duration: 8000,
+        },
+      });
+    },
+  };
+
+  const { mutate: mutateCreateRole, isPending: isCreateRolePending } =
+    useCreateRole(
+      ({ query, api }) => ({
+        mutate: api.mutate,
+        isPending: query.isPending,
+      }),
+      callbacks,
+    );
+
+  const { mutate: mutateUpdateRole, isPending: isSetRolePending } = useSetRole(
+    ({ query, api }) => ({
+      mutate: api.mutate,
+      isPending: query.isPending,
+    }),
+    callbacks,
+  );
+
+  const onConfirm = async () => {
+    const { isNewSet, orgName, name, ...params } = form.values;
+    if (!name) return;
+
+    if (isNewSet) {
+      mutateCreateRole({ ...params, name });
+      return;
     }
+    if (!orgName) return;
+
+    mutateUpdateRole({ ...params, orgName, name });
   };
 
   useEffect(() => {
@@ -95,7 +159,7 @@ export const RoleForm = ({ name, formHandlers }: RoleFormProps) => {
   // ----------------
   // No-Hooks Section
   // ----------------
-  const isBusy = isFetching;
+  const isBusy = isFetching || isSetRolePending || isCreateRolePending;
   if (isBusy) return <ScreenLoader />;
 
   const handleError = () => {

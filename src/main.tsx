@@ -1,14 +1,12 @@
 import './styles/globals.css';
 import { StrictMode } from 'react';
-import { redirect } from 'react-router';
 import { RouterProvider, createBrowserRouter } from 'react-router';
 import ReactDOM from 'react-dom/client';
 import { QueryClientProvider } from '@tanstack/react-query';
 import { queryClientHandlers } from '>/bootstrap';
-import { codeStoreActions } from '>/services/stores';
 import { routes, backPath, userPrefs } from '>/config';
 import { configureApiClient } from '>/services/api';
-
+import { readFileLoader, bundleViewLoader } from '>/loaders';
 import {
   App,
   AppBootstrap,
@@ -24,15 +22,6 @@ import {
   DataTable,
   OpenRouterModelsViewRoute,
 } from '>/modules';
-
-const readFileLoader = () => {
-  const activeFile = codeStoreActions.getActiveFile();
-
-  if (!activeFile) {
-    throw redirect(routes.front.pathsView);
-  }
-  return null;
-};
 
 export const browserRouter = createBrowserRouter([
   {
@@ -67,6 +56,7 @@ export const browserRouter = createBrowserRouter([
       },
       {
         path: routes.front.bundleView,
+        loader: bundleViewLoader,
         element: <BundleViewRoute />,
       },
       {

@@ -1,9 +1,9 @@
 {
   "author": "Mark Samios",
   "name": "Reductive-Context-SPA",
-  "version": "0.0.40",
+  "version": "0.0.41",
   "license": "GPL-3.0",
-  "description": "LLM Context Control with Human-in-the-loop workspace for curating and reducing content context",
+  "description": "LLM Context Control Application with Human-in-the-loop workspace for curating and reducing content context",
   "keywords": [
     "ai-assisted-development",
     "content-context",
@@ -11,6 +11,7 @@
     "human-in-the-loop",
     "llm",
     "llm-context",
+    "dynamic-llm-roles",
     "token-optimization"
   ],
   "type": "module",

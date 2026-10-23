@@ -12,8 +12,12 @@ import type {
   DeleteBundlesResponse,
   WriteFileRequest,
   WriteFileResponse,
+  CreateRoleRequest,
+  CreateRoleResponse,
   SetRoleRequest,
   SetRoleResponse,
+  DeleteRolesRequest,
+  DeleteRolesResponse,
 } from '>/contracts';
 import { createMutationHook } from './mutationBuilder';
 import { queryKeys } from './defs';
@@ -108,9 +112,9 @@ export const useWriteFile = createMutationHook<
     ...defaultResponse,
   },
   options: {
-    cache: async (qc, _, params) => {
+    cache: async (qc, rsp, req) => {
       await qc.invalidateQueries({
-        queryKey: queryKeys.readFile({ path: params.path, name: params.name }),
+        queryKey: queryKeys.readFile({ path: req.path, name: req.name }),
       });
     },
   },
@@ -127,10 +131,61 @@ export const useSetRole = createMutationHook<
     ...defaultSetRole,
   },
   options: {
-    cache: async (qc, data, req) => {
+    cache: async (qc, rsp, req) => {
       await qc.invalidateQueries({
         queryKey: queryKeys.getRole({ name: req.name }),
       });
+    },
+  },
+});
+
+const defaultCreateRole = {};
+
+export const useCreateRole = createMutationHook<
+  MutationFunction<CreateRoleResponse, CreateRoleRequest>
+>({
+  fn: apiPoints.createRole,
+  state: {
+    ...defaultResponse,
+    ...defaultCreateRole,
+  },
+  options: {
+    cache: async (qc) => {
+      await qc.invalidateQueries({
+        queryKey: queryKeys.getRoleList(),
+      });
+    },
+  },
+});
+
+export const useDeleteRoles = createMutationHook<
+  MutationFunction<DeleteRolesResponse, DeleteRolesRequest>
+>({
+  fn: apiPoints.deleteRoles,
+  state: {
+    ...defaultResponse,
+  },
+  options: {
+    cache: async (qc, rsp, req) => {
+      await qc.invalidateQueries({
+        queryKey: queryKeys.getRoleList(),
+      });
+      await Promise.all(
+        req.roleNames.map((name) =>
+          qc.invalidateQueries({
+            queryKey: queryKeys.getRole({ name }),
+          }),
+        ),
+      );
+    },
+    // on error we don't know what actually got deleted so invalidate all associated caches
+    cacheError: async (qc, err, req) => {
+      await qc.invalidateQueries({ queryKey: queryKeys.getRoleList() });
+      await Promise.all(
+        req.roleNames.map((name) =>
+          qc.invalidateQueries({ queryKey: queryKeys.getRole({ name }) }),
+        ),
+      );
     },
   },
 });

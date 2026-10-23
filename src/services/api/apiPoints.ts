@@ -12,6 +12,7 @@ import {
   GetBundleContract,
   SetBundleContract,
   GetBundleListContract,
+  CreateRoleContract,
   GetRoleListContract,
   GetRoleContract,
   SetRoleContract,
@@ -39,6 +40,8 @@ import type {
   SubmitBundleRequest,
   ResumeBundleRequest,
   GetBundleListResponse,
+  CreateRoleRequest,
+  CreateRoleResponse,
   GetRoleListResponse,
   GetRoleRequest,
   GetRoleResponse,
@@ -156,10 +159,11 @@ const deleteBundles = (data: DeleteBundlesRequest) =>
     apiClient.post(routes.back.deleteBundles, data, DeleteBundlesContract),
   );
 
-const getRoleList = () =>
-  apiCall<GetRoleListResponse>(() =>
-    apiClient.get(routes.back.getRoleList, GetRoleListContract),
+const createRole = (data: CreateRoleRequest) =>
+  apiCall<CreateRoleResponse>(() =>
+    apiClient.post(routes.back.createRole, data, CreateRoleContract),
   );
+
 const getRole = (data: GetRoleRequest) =>
   apiCall<GetRoleResponse>(() =>
     apiClient.post(routes.back.getRole, data, GetRoleContract),
@@ -168,6 +172,11 @@ const setRole = (data: SetRoleRequest) =>
   apiCall<SetRoleResponse>(() =>
     apiClient.post(routes.back.setRole, data, SetRoleContract),
   );
+const getRoleList = () =>
+  apiCall<GetRoleListResponse>(() =>
+    apiClient.get(routes.back.getRoleList, GetRoleListContract),
+  );
+
 const deleteRoles = (data: DeleteRolesRequest) =>
   apiCall<DeleteRolesResponse>(() =>
     apiClient.post(routes.back.deleteRoles, data, DeleteRolesContract),
@@ -207,6 +216,7 @@ export const apiPoints = {
   submitBundle,
   resumeBundle,
   deleteBundles,
+  createRole,
   getRoleList,
   getRole,
   setRole,

@@ -60,7 +60,7 @@ export const BundleSideList = () => {
 
   return (
     <div className='relative'>
-      {isBusy && <ScreenLoader local={true} />}
+      {isBusy && <ScreenLoader />}
       <div className='side-list'>
         {rows.length > 0 ? (
           <>
@@ -69,11 +69,11 @@ export const BundleSideList = () => {
               const isSelected = activeBundleId === entry.bundleId;
               return (
                 <div
-                  className='btn-group side-list-item min-w-0'
+                  className='btn-group side-list-item min-w-0 gap-0.5'
                   key={`${row}-${idx}`}
                 >
                   <button
-                    className='btn-square border-0 error shrink-0'
+                    className='btn-square border-0 error shrink-0 px-1'
                     onClick={() => onDeleteBundle(idx)}
                   >
                     <FileXIcon size={16} />
