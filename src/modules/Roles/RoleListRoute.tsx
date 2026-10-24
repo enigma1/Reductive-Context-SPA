@@ -47,14 +47,14 @@ export const RoleListRoute = () => {
         {roles.length === 0 ? (
           <p className='pad'>There are currently no roles</p>
         ) : (
-          <div className='flex flex-wrap gap-4 p-4 overflow-auto w-full'>
+          <div className='flex flex-wrap gap-4 p-3 overflow-auto w-full'>
             {roles.map(({ name, roleMain }, idx) => {
               return (
                 <div key={idx} style={{ minWidth: '250px', flex: '1 1 250px' }}>
                   <Card
-                    title={<span>Role #{name}</span>}
+                    title={<span className='font-bold'>#{name}</span>}
                     content={
-                      <div className='wrapper p-4 gap-2'>{roleMain}</div>
+                      <div className='wrapper py-4 gap-2'>{roleMain}</div>
                     }
                     controls={<RoleControls roleName={name} />}
                   />

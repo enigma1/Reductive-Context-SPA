@@ -33,13 +33,17 @@
     background-color: var(--color-bg);
 
     &.edit {
-      @apply mt-2 min-h-40 border rounded-lg p-2;
+      @apply mt-2 flex-1 min-h-0 border rounded-lg p-2;
       background-color: var(--color-srf);
     }
   }
 
   .area-item {
     @apply flex flex-col px-3 py-2 rounded-sm;
+
+    &.active-editor-item {
+      @apply flex-1 min-h-40;
+    }
 
     &.odd {
       background-color: var(--color-srf);

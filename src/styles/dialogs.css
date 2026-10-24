@@ -15,7 +15,7 @@
     }
 
     & .caption {
-      @apply flex shrink-0 px-4 py-3 text-lg font-semibold;
+      @apply flex shrink-0 p-3 text-lg font-semibold;
       /* background-color: var(--color-srf-dim); */
       border-color: var(--color-border-separate);
       background: linear-gradient(54deg in oklch, var(--color-srf-dim) 40%, var(--color-action) 100%);
