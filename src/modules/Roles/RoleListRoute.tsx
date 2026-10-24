@@ -2,6 +2,7 @@ import { useRef, useMemo } from 'react';
 import { ListRestartIcon } from 'lucide-react';
 import { useGetRoleList } from '>/services/queryHooks';
 import { ScreenLoader, ListingPageHeader, Card } from '>/modules';
+import { RoleControls } from './RoleControls';
 
 type RoleListHeaderProps = {
   onRefresh: () => void;
@@ -55,6 +56,7 @@ export const RoleListRoute = () => {
                     content={
                       <div className='wrapper p-4 gap-2'>{roleMain}</div>
                     }
+                    controls={<RoleControls roleName={name} />}
                   />
                 </div>
               );

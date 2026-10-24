@@ -75,6 +75,13 @@ export const RoleForm = ({ name, formHandlers }: RoleFormProps) => {
     scopeExamples,
   });
 
+  const roleMainEditor = useEditor();
+  const contentRulesEditor = useEditor();
+  const contentExamplesEditor = useEditor();
+  const scopePromptEditor = useEditor();
+  const scopeRulesEditor = useEditor();
+  const scopeExamplesEditor = useEditor();
+
   useEffect(() => {
     const disabled = errorResponse || !form.values.name;
     setButtonStatus('confirm', disabled ? 'disabled' : undefined);
@@ -136,25 +143,34 @@ export const RoleForm = ({ name, formHandlers }: RoleFormProps) => {
     const { isNewSet, orgName, name, ...params } = form.values;
     if (!name) return;
 
+    const editorValues = {
+      roleMain: roleMainEditor.getContent() ?? params.roleMain,
+      contentRules: contentRulesEditor.getContent() ?? params.contentRules,
+      contentExamples:
+        contentExamplesEditor.getContent() ?? params.contentExamples,
+      scopePrompt: scopePromptEditor.getContent() ?? params.scopePrompt,
+      scopeRules: scopeRulesEditor.getContent() ?? params.scopeRules,
+      scopeExamples: scopeExamplesEditor.getContent() ?? params.scopeExamples,
+    };
+
+    const payload = {
+      ...params,
+      ...editorValues,
+      name,
+    };
+
     if (isNewSet) {
-      mutateCreateRole({ ...params, name });
+      mutateCreateRole(payload);
       return;
     }
     if (!orgName) return;
-
-    mutateUpdateRole({ ...params, orgName, name });
+    console.log('payload', payload);
+    mutateUpdateRole({ ...payload, orgName });
   };
 
   useEffect(() => {
     formHandlers.confirm = onConfirm;
   }, [onConfirm]);
-
-  const roleMainEditor = useEditor();
-  const contentRulesEditor = useEditor();
-  const contentExamplesEditor = useEditor();
-  const scopePromptEditor = useEditor();
-  const scopeRulesEditor = useEditor();
-  const scopeExamplesEditor = useEditor();
 
   // ----------------
   // No-Hooks Section
@@ -240,18 +256,19 @@ export const RoleForm = ({ name, formHandlers }: RoleFormProps) => {
                 }`}
               />
             </div>
-            {openSection === 'roleMain' && (
-              <div className='area-content edit'>
-                <Editor
-                  onMount={roleMainEditor.onMount}
-                  value={roleMain}
-                  language='markdown'
-                  options={{
-                    ...editorSimpleOptions,
-                  }}
-                />
-              </div>
-            )}
+            <div
+              className={cx(
+                'area-content edit',
+                openSection !== 'roleMain' && 'hidden',
+              )}
+            >
+              <Editor
+                onMount={roleMainEditor.onMount}
+                value={roleMain}
+                language='markdown'
+                options={editorSimpleOptions}
+              />
+            </div>
           </div>
           <div className='area-item'>
             <div
@@ -266,18 +283,19 @@ export const RoleForm = ({ name, formHandlers }: RoleFormProps) => {
                 }`}
               />
             </div>
-            {openSection === 'contentRules' && (
-              <div className='area-content edit'>
-                <Editor
-                  onMount={contentRulesEditor.onMount}
-                  value={contentRules}
-                  language='markdown'
-                  options={{
-                    ...editorSimpleOptions,
-                  }}
-                />
-              </div>
-            )}
+            <div
+              className={cx(
+                'area-content edit',
+                openSection !== 'contentRules' && 'hidden',
+              )}
+            >
+              <Editor
+                onMount={contentRulesEditor.onMount}
+                value={contentRules}
+                language='markdown'
+                options={editorSimpleOptions}
+              />
+            </div>
           </div>
           <div className='area-item'>
             <div
@@ -292,18 +310,19 @@ export const RoleForm = ({ name, formHandlers }: RoleFormProps) => {
                 }`}
               />
             </div>
-            {openSection === 'contentExamples' && (
-              <div className='area-content edit'>
-                <Editor
-                  onMount={contentExamplesEditor.onMount}
-                  value={contentExamples}
-                  language='markdown'
-                  options={{
-                    ...editorSimpleOptions,
-                  }}
-                />
-              </div>
-            )}
+            <div
+              className={cx(
+                'area-content edit',
+                openSection !== 'contentExamples' && 'hidden',
+              )}
+            >
+              <Editor
+                onMount={contentExamplesEditor.onMount}
+                value={contentExamples}
+                language='markdown'
+                options={editorSimpleOptions}
+              />
+            </div>
           </div>
           <div className='area-item'>
             <div
@@ -318,18 +337,19 @@ export const RoleForm = ({ name, formHandlers }: RoleFormProps) => {
                 }`}
               />
             </div>
-            {openSection === 'scopePrompt' && (
-              <div className='area-content edit'>
-                <Editor
-                  onMount={scopePromptEditor.onMount}
-                  value={scopePrompt}
-                  language='markdown'
-                  options={{
-                    ...editorSimpleOptions,
-                  }}
-                />
-              </div>
-            )}
+            <div
+              className={cx(
+                'area-content edit',
+                openSection !== 'scopePrompt' && 'hidden',
+              )}
+            >
+              <Editor
+                onMount={scopePromptEditor.onMount}
+                value={scopePrompt}
+                language='markdown'
+                options={editorSimpleOptions}
+              />
+            </div>
           </div>
           <div className='area-item'>
             <div
@@ -344,18 +364,19 @@ export const RoleForm = ({ name, formHandlers }: RoleFormProps) => {
                 }`}
               />
             </div>
-            {openSection === 'scopeRules' && (
-              <div className='area-content edit'>
-                <Editor
-                  onMount={scopeRulesEditor.onMount}
-                  value={scopeRules}
-                  language='markdown'
-                  options={{
-                    ...editorSimpleOptions,
-                  }}
-                />
-              </div>
-            )}
+            <div
+              className={cx(
+                'area-content edit',
+                openSection !== 'scopeRules' && 'hidden',
+              )}
+            >
+              <Editor
+                onMount={scopeRulesEditor.onMount}
+                value={scopeRules}
+                language='markdown'
+                options={editorSimpleOptions}
+              />
+            </div>
           </div>
           <div className='area-item'>
             <div
@@ -370,18 +391,19 @@ export const RoleForm = ({ name, formHandlers }: RoleFormProps) => {
                 }`}
               />
             </div>
-            {openSection === 'scopeExamples' && (
-              <div className='area-content edit'>
-                <Editor
-                  onMount={scopeExamplesEditor.onMount}
-                  value={scopeExamples}
-                  language='markdown'
-                  options={{
-                    ...editorSimpleOptions,
-                  }}
-                />
-              </div>
-            )}
+            <div
+              className={cx(
+                'area-content edit',
+                openSection !== 'scopeExamples' && 'hidden',
+              )}
+            >
+              <Editor
+                onMount={scopeExamplesEditor.onMount}
+                value={scopeExamples}
+                language='markdown'
+                options={editorSimpleOptions}
+              />
+            </div>
           </div>
         </div>
       </div>

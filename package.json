@@ -1,7 +1,7 @@
 {
   "author": "Mark Samios",
   "name": "Reductive-Context-SPA",
-  "version": "0.0.41",
+  "version": "0.0.42",
   "license": "GPL-3.0",
   "description": "LLM Context Control Application with Human-in-the-loop workspace for curating and reducing content context",
   "keywords": [
@@ -37,8 +37,8 @@
     "zod": "^4.4.3"
   },
   "devDependencies": {
-    "@playwright/test": "^1.63.0",
     "@eslint/js": "^10.0.1",
+    "@playwright/test": "^1.63.0",
     "@tailwindcss/vite": "^4.3.3",
     "@testing-library/dom": "^10.4.1",
     "@testing-library/jest-dom": "^7.0.1",
@@ -51,7 +51,7 @@
     "@types/react-dom": "^19.2.4",
     "@types/react-syntax-highlighter": "^15.5.13",
     "@vitejs/plugin-react": "6.1.0",
-    "@vitest/coverage-v8": "^4.1.11",
+    "@vitest/coverage-v8": "^5.0.5",
     "eslint": "^10.10.0",
     "eslint-plugin-check-file": "^3.3.2",
     "eslint-plugin-import": "^2.32.0",
@@ -66,7 +66,7 @@
     "typescript-eslint": "^8.68.0",
     "vite": "^8.2.2",
     "vite-plugin-svgr": "^5.2.0",
-    "vitest": "^4.1.11"
+    "vitest": "^5.0.5"
   },
   "overrides": {
     "eslint-plugin-import": {
