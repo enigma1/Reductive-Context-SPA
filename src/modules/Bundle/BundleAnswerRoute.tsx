@@ -6,6 +6,7 @@ import { routes } from '>/config';
 import { ScreenLoader, MarkdownComponents } from '>/modules';
 import { fixMarkdown } from '>/services/utils';
 import { MarkdownBlock } from './MarkdownBlock';
+import { BundleClarification } from './BundleClarification';
 
 export const BundleAnswerRoute = () => {
   const navigate = useNavigate();
@@ -24,6 +25,10 @@ export const BundleAnswerRoute = () => {
   }
 
   const onGoBack = () => {
+    if (bundleStream === 'awaiting') {
+      navigate(routes.front.pathsView);
+      return;
+    }
     configStoreActions.setConversationMode('listing');
     navigate(routes.front.bundleView);
   };
@@ -50,16 +55,7 @@ export const BundleAnswerRoute = () => {
         {bundleStream === 'error' && (
           <div className='page-section'>Request failed</div>
         )}
-        {bundleStream === 'awaiting' && clarification && (
-          <div className='page-section'>
-            <h2>Clarification Needed:</h2>
-            <div className='prose max-w-none'>
-              <ReactMarkdown components={MarkdownComponents}>
-                {fixMarkdown(clarification)}
-              </ReactMarkdown>
-            </div>
-          </div>
-        )}
+        <BundleClarification />
         {(bundleStream === 'done' || bundleStream === 'idle') && (
           <>
             <div className='page-section'>

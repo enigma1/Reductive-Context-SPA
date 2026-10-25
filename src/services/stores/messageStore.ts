@@ -34,7 +34,7 @@ export const messageStoreActions: MessageStoreActions<unknown> = {
   addMessage: (msg) => {
     const params = {
       ...msg,
-      mode: msg.mode ?? 'header',
+      mode: msg.mode ?? 'footer',
       type: msg.type ?? 'error',
       id: msg.id ?? uuidv4(),
     };

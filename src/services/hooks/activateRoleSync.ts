@@ -1,16 +1,21 @@
 /* File: src/services/hooks/useActivateRoleSync.ts
   Hook to trigger and manage role activation state lifecycle
 */
-import { useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { ActivateRoleResponse } from '>/contracts';
 import { useActivateRole } from '>/services/queryHooks';
 import { useConfigStore, messageStoreActions } from '>/services/stores';
 
 export const useActivateRoleSync = () => {
-  const { currentRole, setCurrentModel } = useConfigStore(({ state, api }) => ({
-    currentRole: state.currentRole,
-    setCurrentModel: api.setCurrentModel,
-  }));
+  const { currentRole, setCurrentModel, setCurrentRole } = useConfigStore(
+    ({ state, api }) => ({
+      currentRole: state.currentRole,
+      setCurrentModel: api.setCurrentModel,
+      setCurrentRole: api.setCurrentRole,
+    }),
+  );
+  const [lastRole, setLastRole] = useState<string>(currentRole);
+
   const { mutate: mutateActivateRole, isPending } = useActivateRole(
     ({ query, api }) => ({
       mutate: api.mutate,
@@ -24,6 +29,7 @@ export const useActivateRoleSync = () => {
     onSuccess: (data: ActivateRoleResponse) => {
       if (data.ok) {
         data.aiStatus.active ? setCurrentModel(data.aiStatus.model) : undefined;
+        setLastRole(currentRole);
         messageStoreActions.addMessage({
           content: {
             type: 'success',
@@ -34,6 +40,7 @@ export const useActivateRoleSync = () => {
       }
     },
     onError: () => {
+      setCurrentRole(lastRole);
       messageStoreActions.addMessage({
         content: {
           text: 'Setting LLM Role failed.',

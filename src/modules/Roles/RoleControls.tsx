@@ -20,13 +20,19 @@ type RoleControlProps = {
   roleName: string;
 };
 export const RoleControls = ({ roleName }: RoleControlProps) => {
-  const { currentRole } = useConfigStore(({ state, api }) => ({
+  const { currentRole, setCurrentRole } = useConfigStore(({ state, api }) => ({
     currentRole: state.currentRole,
+    setCurrentRole: api.setCurrentRole,
   }));
+
   const onEdit = (name: string) => {
     dialogStoreActions.openDialog({
       payload: dialogFactories.setRole({ name }),
     });
+  };
+
+  const onActivate = (name: string) => {
+    setCurrentRole(name);
   };
 
   return (
@@ -36,7 +42,7 @@ export const RoleControls = ({ roleName }: RoleControlProps) => {
       </button>
       <button
         className='btn'
-        onClick={() => onEdit(roleName)}
+        onClick={() => onActivate(roleName)}
         data-status={currentRole === roleName ? 'disabled' : undefined}
       >
         Activate

@@ -22,7 +22,7 @@ import {
   messageStoreActions,
 } from '>/services/stores';
 import { routes } from '>/config';
-import { ScreenLoader, dialogFactories } from '>/modules';
+import { BundleClarification, ScreenLoader, dialogFactories } from '>/modules';
 import type { CreateBundleResponse } from '>/contracts';
 import { FileSelector } from './FileSelector';
 
@@ -236,6 +236,7 @@ export const PathsViewRoute = () => {
         </div>
       </div>
       <div className='page-content'>
+        <BundleClarification />
         <div className='page-section'>
           {hasPaths ? (
             <>
