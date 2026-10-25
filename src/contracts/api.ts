@@ -3,6 +3,7 @@
   Validates APIs requests/responses with the back end
 */
 import { z } from 'zod';
+import { MAX_ROLE_IMAGE_SIZE } from '>/config';
 import { OpenRouterModelSchema } from './openRouter';
 
 export const AiStatusSchema = z.object({
@@ -297,6 +298,17 @@ export const AssistantRoleDetailedSchema = AssistantRoleSchema.extend({
   scopePrompt: z.string(),
   scopeRules: z.string(),
   scopeExamples: z.string(),
+  image: z
+    .instanceof(File)
+    .refine((f) => f.size <= MAX_ROLE_IMAGE_SIZE, {
+      message: 'Image must be under 1 MB',
+    })
+    .refine((f) => ['image/jpeg', 'image/png', 'image/webp'].includes(f.type), {
+      message: 'Must be JPG, PNG, or WebP',
+    })
+    .optional(),
+  status: z.number().min(0).max(1).optional(),
+  sortOrder: z.number().int().min(0).optional(),
 });
 
 export const CreateRoleRequestSchema = AssistantRoleDetailedSchema;

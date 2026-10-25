@@ -1,22 +1,6 @@
-import { useRef, useMemo } from 'react';
-import { ListRestartIcon } from 'lucide-react';
 import { useGetRoleList } from '>/services/queryHooks';
 import { ScreenLoader, ListingPageHeader, Card } from '>/modules';
-import { RoleControls } from './RoleControls';
-
-type RoleListHeaderProps = {
-  onRefresh: () => void;
-};
-export const RoleListHeader = ({ onRefresh }: RoleListHeaderProps) => {
-  const commonActions = (
-    <>
-      <button className='btn-secondary' onClick={onRefresh} title='Refresh'>
-        <ListRestartIcon size={24} />
-      </button>
-    </>
-  );
-  return commonActions;
-};
+import { RoleControls, RoleListHeader } from './RoleControls';
 
 export const RoleListRoute = () => {
   const { roles, isFetching, refetch } = useGetRoleList(
@@ -50,12 +34,14 @@ export const RoleListRoute = () => {
           <div className='flex flex-wrap gap-4 p-3 overflow-auto w-full'>
             {roles.map(({ name, roleMain }, idx) => {
               return (
-                <div key={idx} style={{ minWidth: '250px', flex: '1 1 250px' }}>
+                <div
+                  className='wrapper border rounded-lg overflow-hidden'
+                  key={idx}
+                  style={{ minWidth: '250px', flex: '1 1 250px' }}
+                >
                   <Card
-                    title={<span className='font-bold'>#{name}</span>}
-                    content={
-                      <div className='wrapper py-4 gap-2'>{roleMain}</div>
-                    }
+                    title={`#${name}`}
+                    content={roleMain}
                     controls={<RoleControls roleName={name} />}
                   />
                 </div>

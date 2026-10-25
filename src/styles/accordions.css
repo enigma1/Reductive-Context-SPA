@@ -1,4 +1,13 @@
 @layer components {
+  .accordion-item {
+    @apply flex flex-col px-3 py-2 rounded-sm;
+    background: linear-gradient(90deg in oklch, var(--color-srf-elevated) 35%, var(--color-dim) 60%);
+
+    &>.active-item {
+      @apply flex flex-col flex-1 min-h-0;
+    }
+  }
+
   .side-accordion {
     @apply flex flex-col min-h-0 border-be last:border-0 w-full;
     border-color: var(--color-border);

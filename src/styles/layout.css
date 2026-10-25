@@ -44,6 +44,9 @@
     }
   }
 
+  .center {
+    @apply flex items-center justify-center;
+  }
 
   .wrapper {
     @apply flex flex-col;
@@ -62,7 +65,23 @@
   }
 
   .inline-wrapper {
-    @apply flex flex-[0_0_auto] flex-wrap items-center gap-1 pr-3
+    @apply flex flex-wrap flex-[0_0_auto] items-center gap-1 pr-3
+  }
+
+  .one-line {
+    @apply flex flex-row w-full items-center gap-2 cursor-pointer;
+
+    >:first-child {
+      @apply flex-1 min-w-0;
+    }
+  }
+
+  .one-line.no-stretch> :first-child {
+    @apply flex-none;
+  }
+
+  .container-wrapper {
+    @apply flex flex-wrap gap-4 overflow-auto w-full;
   }
 
   label.full {

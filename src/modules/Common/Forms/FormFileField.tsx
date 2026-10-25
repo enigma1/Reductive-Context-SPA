@@ -111,7 +111,6 @@ const DropFileArea = ({
 type DropFileFieldProps = {
   status?: StatusType;
   notice?: string;
-
   value?: File | null;
   texts: DropFileAreaText;
   onValueChange: (file: File | null) => void;

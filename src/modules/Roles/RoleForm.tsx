@@ -15,7 +15,9 @@ import {
   ErrorDetails,
   ScreenLoader,
   InputField,
+  NumberField,
   CheckboxField,
+  DropFileField,
 } from '>/modules';
 import { CommonDialogHandlers } from '>/types';
 import { RoleEditSection } from './RoleEditSection';
@@ -60,6 +62,9 @@ export const RoleForm = ({ name, formHandlers }: RoleFormProps) => {
     scopePrompt,
     scopeRules,
     scopeExamples,
+    sortOrder,
+    status,
+    image,
     isFetching,
   } = useGetRole({ name: name ?? '' }, ({ state, query }) => ({
     roleMain: state.roleMain,
@@ -68,6 +73,9 @@ export const RoleForm = ({ name, formHandlers }: RoleFormProps) => {
     scopePrompt: state.scopePrompt,
     scopeRules: state.scopeRules,
     scopeExamples: state.scopeExamples,
+    sortOrder: state.sortOrder,
+    status: state.status,
+    image: state.image,
     isFetching: query.isFetching,
   }));
 
@@ -81,6 +89,9 @@ export const RoleForm = ({ name, formHandlers }: RoleFormProps) => {
     scopePrompt,
     scopeRules,
     scopeExamples,
+    image,
+    sortOrder,
+    status,
   });
 
   const editors = [
@@ -91,7 +102,7 @@ export const RoleForm = ({ name, formHandlers }: RoleFormProps) => {
     useEditor(), // scopeRules
     useEditor(), // scopeExamples
   ];
-  const values = [
+  const editorValues = [
     roleMain,
     contentRules,
     contentExamples,
@@ -241,33 +252,91 @@ export const RoleForm = ({ name, formHandlers }: RoleFormProps) => {
             />
           </div>
         </div>
-        <div className='area-listing'>
+        <div className='area-listing gap-0'>
           <div className='area-item'>
-            <InputField
-              id='role-name'
-              label='Role Name'
-              value={name}
-              title={`Role Name`}
-              $status={
-                form.submitAttempted && !form.values.name ? 'error' : undefined
-              }
-              $notice={form.values.name ? undefined : 'Required'}
+            <div className='one-line'>
+              <InputField
+                id='role-name'
+                label='Role Name'
+                value={name}
+                title={`Role Name`}
+                $status={
+                  form.submitAttempted && !form.values.name
+                    ? 'error'
+                    : undefined
+                }
+                $notice={form.values.name ? undefined : 'Required'}
+                onValueChange={(value) => {
+                  form.setValue('name', value);
+                }}
+                placeholder='Enter Role Name'
+              />
+              <NumberField
+                id='sort-order'
+                label='Sort:'
+                value={form.values.sortOrder}
+                title={`Sort Order`}
+                onValueChange={(value) => {
+                  form.setValue('sortOrder', value || 0);
+                }}
+              />
+              <div className='h-full center'>
+                <CheckboxField
+                  id='show-role'
+                  label='Show:'
+                  checked={form.values.status === 1}
+                  wrapClass='center'
+                  wrapLayout='stack'
+                  // wrapClass='label-left'
+                  onChange={(checked) => {
+                    if (checked) {
+                      form.setValue('status', 1);
+                    } else {
+                      form.setValue('status', 0);
+                    }
+                  }}
+                />
+              </div>
+            </div>
+          </div>
+          {editorSections.map((section, idx) => (
+            <div
+              key={section.key}
+              className={cx(
+                'accordion-item border-t',
+                openSection === section.key && 'wrapper flex-1 min-h-40',
+              )}
+            >
+              <RoleEditSection
+                title={section.title}
+                isOpen={openSection === section.key}
+                onToggle={() => toggleSection(section.key)}
+                value={editorValues[idx]}
+                onMount={editors[idx].onMount}
+              />
+            </div>
+          ))}
+          <div className='one-line center border-t border-b p-3'>
+            <DropFileField
+              value={form.values.image}
               onValueChange={(value) => {
-                form.setValue('name', value);
+                form.setValue('image', value ?? undefined);
               }}
-              placeholder='Enter Role Name'
+              containerProps={{
+                className: 'center gap-2',
+              }}
+              inputProps={{
+                accept: '.png,.jpg,.webp',
+              }}
+              texts={{
+                title: 'Drop Image file here',
+                subtitle: 'or browse for a file',
+                browseButton: 'Browse...',
+                replaceButton: 'Replace File',
+                removeButton: 'Clear',
+              }}
             />
           </div>
-          {editorSections.map((section, i) => (
-            <RoleEditSection
-              key={section.key}
-              title={section.title}
-              isOpen={openSection === section.key}
-              onToggle={() => toggleSection(section.key)}
-              value={values[i]}
-              onMount={editors[i].onMount}
-            />
-          ))}
         </div>
       </div>
     </div>

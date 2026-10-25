@@ -18,11 +18,8 @@ export const RoleEditSection = ({
   value,
   onMount,
 }: EditorSectionProps) => (
-  <div className={cx('area-item', isOpen && 'active-editor-item')}>
-    <div
-      className='flex items-center justify-between cursor-pointer select-none'
-      onClick={onToggle}
-    >
+  <div className={cx(isOpen && 'active-item')}>
+    <div className='one-line' onClick={onToggle}>
       <h4 className='area-subtitle'>{title}</h4>
       <CircleChevronLeftIcon
         size={20}

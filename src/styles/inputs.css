@@ -1,6 +1,6 @@
 @layer components {
   .input {
-    @apply w-full px-3 py-2 rounded-md text-sm;
+    @apply w-full p-2 rounded-md text-sm;
     background: var(--color-srf);
     color: var(--color-text);
     border: 1px solid var(--color-border);
@@ -129,7 +129,7 @@
   }
 
   .check-label {
-    @apply flex items-center gap-2 cursor-pointer text-sm w-fit;
+    @apply flex items-center gap-2 cursor-pointer text-sm w-fit select-none;
     white-space: nowrap;
     color: var(--color-text);
   }

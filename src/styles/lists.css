@@ -55,14 +55,6 @@
     @apply flex items-center;
   }
 
-  .one-line {
-    @apply flex flex-row w-full items-center gap-2 cursor-pointer;
-
-    >:first-child {
-      @apply flex-1 min-w-0;
-    }
-  }
-
   .sub-heading-bg {
     background: linear-gradient(54deg in oklch, var(--color-srf) 39%, var(--color-srf-dim) 100%);
   }
