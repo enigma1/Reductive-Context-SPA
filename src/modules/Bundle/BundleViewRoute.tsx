@@ -22,8 +22,13 @@ export const BundleViewRoute = () => {
     }),
   );
 
-  const { bundleId = 0, activePrompt } = useCodeStore(({ state, api }) => ({
+  const {
+    bundleId = 0,
+    activePrompt,
+    bundleStream,
+  } = useCodeStore(({ state, api }) => ({
     bundleId: state.activeBundleId,
+    bundleStream: state.bundleStream,
     activePrompt: state.activePrompt,
   }));
 

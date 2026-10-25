@@ -2,6 +2,8 @@ import type { MutationFunction } from '@tanstack/react-query';
 import { apiPoints } from '>/services/api';
 import { defaultResponse } from '>/config';
 import type {
+  ActivateRoleRequest,
+  ActivateRoleResponse,
   CreateBundleRequest,
   CreateBundleResponse,
   SetBundleRequest,
@@ -187,5 +189,14 @@ export const useDeleteRoles = createMutationHook<
         ),
       );
     },
+  },
+});
+
+export const useActivateRole = createMutationHook<
+  MutationFunction<ActivateRoleResponse, ActivateRoleRequest>
+>({
+  fn: apiPoints.activateRole,
+  state: {
+    ...defaultResponse,
   },
 });

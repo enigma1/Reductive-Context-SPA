@@ -88,7 +88,7 @@ if (!container) {
 }
 
 configureApiClient(`${backPath}:${userPrefs.backPort}`);
-// console.log('start', `${backPath}:${userPrefs.backPort}`);
+
 ReactDOM.createRoot(container).render(
   <StrictMode>
     <QueryClientProvider client={queryClientHandlers}>

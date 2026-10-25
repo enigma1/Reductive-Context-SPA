@@ -16,6 +16,7 @@ import {
   GetRoleListContract,
   GetRoleContract,
   SetRoleContract,
+  ActivateRoleContract,
   DeleteRolesContract,
   DeleteBundlesContract,
   GetLanguagesContract,
@@ -47,6 +48,8 @@ import type {
   GetRoleResponse,
   SetRoleRequest,
   SetRoleResponse,
+  ActivateRoleRequest,
+  ActivateRoleResponse,
   DeleteRolesRequest,
   DeleteRolesResponse,
   DeleteBundlesRequest,
@@ -177,6 +180,11 @@ const getRoleList = () =>
     apiClient.get(routes.back.getRoleList, GetRoleListContract),
   );
 
+const activateRole = (data: ActivateRoleRequest) =>
+  apiCall<ActivateRoleResponse>(() =>
+    apiClient.post(routes.back.activateRole, data, ActivateRoleContract),
+  );
+
 const deleteRoles = (data: DeleteRolesRequest) =>
   apiCall<DeleteRolesResponse>(() =>
     apiClient.post(routes.back.deleteRoles, data, DeleteRolesContract),
@@ -220,6 +228,7 @@ export const apiPoints = {
   getRoleList,
   getRole,
   setRole,
+  activateRole,
   deleteRoles,
   getTableData,
   getLanguages,

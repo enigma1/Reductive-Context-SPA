@@ -6,3 +6,4 @@ export * from './resize';
 export * from './resizableSplit';
 export * from './bundleActions';
 export * from './bundleSync';
+export * from './activateRoleSync';

@@ -1,9 +1,13 @@
 import { Link } from 'react-router';
-import { dialogStoreActions } from '>/services/stores';
+import { dialogStoreActions, useConfigStore } from '>/services/stores';
 import { DropdownMenu, dialogFactories } from '>/modules';
 import { routes } from '>/config';
 
 export const HeaderMenu = () => {
+  const { aiModel } = useConfigStore(({ state }) => ({
+    aiModel: state.aiModel,
+  }));
+
   return (
     <div className='menu'>
       <DropdownMenu label='Pages'>
@@ -38,6 +42,7 @@ export const HeaderMenu = () => {
         </button>
         <Link to={routes.front.openRouterModelsView}>Open Router Models</Link>
       </DropdownMenu>
+      <div className='ml-auto flex gap-2 pr-4 inverted-text'>{aiModel}</div>
     </div>
   );
 };

@@ -362,6 +362,20 @@ export const SetRoleContract = {
   responseSchema: SetRoleResponseSchema,
 };
 
+export const ActivateRoleRequestSchema = z.object({
+  roleName: z.string().optional(),
+});
+
+export type ActivateRoleRequest = z.infer<typeof ActivateRoleRequestSchema>;
+
+export const ActivateRoleResponseSchema = BasicResponseSchema;
+export type ActivateRoleResponse = z.infer<typeof ActivateRoleResponseSchema>;
+
+export const ActivateRoleContract = {
+  requestSchema: ActivateRoleRequestSchema,
+  responseSchema: ActivateRoleResponseSchema,
+};
+
 export const DeleteRolesRequestSchema = z.object({
   roleNames: z.array(z.string()).min(1),
 });

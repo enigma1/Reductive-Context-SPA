@@ -106,7 +106,7 @@
 
   .btn-micro {
     @apply px-2 py-1 rounded shadow-sm flex items-center justify-center;
-    background-color: var(--state-normal);
+    background-color: transparent;
     color: var(--color-text);
 
     &:hover {
@@ -124,6 +124,15 @@
       color: var(--color-text-light);
       cursor: not-allowed;
     }
+
+    &.warn {
+      color: var(--color-warn);
+    }
+
+    &.error {
+      color: var(--color-error);
+    }
+
   }
 
   .btn-host {

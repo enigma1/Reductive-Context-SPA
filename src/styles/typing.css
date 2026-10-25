@@ -4,4 +4,8 @@
     color: var(--color-text-muted);
   }
 
+  .inverted-text {
+    @apply font-semibold;
+    color: var(--color-text-peak)
+  }
 }

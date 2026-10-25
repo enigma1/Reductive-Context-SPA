@@ -221,10 +221,10 @@ export const FileSelector = ({ filesByFolder }: FileSelectorProps) => {
                             >
                               <button
                                 title='Remove lines of code from bundle'
-                                className='btn-square error rotate-180'
+                                className='btn-micro error'
                                 onClick={() => onRangeRemove(file, range)}
                               >
-                                <DeleteIcon size={14} />
+                                <DeleteIcon className='rotate-180' size={14} />
                               </button>
                               <span>{`Lines: [${range.startLine}-${range.endLine}]`}</span>
                             </div>

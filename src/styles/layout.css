@@ -89,11 +89,11 @@
   }
 
   .light-borders {
-    @apply border rounded-md;
+    @apply border rounded-md py-2;
     border-color: var(--color-border-focus);
 
     >div {
-      @apply m-3;
+      @apply mx-2;
     }
   }
 

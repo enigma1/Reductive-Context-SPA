@@ -1,4 +1,4 @@
-import { useRef, useMemo } from 'react';
+import { useState, useRef, useMemo } from 'react';
 import { useNavigate } from 'react-router';
 import { createContextTableStore } from '>/services/stores';
 import { useOpenRouterModels } from '>/services/queryHooks';
@@ -11,13 +11,11 @@ import {
   EmptyPage,
 } from '>/modules';
 import type { ViewRow, JsonArray } from '>/types';
+import { OpenModelsCardListing } from './OpenModelsCardListing';
+import { OpenModelsTableListing } from './OpenModelsTableListing';
 
 export const OpenRouterModelsViewRoute = () => {
-  const resizeLineRef = useRef<HTMLDivElement | null>(null);
-  const tableRef = useRef<HTMLTableElement>(null);
-  const outerRef = useRef<HTMLDivElement>(null);
-  const tableStore = useMemo(() => createContextTableStore({}), []);
-  const navigate = useNavigate();
+  const [viewMode, setViewMode] = useState<'table' | 'cards'>('table');
 
   const { models, isFetching } = useOpenRouterModels(
     undefined,
@@ -37,57 +35,24 @@ export const OpenRouterModelsViewRoute = () => {
     'pricing',
   ];
 
-  const viewRows: ViewRow<JsonArray>[] = useMemo(() => {
-    return models
-      .sort((a, b) => a.id.localeCompare(b.id))
-      .map((model, idx) => ({
-        row: [
-          model.id,
-          model.name,
-          model.supported_parameters?.join(', ') ?? null,
-          model.description ?? null,
-          model.context_length ?? null,
-          model.architecture?.modality ?? null,
-          model.pricing ? JSON.stringify(model.pricing) : null,
-        ],
-        uiKey: model.id,
-        offset: idx,
-      }));
-  }, [models]);
-
   const shellHandlers = {};
 
   const isBusy = isFetching;
   if (isBusy) return <ScreenLoader />;
 
-  if (viewRows.length === 0) {
+  if (models.length === 0) {
     return <EmptyPage note='No Open Router models found' />;
   }
 
-  return (
-    <>
-      <TablePageHeader
-        store={tableStore}
-        title='Open Router use the id after openai-compatible:'
-        expansionRef={tableRef}
-        actions={shellHandlers}
-        indicators={{ hasHiddenColumns: false }}
-      />
-      <EffectiveTableWrapper
-        outerRef={outerRef}
-        resizeLineRef={resizeLineRef}
-        tableRef={tableRef}
-      >
-        <TableContainer
-          rows={viewRows}
-          columnsOrder={columnsOrder}
-          activeCols={columnsOrder}
-          store={tableStore}
-          outerRef={outerRef}
-          tableRef={tableRef}
-          resizeLineRef={resizeLineRef}
-        />
-      </EffectiveTableWrapper>
-    </>
+  return viewMode === 'table' ? (
+    <OpenModelsTableListing
+      models={models}
+      onToggle={() => setViewMode('cards')}
+    />
+  ) : (
+    <OpenModelsCardListing
+      models={models}
+      onToggle={() => setViewMode('table')}
+    />
   );
 };

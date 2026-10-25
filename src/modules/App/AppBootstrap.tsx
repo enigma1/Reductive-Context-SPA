@@ -1,6 +1,6 @@
 import { useState, useEffect, type ReactNode } from 'react';
 import { useGetLanguages } from '>/services/queryHooks';
-import { useBundleSync } from '>/services/hooks';
+import { useBundleSync, useActivateRoleSync } from '>/services/hooks';
 import { ScreenLoader } from '>/modules';
 import { setExtensionLanguages } from '>/config';
 
@@ -14,13 +14,16 @@ export const AppBootstrap = ({ children }: { children: ReactNode }) => {
       languages: state.languages,
     }),
   );
-  const ready = isFetched && !isFetching;
+
+  const { isPending: isActivateRolePending } = useActivateRoleSync();
+  const ready = isFetched && !isFetching && !isActivateRolePending;
 
   useEffect(() => {
     if (!ready) return;
     setExtensionLanguages(languages);
     setBootstrap(true);
   }, [ready, languages]);
+
   useBundleSync();
 
   if (!bootstrap) {

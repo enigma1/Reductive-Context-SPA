@@ -6,7 +6,7 @@ import { userPrefs } from '>/config';
 import type { UserPrefs, LayoutPrefs, ConversationMode } from '>/contracts';
 import { makeState } from './estate';
 
-type ConfigStoreState = UserPrefs;
+type ConfigStoreState = UserPrefs & { aiModel?: string };
 
 export type ConfigStoreActions = {
   setTheme: (value?: string) => void;
@@ -19,6 +19,7 @@ export type ConfigStoreActions = {
   setSidebarWidth: (width: number) => void;
   getCurrentRole: () => string;
   setCurrentRole: (role: string) => void;
+  setCurrentModel: (model?: string) => void;
 };
 
 // type ConfigStore = ConfigStoreState & ConfigStoreActions;
@@ -68,6 +69,10 @@ export const configStoreActions: ConfigStoreActions = {
   },
   setCurrentRole: (role) => {
     setAuto({ currentRole: role });
+  },
+
+  setCurrentModel: (model) => {
+    setAuto({ aiModel: model });
   },
 };
 

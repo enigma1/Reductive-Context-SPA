@@ -15,6 +15,7 @@ import {
   SquareArrowLeftIcon,
   ListRestartIcon,
   ShrinkIcon,
+  LayoutGridIcon,
 } from 'lucide-react';
 import type { ContextTableStore } from '>/services/stores';
 import { compactTable } from '>/services/utils';
@@ -28,6 +29,7 @@ type PageHeaderActions = {
   onDelete?: () => void;
   onFilterColumns?: () => void;
   onRefetch?: () => void;
+  onToggle?: () => void;
   onBack?: () => void;
 };
 
@@ -70,6 +72,7 @@ export const TablePageHeader = ({
     onDelete,
     onFilterColumns,
     onRefetch,
+    onToggle,
     onBack,
   } = shellActions;
   const [isPacked, setIsPacked] = useState(false);
@@ -156,6 +159,15 @@ export const TablePageHeader = ({
                 title='Refresh the Table'
               >
                 <ListRestartIcon size={24} />
+              </button>
+            )}
+            {onToggle && (
+              <button
+                className={`btn-secondary`}
+                onClick={onToggle}
+                title='Switch View'
+              >
+                <LayoutGridIcon size={24} />
               </button>
             )}
 

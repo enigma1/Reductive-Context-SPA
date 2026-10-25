@@ -28,6 +28,7 @@ export const routes: AllRoutes = {
     getRoleList: '/api/get-roles',
     getRole: '/api/get-role',
     setRole: '/api/set-role',
+    activateRole: '/api/activate-role',
     deleteRoles: '/api/delete-roles',
     getTableData: '/api/get-table-data',
     getLanguages: '/api/get-languages',
