@@ -53,6 +53,7 @@ export const MarkdownBlock = ({
         <h4 className='wrapper'>{`${totalFilesCount > 1 ? idx + 1 + '. ' : ''}${path}`}</h4>
         <button
           className='btn-square'
+          title={`Copy Content`}
           onClick={() => onCopy(file.content, idx)}
         >
           {flashIndex !== null ? (
@@ -62,11 +63,19 @@ export const MarkdownBlock = ({
           )}
         </button>
         {file.isNew ? (
-          <button className='btn-square' onClick={() => onWriteNew(file)}>
+          <button
+            className='btn-square'
+            title={`Create New File: ${file.path}`}
+            onClick={() => onWriteNew(file)}
+          >
             <FilePlusIcon size={18} />
           </button>
         ) : (
-          <button className='btn-square' onClick={() => onContentCompare(file)}>
+          <button
+            className='btn-square'
+            title={`Compare Changes in ${file.path}`}
+            onClick={() => onContentCompare(file)}
+          >
             <ScaleIcon size={18} />
           </button>
         )}

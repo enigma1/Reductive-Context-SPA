@@ -65,6 +65,11 @@ export const useSetBundle = createMutationHook<
       await qc.invalidateQueries({
         queryKey: queryKeys.getBundle({ bundleId: req.bundleId }),
       });
+      if (req.paths) {
+        await qc.invalidateQueries({
+          queryKey: queryKeys.getPaths({ paths: req.paths }),
+        });
+      }
     },
   },
 });

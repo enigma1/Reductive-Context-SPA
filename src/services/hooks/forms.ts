@@ -30,7 +30,10 @@ export const useSimpleForm = <T extends Record<string, unknown>>(
 
   const saveProfile = useCallback(
     (customProfileId?: string) => {
-      formsStoreActions.addProfileEntry(customProfileId ?? profileId, values);
+      const resolvedProfileId =
+        customProfileId ??
+        (Array.isArray(profileId) ? profileId.join('-') : profileId);
+      formsStoreActions.addProfileEntry(resolvedProfileId, values);
     },
     [profileId, values],
   );

@@ -9,11 +9,13 @@ export const useBundleActions = () => {
   const {
     bundleId = 0,
     bundleStream,
+    textTrees,
     setBundleStream,
   } = useCodeStore(({ state, api }) => ({
     bundleId: state.activeBundleId,
     activePrompt: state.activePrompt,
     bundleStream: state.bundleStream,
+    textTrees: state.textTrees,
     setBundleStream: api.setBundleStream,
   }));
 
@@ -37,6 +39,7 @@ export const useBundleActions = () => {
     setBundleStream('processing');
     processBundle({
       bundleId,
+      textTrees,
       bundleContent: contentEditor.getContent(),
       prompt: promptEditor.getContent(),
     });

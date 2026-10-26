@@ -42,7 +42,9 @@ export const HeaderMenu = () => {
         </button>
         <Link to={routes.front.openRouterModelsView}>Open Router Models</Link>
       </DropdownMenu>
-      <div className='ml-auto flex gap-2 pr-4 inverted-text'>{aiModel}</div>
+      <div className='ml-auto flex gap-2 pr-4 inverted-text text-sm'>
+        {aiModel}
+      </div>
     </div>
   );
 };

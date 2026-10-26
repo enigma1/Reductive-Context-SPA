@@ -1,3 +1,4 @@
+/** Reusable UI and app hooks (forms, themes, modals, editor, resize, bundle sync) */
 export * from './forms';
 export * from './themes';
 export * from './modals';

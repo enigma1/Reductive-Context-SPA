@@ -1,5 +1,4 @@
 import { RefObject } from 'react';
-import pickBy from 'lodash-es/pickBy';
 import {
   useQuery,
   UseMutationResult,
@@ -15,8 +14,6 @@ import {
   GetBundleRequest,
   GetRoleRequest,
 } from '>/contracts';
-import { appStoreActions } from '>/services/stores';
-import { createNetworkError } from '>/services/api/apiErrors';
 
 export const STALE_TIME = 3 * 60 * 1000; // Set default to 3 minutes
 export const KEEP_IN_CACHE_TIME = 8 * 60 * 1000; // Set default to 10 minutes
@@ -114,60 +111,3 @@ export const queryKeys = {
   getLanguages: () => ['get-languages'],
   getOpenRouterModels: () => ['get-open-router-models'],
 };
-
-export const getMutationResult = <TData = any, TVariables = any>(
-  mutation: UseMutationResult<TData, any, TVariables>,
-) => {
-  const guardMutate: typeof mutation.mutate = (...args) => {
-    if (!appStoreActions.getAppStatus()) {
-      // const error = createNetworkError('offline');
-      // options?.onError?.(error, variables, undefined, mutation.context);
-      console.log('Mutation attempt while offline = exiting');
-      return;
-    }
-
-    mutation.mutate(...args);
-  };
-
-  const guardMutateAsync: typeof mutation.mutateAsync = async (...args) => {
-    if (!appStoreActions.getAppStatus()) {
-      throw createNetworkError('offline');
-    }
-
-    return mutation.mutateAsync(...args);
-  };
-
-  const api = pickBy(mutation, (val) => typeof val === 'function') as {
-    mutate: typeof mutation.mutate;
-    mutateAsync: typeof mutation.mutateAsync;
-  };
-
-  const query = pickBy(
-    mutation,
-    (val) => typeof val !== 'function',
-  ) as MutationQuery<TData>;
-  return {
-    api: {
-      ...api,
-      mutate: guardMutate,
-      mutateAsync: guardMutateAsync,
-    },
-    query,
-  };
-};
-
-// Common invalidate Options on normal/error mutation response
-export const invalidateOptions = <
-  TMutationFn extends MutationFunction<any, any>,
->(): MutationCacheEffect<TMutationFn> => ({
-  cache: async (qc, data) => {
-    await qc.invalidateQueries({
-      queryKey: queryKeys.preferences(),
-    });
-  },
-  cacheError: async (qc, error) => {
-    await qc.invalidateQueries({
-      queryKey: queryKeys.preferences(),
-    });
-  },
-});

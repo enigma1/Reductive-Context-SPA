@@ -8,11 +8,11 @@ import {
   MutationRequestMeta,
   MutationCallbacks,
   MutationHookProps,
-  getMutationResult,
   MutationCacheEffect,
   InferVariables,
   InferData,
 } from './defs';
+import { getMutationResult } from './_handlers';
 
 type CreateMutationHookProps<TMutationFn extends MutationFunction<any, any>> = {
   fn: TMutationFn;
