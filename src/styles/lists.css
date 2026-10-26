@@ -29,7 +29,7 @@
 
   .selection-section {
     @apply flex items-center p-3 rounded-lg border;
-    background-color: var(--color-srf-elevated);
+    background: linear-gradient(90deg in oklch, var(--color-srf) 15%, var(--color-srf-dim) 100%);
   }
 
   .selection-outer {

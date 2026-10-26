@@ -14,7 +14,6 @@ import {
   useGetPaths,
   useCreateBundle,
   useSetBundle,
-  useGetBundle,
 } from '>/services/queryHooks';
 import {
   useCodeStore,
@@ -22,17 +21,28 @@ import {
   messageStoreActions,
 } from '>/services/stores';
 import { routes } from '>/config';
-import { BundleClarification, ScreenLoader, dialogFactories } from '>/modules';
+import {
+  CheckboxField,
+  BundleClarification,
+  ScreenLoader,
+  dialogFactories,
+} from '>/modules';
 import type { CreateBundleResponse } from '>/contracts';
 import { FileSelector } from './FileSelector';
+
+type CollapsibleTextTreeProps = {
+  root: string;
+  textTree: string;
+  onChange: (checked: boolean) => void;
+  isSet: boolean;
+};
 
 const CollapsibleTextTree = ({
   root,
   textTree,
-}: {
-  root: string;
-  textTree: string;
-}) => {
+  onChange,
+  isSet,
+}: CollapsibleTextTreeProps) => {
   const [isExpanded, setIsExpanded] = useState(false);
 
   const toggleExpand = () => {
@@ -43,9 +53,16 @@ const CollapsibleTextTree = ({
     <div className='border border-base-300 rounded-md mb-2 overflow-hidden'>
       <div
         onClick={toggleExpand}
-        className='flex items-center justify-between p-2 cursor-pointer bg-base-200 select-none'
+        className='one-line p-2 cursor-pointer bg-base-200 select-none'
       >
         <span className='stand'>{root}</span>
+        <CheckboxField
+          id={root}
+          label='Include:'
+          wrapClass='label-left'
+          checked={isSet}
+          onChange={onChange}
+        />
         <button
           className='btn-micro'
           type='button'
@@ -78,14 +95,18 @@ export const PathsViewRoute = () => {
     setActiveBundleId,
     getActivePrompt,
     clearSelectedFiles,
+    textTrees: selectedTextTrees,
+    setTree,
   } = useCodeStore(({ state, api }) => ({
     activeBundleId: state.activeBundleId,
     activePrompt: state.activePrompt,
     currentPaths: state.activePaths,
     selectedFiles: state.selectedFiles,
+    textTrees: state.textTrees,
     setActiveBundleId: api.setActiveBundleId,
     clearSelectedFiles: api.clearSelectedFiles,
     getActivePrompt: api.getActivePrompt,
+    setTree: api.setTree,
   }));
 
   const { paths, isPathFetching, refetch, textTrees } = useGetPaths(
@@ -241,12 +262,16 @@ export const PathsViewRoute = () => {
           {hasPaths ? (
             <>
               <div>
-                {Object.entries(textTrees).map(([root, textTree], idx) => {
+                {Object.entries(textTrees).map(([root, tree], idx) => {
                   return (
                     <CollapsibleTextTree
                       key={`text-tree-${idx}`}
                       root={root}
-                      textTree={textTree}
+                      textTree={tree}
+                      onChange={(enabled) => {
+                        setTree({ key: root, value: tree, enabled });
+                      }}
+                      isSet={selectedTextTrees[root] ? true : false}
                     />
                   );
                 })}

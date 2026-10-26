@@ -95,13 +95,27 @@ export const useDeleteBundles = createMutationHook<
     ...defaultResponse,
   },
   options: {
-    cache: async (qc) => {
+    cache: async (qc, rsp, req) => {
       await qc.invalidateQueries({
         queryKey: queryKeys.getBundleList(),
       });
-      // await qc.invalidateQueries({
-      //   queryKey: queryKeys.getBundle(),
-      // });
+      await Promise.all(
+        req.bundleIds.map((id) =>
+          qc.invalidateQueries({
+            queryKey: queryKeys.getBundle({ bundleId: id }),
+          }),
+        ),
+      );
+    },
+    cacheError: async (qc, err, req) => {
+      await qc.invalidateQueries({ queryKey: queryKeys.getRoleList() });
+      await Promise.all(
+        req.bundleIds.map((id) =>
+          qc.invalidateQueries({
+            queryKey: queryKeys.getBundle({ bundleId: id }),
+          }),
+        ),
+      );
     },
   },
 });

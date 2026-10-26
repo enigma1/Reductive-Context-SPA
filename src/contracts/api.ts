@@ -188,6 +188,7 @@ export const GetBundleResponseSchema = BasicResponseSchema.extend({
   conversations: z.array(ConversationSchema),
   rootPaths: z.array(RootPathSchema),
   userFiles: z.array(UserFileSchema),
+  textTrees: z.record(z.string(), z.string()),
 });
 export type GetBundleResponse = z.infer<typeof GetBundleResponseSchema>;
 
@@ -219,6 +220,7 @@ export const SubmitBundleRequestSchema = z.object({
   bundleId: z.number().int().positive(),
   bundleContent: z.string(),
   prompt: z.string(),
+  textTrees: z.record(z.string(), z.string()).optional(),
 });
 export type SubmitBundleRequest = z.infer<typeof SubmitBundleRequestSchema>;
 

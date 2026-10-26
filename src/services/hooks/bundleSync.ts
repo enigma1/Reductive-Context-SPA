@@ -14,18 +14,20 @@ export const useBundleSync = () => {
     }),
   );
 
-  const { bundleId, rootPaths, prompt, userFiles, isFetched } = useGetBundle(
-    {
-      bundleId: activeBundleId ?? 0,
-    },
-    ({ state, query }) => ({
-      isFetched: query.isFetched,
-      bundleId: state.bundleId,
-      rootPaths: state.rootPaths,
-      prompt: state.prompt,
-      userFiles: state.userFiles,
-    }),
-  );
+  const { bundleId, rootPaths, prompt, userFiles, isFetched, textTrees } =
+    useGetBundle(
+      {
+        bundleId: activeBundleId ?? 0,
+      },
+      ({ state, query }) => ({
+        isFetched: query.isFetched,
+        bundleId: state.bundleId,
+        rootPaths: state.rootPaths,
+        prompt: state.prompt,
+        userFiles: state.userFiles,
+        textTrees: state.textTrees,
+      }),
+    );
 
   useEffect(() => {
     if (!isFetched || bundleId !== activeBundleId) return;

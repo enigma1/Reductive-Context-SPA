@@ -8,6 +8,7 @@ import {
   ContentDifferencesDlg,
   WriteFileDlg,
   ActionPreview,
+  TextTree,
 } from '>/modules';
 import type { TableData } from '>/contracts';
 import { DialogPayload, WizardHandlers, CommonDialogHandlers } from '>/types';
@@ -125,6 +126,17 @@ const setFilePaths = () => {
   return payload;
 };
 
+const showTextTree = () => {
+  const payload: DialogPayload = {
+    initialSize: 'lg',
+    caption: 'Folders Text Tree',
+    component: <TextTree />,
+    variant: 'info',
+    actions: dialogActions.ack(),
+  };
+  return payload;
+};
+
 type ContentDifferencesProps = {
   file: RecommendedFile;
 };
@@ -232,6 +244,7 @@ type DialogFactories = {
   editPreferences: Factory<void>;
   setRole: Factory<SetRoleProps | void>;
   setFilePaths: Factory<void>;
+  showTextTree: Factory<void>;
   contentDifferences: Factory<ContentDifferencesProps>;
   writeFile: Factory<ContentDifferencesProps>;
   deleteTableEntries: Factory<DeleteTableEntriesProps>;
@@ -242,6 +255,7 @@ export const dialogFactories: DialogFactories = {
   editPreferences,
   setRole,
   setFilePaths,
+  showTextTree,
   contentDifferences,
   writeFile,
   deleteTableEntries,

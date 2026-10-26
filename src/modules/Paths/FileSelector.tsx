@@ -1,8 +1,13 @@
 import { useNavigate } from 'react-router';
-import { DeleteIcon, EyeIcon } from 'lucide-react';
-import { useCodeStore } from '>/services/stores';
+import { DeleteIcon, EyeIcon, FolderTreeIcon } from 'lucide-react';
+import { useCodeStore, dialogStoreActions } from '>/services/stores';
 import { routes } from '>/config';
-import { CheckboxField, TextAreaField, RadioFields } from '>/modules';
+import {
+  CheckboxField,
+  TextAreaField,
+  RadioFields,
+  dialogFactories,
+} from '>/modules';
 import type { FileNode, FileMode, ContentRange } from '>/contracts';
 import type { FilesByFolder } from '>/types';
 
@@ -25,8 +30,8 @@ export const FileSelector = ({ filesByFolder }: FileSelectorProps) => {
     addSelectedFile,
     setActivePrompt,
     activePrompt,
-    getCurrentPaths,
-    getAllSelectedFiles,
+    // getCurrentPaths,
+    // getAllSelectedFiles,
   } = useCodeStore(({ state, api }) => ({
     activePrompt: state.activePrompt,
     selectedFiles: state.selectedFiles,
@@ -37,8 +42,8 @@ export const FileSelector = ({ filesByFolder }: FileSelectorProps) => {
     setViewFile: api.setViewFile,
     addSelectedFile: api.addSelectedFile,
     setActivePrompt: api.setActivePrompt,
-    getCurrentPaths: api.getCurrentPaths,
-    getAllSelectedFiles: api.getAllSelectedFiles,
+    // getCurrentPaths: api.getCurrentPaths,
+    // getAllSelectedFiles: api.getAllSelectedFiles,
   }));
 
   const getFolderSelectionState = (
@@ -138,6 +143,12 @@ export const FileSelector = ({ filesByFolder }: FileSelectorProps) => {
     addSelectedFiles(allFiles);
   };
 
+  const onShowTextTree = () => {
+    dialogStoreActions.openDialog({
+      payload: dialogFactories.showTextTree(),
+    });
+  };
+
   const topMode = getRootSelectionMode();
 
   return (
@@ -161,6 +172,22 @@ export const FileSelector = ({ filesByFolder }: FileSelectorProps) => {
               wrapLayout='inline'
               onChange={onSetAll}
             />
+          </div>
+          <div className='ml-auto flex gap-2'>
+            <CheckboxField
+              id='treeInclude'
+              label='Tree:'
+              checked={true}
+              wrapClass='label-left'
+              onChange={(checked) => {
+                if (checked) {
+                } else {
+                }
+              }}
+            />
+            <button className='btn-square' onClick={onShowTextTree}>
+              <FolderTreeIcon size={16} />
+            </button>
           </div>
         </div>
         {Object.entries(filesByFolder).map(([folder, files], idx) => {

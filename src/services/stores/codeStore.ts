@@ -48,12 +48,19 @@ type BundleSession = {
 
 type StoreState = {
   selectedFiles: FileNode[];
+  textTrees: Record<string, string>;
   activePaths: FolderPath[];
   activePrompt: string;
   activeBundleId?: number;
   activeFile?: ActiveFile;
   bundleStream: BundleStream;
   bundleResponse: FrontRequest;
+};
+
+type TreeInfoProps = {
+  key: string;
+  value: string;
+  enabled: boolean;
 };
 
 export type CodeStoreActions = {
@@ -67,6 +74,7 @@ export type CodeStoreActions = {
 
   getCurrentPaths: () => FolderPath[];
   setCurrentPaths: (paths?: FolderPath[]) => void;
+  setTree: (tree: TreeInfoProps) => void;
   setActiveFile: (file?: FileNode) => void;
   setViewFile: (file?: FileNode) => void;
   getActiveFile: () => FileNode | undefined;
@@ -95,6 +103,7 @@ const initialBundleSession: BundleSession = {
 
 const initialState: StoreState = {
   selectedFiles: [],
+  textTrees: {},
   activePaths: [],
   activePrompt: '',
   bundleStream: 'idle',
@@ -157,6 +166,19 @@ export const codeStoreActions: CodeStoreActions = {
   },
   setCurrentPaths: (paths) => {
     setAuto({ activePaths: paths ?? [] });
+  },
+
+  setTree: (tree) => {
+    const { key, value, enabled } = tree;
+    const trees = get().textTrees;
+
+    if (!enabled) {
+      const { [key]: _removed, ...remaining } = trees;
+      setAuto({ textTrees: remaining });
+      return;
+    }
+
+    setAuto({ textTrees: { ...trees, [key]: value } });
   },
 
   getActiveFile: () => {

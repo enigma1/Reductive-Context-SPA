@@ -88,6 +88,14 @@
     @apply w-full h-full;
   }
 
+  .sticky-container {
+    @apply relative;
+
+    & .head {
+      @apply sticky top-0 z-10 block;
+    }
+  }
+
   .light-borders {
     @apply border rounded-md py-2;
     border-color: var(--color-border-focus);

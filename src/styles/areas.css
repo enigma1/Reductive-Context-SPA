@@ -62,6 +62,11 @@
       @apply border;
       background: linear-gradient(75deg in oklch, var(--color-srf-muted) 35%, var(--color-success-bg) 100%);
     }
+
+    &>.head {
+      @apply border-b;
+      background: linear-gradient(75deg in oklch, var(--color-srf-muted) 35%, var(--color-info-bg) 100%);
+    }
   }
 
   .area-grid {

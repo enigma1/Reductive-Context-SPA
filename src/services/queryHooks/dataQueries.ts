@@ -111,6 +111,7 @@ export const useGetBundle = createDataQueryHook<
     bundleContent: '',
     prompt: '',
     rootPaths: [],
+    textTrees: {},
     userFiles: [],
     conversations: [],
     bundleId: req.bundleId,

@@ -7,7 +7,11 @@ type ToggleButtonProps = {
 };
 const ToggleButton = ({ onToggle }: ToggleButtonProps) => {
   return (
-    <button className='btn-secondary' onClick={onToggle}>
+    <button
+      className='btn-secondary'
+      onClick={onToggle}
+      title='Switch into Table View'
+    >
       <TableIcon size={24} />
     </button>
   );
