@@ -29,6 +29,7 @@ export const BundleAnswerRoute = () => {
   if (isEmpty && bundleStream !== 'awaiting') {
     return <Navigate to={routes.front.pathsView} replace />;
   }
+
   const onGoBack = () => {
     if (bundleStream === 'awaiting') {
       navigate(routes.front.pathsView);

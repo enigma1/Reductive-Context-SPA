@@ -8,12 +8,19 @@ import {
   ListRestartIcon,
   CombineIcon,
   ArrowLeftToLineIcon,
+  SaveCheckIcon,
 } from 'lucide-react';
+import { WriteFileResponse } from '>/contracts';
 import { routes, editorOptions } from '>/config';
-import { useCodeStore } from '>/services/stores';
-import { useReadFile } from '>/services/queryHooks';
+import {
+  useCodeStore,
+  dialogStoreActions,
+  messageStoreActions,
+} from '>/services/stores';
+import { useReadFile, useWriteFile } from '>/services/queryHooks';
 import { useViewerSelection } from '>/services/hooks';
 import { ScreenLoader } from '>/modules';
+import { ApiError } from '>/types';
 
 export const Reader = () => {
   const navigate = useNavigate();
@@ -34,13 +41,42 @@ export const Reader = () => {
     }),
   );
 
-  const { onMount, getSelections, language, isDirty } =
+  const { onMount, getContent, getSelections, language, isDirty, clearDirty } =
     useViewerSelection(activeFile);
+
+  const writeCallbacks = {
+    onSuccess: (data: WriteFileResponse) => {
+      clearDirty();
+      messageStoreActions.addMessage({
+        content: {
+          text: `File ${activeFile?.name} written successfully.`,
+          duration: 5000,
+        },
+      });
+    },
+    onError: (error: unknown) => {
+      dialogStoreActions.setError(error as ApiError);
+      messageStoreActions.addMessage({
+        content: {
+          text: `Write Operation Failed. Please check if file ${activeFile} exists and if it's writable.`,
+          duration: 5000,
+        },
+      });
+    },
+  };
+
+  const { mutate: mutateWriting, isPending: isPendingWriting } = useWriteFile(
+    ({ api, query }) => ({
+      isPending: query.isPending,
+      mutate: api.mutate,
+    }),
+    writeCallbacks,
+  );
 
   // ----------------
   // No-Hooks Section
   // ----------------
-  const isBusy = isFetching;
+  const isBusy = isFetching || isPendingWriting;
   if (isBusy || !activeFile) return <ScreenLoader />;
 
   const onGoBack = () => {
@@ -48,7 +84,13 @@ export const Reader = () => {
   };
 
   const onRefresh = () => {
+    clearDirty();
     refetch();
+  };
+
+  const onSaveFile = () => {
+    if (!activeFile) return;
+    mutateWriting({ ...activeFile, content: getContent() });
   };
 
   const updateCodeLines = () => {
@@ -97,6 +139,14 @@ export const Reader = () => {
               data-status={!isDirty ? 'disabled' : undefined}
             >
               <CombineIcon size={24} />
+            </button>
+            <button
+              className='btn'
+              onClick={onSaveFile}
+              title='Save File'
+              data-status={!isDirty ? 'disabled' : undefined}
+            >
+              <SaveCheckIcon size={24} />
             </button>
           </div>
         </div>

@@ -17,16 +17,17 @@ written by: Mark Samios [@enigma1](https://github.com/enigma1)
 
 ## Features
 
+- Supports for multiple project roots
 - Eliminates complex contexts before dispathing a code bundle to LLMs.
+- User-controlled context assembly
 - Keeps the human user in the development loop for configuration and approvals
+- Extracts file signatures for LLM submission
+- Support virtually unlimited LLM Roles.
 - Supports LLM clarification
 - File and folder selection
-- Wizard-style configuration
-- Checkbox-based context selection
-- File and code inspection
 - Token/context information
-- User-controlled context assembly
 - Interaction with the backend API
+- Operates independently of external IDEs
 
 ## Current API
 

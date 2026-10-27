@@ -33,7 +33,7 @@ export const useBundleSync = () => {
     if (!isFetched || bundleId !== activeBundleId) return;
     setBundleSession({
       activePrompt: prompt,
-      bundleStream: 'idle',
+      // bundleStream: 'idle',
       activePaths: rootPaths,
       selectedFiles: transformUserFiles(userFiles),
     });

@@ -1,3 +1,4 @@
+/** Bundle Components include Routes and conversation containers */
 export * from './BundleViewRoute';
 export * from './BundleListRoute';
 export * from './BundleAnswerRoute';

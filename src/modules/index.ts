@@ -1,4 +1,4 @@
-/** Feature-scoped React components — form most one folder per domain (App, Bundle, Roles, Paths etc.) */
+/** Feature-scoped React top level folder — typically separate folder per domain (App, Bundle, Roles, Paths etc.) */
 export * from './App';
 export * from './Layout';
 export * from './Overlay';

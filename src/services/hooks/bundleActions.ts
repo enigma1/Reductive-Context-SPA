@@ -42,7 +42,7 @@ export const useBundleActions = () => {
       bundleStream === 'awaiting' ? resumeBundle : submitBundle;
     setBundleStream('processing');
     processBundle({
-      role: configStoreActions.getCurrentRole(),
+      roleName: configStoreActions.getCurrentRole(),
       bundleId,
       textTrees,
       bundleContent: contentEditor.getContent(),

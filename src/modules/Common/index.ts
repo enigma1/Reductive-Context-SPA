@@ -1,3 +1,4 @@
+/** Common Components include interactive elemnts like dialogs, forms and general purpose containers*/
 export * from './Dropdowns';
 export * from './Forms';
 export * from './Containers';

@@ -43,7 +43,7 @@ type BundleSession = {
   selectedFiles: FileNode[];
   activePaths: FolderPath[];
   activePrompt: string;
-  bundleStream: BundleStream;
+  // bundleStream: BundleStream;
 };
 
 type StoreState = {
@@ -98,7 +98,7 @@ const initialBundleSession: BundleSession = {
   selectedFiles: [],
   activePaths: [],
   activePrompt: '',
-  bundleStream: 'idle',
+  // bundleStream: 'idle',
 };
 
 const initialState: StoreState = {
