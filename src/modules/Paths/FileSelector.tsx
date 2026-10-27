@@ -2,12 +2,7 @@ import { useNavigate } from 'react-router';
 import { DeleteIcon, EyeIcon, FolderTreeIcon } from 'lucide-react';
 import { useCodeStore, dialogStoreActions } from '>/services/stores';
 import { routes } from '>/config';
-import {
-  CheckboxField,
-  TextAreaField,
-  RadioFields,
-  dialogFactories,
-} from '>/modules';
+import { TextAreaField, RadioFields, dialogFactories } from '>/modules';
 import type { FileNode, FileMode, ContentRange } from '>/contracts';
 import type { FilesByFolder } from '>/types';
 
@@ -174,17 +169,6 @@ export const FileSelector = ({ filesByFolder }: FileSelectorProps) => {
             />
           </div>
           <div className='ml-auto flex gap-2'>
-            <CheckboxField
-              id='treeInclude'
-              label='Tree:'
-              checked={true}
-              wrapClass='label-left'
-              onChange={(checked) => {
-                if (checked) {
-                } else {
-                }
-              }}
-            />
             <button className='btn-square' onClick={onShowTextTree}>
               <FolderTreeIcon size={16} />
             </button>

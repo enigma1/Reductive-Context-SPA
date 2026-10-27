@@ -7,8 +7,7 @@ import {
   DatabasePlusIcon,
   ArrowLeftToLineIcon,
   BrushCleaningIcon,
-  ChevronRightIcon,
-  ChevronDownIcon,
+  ChevronLeftIcon,
 } from 'lucide-react';
 import {
   useGetPaths,
@@ -50,30 +49,38 @@ const CollapsibleTextTree = ({
   };
 
   return (
-    <div className='border border-base-300 rounded-md mb-2 overflow-hidden'>
-      <div
-        onClick={toggleExpand}
-        className='one-line p-2 cursor-pointer bg-base-200 select-none'
-      >
-        <span className='stand'>{root}</span>
-        <CheckboxField
-          id={root}
-          label='Include:'
-          wrapClass='label-left'
-          checked={isSet}
-          onChange={onChange}
-        />
-        <button
-          className='btn-micro'
-          type='button'
-          aria-label={isExpanded ? 'Collapse' : 'Expand'}
+    <div className='border rounded-md mb-2 overflow-hidden'>
+      <div className='one-line p-2 select-none flex items-center'>
+        <div
+          onClick={toggleExpand}
+          className='flex items-center gap-2 cursor-pointer flex-1'
         >
-          {isExpanded ? (
-            <ChevronDownIcon size={18} />
-          ) : (
-            <ChevronRightIcon size={18} />
-          )}
-        </button>
+          <span className='stand'>{root}</span>
+        </div>
+        <div className='flex items-center gap-2'>
+          <div onClick={(e) => e.stopPropagation()}>
+            <CheckboxField
+              id={root}
+              label='Include:'
+              wrapClass='label-left'
+              checked={isSet}
+              onChange={onChange}
+            />
+          </div>
+          <button
+            className='btn-micro'
+            type='button'
+            onClick={toggleExpand}
+            aria-label={isExpanded ? 'Collapse' : 'Expand'}
+          >
+            <ChevronLeftIcon
+              size={18}
+              className={`icon-muted transition-transform duration-300 ${
+                isExpanded ? '-rotate-90' : ''
+              }`}
+            />
+          </button>
+        </div>
       </div>
       {isExpanded && (
         <div className='pl-2'>

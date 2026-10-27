@@ -98,16 +98,47 @@ export type HookStore<
 export type HookSelector<TStore, TResult = TStore> = (store: TStore) => TResult;
 
 export const queryKeys = {
-  // Keys for independent invalidations
-  preferences: () => ['preferences'] as const,
+  // Root key invalidation
+  all: () => ['root'],
+
+  // Root -> Roles
+  roles: (req: GetRoleRequest) => ['root', 'roles', { ...req }],
+  roleList: () => ['root', 'roles'],
+
+  // Root -> Roles -> Paths
+  paths: (paths: GetPathsRequest) => ['root', 'roles', 'paths', { ...paths }],
+
+  // Root -> Roles -> Paths -> Bundles
+  bundleList: () => ['root', 'roles', 'paths', 'bundles'],
+  bundles: (req: GetBundleRequest) => [
+    'root',
+    'roles',
+    'paths',
+    'bundles',
+    { ...req },
+  ],
+
+  // Root -> Roles -> Paths -> Files
+  files: (req: ReadFileRequest) => [
+    'root',
+    'roles',
+    'paths',
+    'files',
+    { ...req },
+  ],
+
+  // Independent
+  languages: () => ['languages'],
+  models: () => ['models'],
+  preferences: () => ['preferences'],
   session: () => ['session'],
-  getTableData: (table: string) => ['get-table-data', table],
-  getPaths: (paths: GetPathsRequest) => ['get-paths', { ...paths }],
-  readFile: (req: ReadFileRequest) => ['read-file', { ...req }],
-  getBundle: (req: GetBundleRequest) => ['get-bundle', { ...req }],
-  getRole: (req: GetRoleRequest) => ['get-role', { ...req }],
-  getBundleList: () => ['get-bundles'],
-  getRoleList: () => ['get-roles'],
-  getLanguages: () => ['get-languages'],
-  getOpenRouterModels: () => ['get-open-router-models'],
+  tableData: (table: string) => ['table-data', table],
+
+  // getPaths: (paths: GetPathsRequest) => ['get-paths', 'get-bundle', { ...paths }],
+  // readFile: (req: ReadFileRequest) => ['read-file', { ...req }],
+
+  // getBundle: (req: GetBundleRequest) => ['get-bundle', { ...req }],
+  // getRole: (req: GetRoleRequest) => ['get-role', { ...req }],
+  // getBundleList: () => ['get-bundles'],
+  // getRoleList: () => ['get-roles'],
 };

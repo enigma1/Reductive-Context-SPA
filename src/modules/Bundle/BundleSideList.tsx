@@ -83,7 +83,7 @@ export const BundleSideList = () => {
                     data-active={isSelected}
                     onClick={() => {
                       setActiveBundleId(entry.bundleId);
-                      navigate(routes.front.bundleView);
+                      navigate(routes.front.pathsView);
                     }}
                   >
                     {names[idx]}

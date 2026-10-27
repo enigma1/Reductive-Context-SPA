@@ -221,6 +221,7 @@ export const SubmitBundleRequestSchema = z.object({
   bundleContent: z.string(),
   prompt: z.string(),
   textTrees: z.record(z.string(), z.string()).optional(),
+  role: z.string().min(1),
 });
 export type SubmitBundleRequest = z.infer<typeof SubmitBundleRequestSchema>;
 

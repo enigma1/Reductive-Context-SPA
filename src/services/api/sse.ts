@@ -82,7 +82,7 @@ export const bundlePostResponse = (msg: StreamMessage) => {
     return;
   }
 
-  if (msg.node === 'generateCode') {
+  if (msg.node === 'generateContent') {
     if (msg.clarification) {
       // Clarification path — no frontRequest, store the question
       codeStoreActions.setClarification(msg.clarification as string);

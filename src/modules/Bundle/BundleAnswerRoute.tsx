@@ -1,6 +1,4 @@
-import { useEffect } from 'react';
-import { useNavigate } from 'react-router';
-import { useQueryClient } from '@tanstack/react-query';
+import { Navigate, useNavigate } from 'react-router';
 import ReactMarkdown from 'react-markdown';
 import { ArrowLeftToLineIcon } from 'lucide-react';
 import { useCodeStore, configStoreActions } from '>/services/stores';
@@ -9,36 +7,28 @@ import { ScreenLoader, MarkdownComponents } from '>/modules';
 import { fixMarkdown } from '>/services/utils';
 import { MarkdownBlock } from './MarkdownBlock';
 import { BundleClarification } from './BundleClarification';
-import { queryKeys } from '>/services/queryHooks';
 
 export const BundleAnswerRoute = () => {
   const navigate = useNavigate();
-
-  const queryClient = useQueryClient();
-
-  const { activeBundleId, bundleResponse, bundleStream } = useCodeStore(
-    ({ state }) => ({
-      activeBundleId: state.activeBundleId,
-      bundleResponse: state.bundleResponse,
-      bundleStream: state.bundleStream,
-    }),
-  );
+  const { bundleResponse, bundleStream } = useCodeStore(({ state }) => ({
+    bundleResponse: state.bundleResponse,
+    bundleStream: state.bundleStream,
+  }));
 
   const { completed, files, reasoning, summary, clarification } =
     bundleResponse;
 
-  useEffect(() => {
-    if (bundleStream !== 'processing' || activeBundleId === undefined) return;
-    queryClient.invalidateQueries({
-      queryKey: queryKeys.getBundle({ bundleId: activeBundleId }),
-    });
-  }, [bundleStream, activeBundleId, queryClient]);
+  console.log('bundleResponse', bundleResponse);
 
   const isBusy = bundleStream === 'processing';
   if (isBusy) {
     return <ScreenLoader />;
   }
 
+  const isEmpty = !summary && !reasoning && !files.length && !clarification;
+  if (isEmpty && bundleStream !== 'awaiting') {
+    return <Navigate to={routes.front.pathsView} replace />;
+  }
   const onGoBack = () => {
     if (bundleStream === 'awaiting') {
       navigate(routes.front.pathsView);

@@ -44,7 +44,6 @@ export const CheckboxField = ({
   return (
     <FormFieldWrapper
       label={label ?? id}
-      htmlFor={id}
       labelClass={labelClass}
       wrapLayout={wrapLayout}
       wrapClass={wrapClass}
@@ -66,7 +65,6 @@ export const CheckboxField = ({
       <span
         className='box'
         onClick={() => {
-          // if (!id && !label) ref.current?.click();
           ref.current?.click();
         }}
       >

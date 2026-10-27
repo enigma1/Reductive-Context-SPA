@@ -41,7 +41,7 @@ export const useGetTableData = createDataQueryHook<
   GetTableDataRequest,
   {}
 >({
-  queryKey: (req) => queryKeys.getTableData(req.table ?? ''),
+  queryKey: (req) => queryKeys.tableData(req.table ?? ''),
   queryFn: async (req) => {
     return await apiPoints.getTableData({
       table: req.table,
@@ -59,7 +59,7 @@ export const useGetPaths = createDataQueryHook<
   GetPathsRequest,
   {}
 >({
-  queryKey: (req) => queryKeys.getPaths(req),
+  queryKey: (req) => queryKeys.paths(req),
   queryFn: async (req) => {
     const response = await apiPoints.getPaths({
       paths: req.paths,
@@ -84,7 +84,7 @@ export const useReadFile = createDataQueryHook<
   ReadFileRequest | undefined,
   {}
 >({
-  queryKey: (fileNode) => queryKeys.readFile(fileNode!),
+  queryKey: (fileNode) => queryKeys.files(fileNode!),
   queryFn: async (fileNode) => {
     const response = await apiPoints.readFile(fileNode!);
     return response;
@@ -101,7 +101,7 @@ export const useGetBundle = createDataQueryHook<
   GetBundleRequest,
   {}
 >({
-  queryKey: (req) => queryKeys.getBundle(req),
+  queryKey: (req) => queryKeys.bundles(req),
   queryFn: async (req) => {
     const rsp = await apiPoints.getBundle(req);
     return rsp;
@@ -134,7 +134,7 @@ export const useGetBundleList = createDataQueryHook<
     getBundleFields: () => EntryFields[];
   }
 >({
-  queryKey: () => queryKeys.getBundleList(),
+  queryKey: () => queryKeys.bundleList(),
   queryFn: async () => {
     const rsp = await apiPoints.getBundleList();
     return rsp;
@@ -180,7 +180,7 @@ export const useGetRoleList = createDataQueryHook<
   GetRoleListRequest,
   {}
 >({
-  queryKey: () => queryKeys.getRoleList(),
+  queryKey: () => queryKeys.roleList(),
   queryFn: async () => {
     const rsp = await apiPoints.getRoleList();
     return rsp;
@@ -196,7 +196,7 @@ export const useGetRole = createDataQueryHook<
   GetRoleRequest,
   {}
 >({
-  queryKey: (req) => queryKeys.getRole(req),
+  queryKey: (req) => queryKeys.roles(req),
   queryFn: async (req) => {
     const rsp = await apiPoints.getRole(req);
     return rsp;
@@ -219,7 +219,7 @@ export const useGetLanguages = createDataQueryHook<
   GetLanguagesRequest,
   {}
 >({
-  queryKey: () => queryKeys.getLanguages(),
+  queryKey: () => queryKeys.languages(),
   queryFn: async () => {
     const rsp = await apiPoints.getLanguages();
     return rsp;
@@ -235,7 +235,7 @@ export const useOpenRouterModels = createDataQueryHook<
   GetOpenRouterModelsRequest,
   {}
 >({
-  queryKey: () => queryKeys.getOpenRouterModels(),
+  queryKey: () => queryKeys.models(),
   queryFn: async () => {
     const rsp = await apiPoints.getOpenRouterModels();
     return rsp;

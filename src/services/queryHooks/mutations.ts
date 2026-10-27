@@ -40,7 +40,7 @@ export const useCreateBundle = createMutationHook<
   options: {
     cache: async (qc) => {
       await qc.invalidateQueries({
-        queryKey: queryKeys.getBundleList(),
+        queryKey: queryKeys.bundleList(),
       });
     },
   },
@@ -63,11 +63,11 @@ export const useSetBundle = createMutationHook<
   options: {
     cache: async (qc, data, req) => {
       await qc.invalidateQueries({
-        queryKey: queryKeys.getBundle({ bundleId: req.bundleId }),
+        queryKey: queryKeys.bundles({ bundleId: req.bundleId }),
       });
       if (req.paths) {
         await qc.invalidateQueries({
-          queryKey: queryKeys.getPaths({ paths: req.paths }),
+          queryKey: queryKeys.paths({ paths: req.paths }),
         });
       }
     },
@@ -80,6 +80,13 @@ export const useSubmitBundle = createMutationHook<
   fn: apiPoints.submitBundle,
   state: {
     ...defaultResponse,
+  },
+  options: {
+    cache: async (qc, data, req) => {
+      await qc.invalidateQueries({
+        queryKey: queryKeys.bundles({ bundleId: req.bundleId }),
+      });
+    },
   },
 });
 
@@ -102,25 +109,27 @@ export const useDeleteBundles = createMutationHook<
   options: {
     cache: async (qc, rsp, req) => {
       await qc.invalidateQueries({
-        queryKey: queryKeys.getBundleList(),
+        queryKey: queryKeys.bundleList(),
       });
+      // Remove the deleted bundles from the cache instead of invalidating them,
+      // since invalidating causes React Query to refetch a deleted resource (resulting in a backend error).
       await Promise.all(
         req.bundleIds.map((id) =>
-          qc.invalidateQueries({
-            queryKey: queryKeys.getBundle({ bundleId: id }),
+          qc.removeQueries({
+            queryKey: queryKeys.bundles({ bundleId: id }),
           }),
         ),
       );
     },
     cacheError: async (qc, err, req) => {
-      await qc.invalidateQueries({ queryKey: queryKeys.getRoleList() });
       await Promise.all(
         req.bundleIds.map((id) =>
-          qc.invalidateQueries({
-            queryKey: queryKeys.getBundle({ bundleId: id }),
+          qc.removeQueries({
+            queryKey: queryKeys.bundles({ bundleId: id }),
           }),
         ),
       );
+      await qc.invalidateQueries({ queryKey: queryKeys.roleList() });
     },
   },
 });
@@ -135,7 +144,7 @@ export const useWriteFile = createMutationHook<
   options: {
     cache: async (qc, rsp, req) => {
       await qc.invalidateQueries({
-        queryKey: queryKeys.readFile({ path: req.path, name: req.name }),
+        queryKey: queryKeys.files({ path: req.path, name: req.name }),
       });
     },
   },
@@ -154,7 +163,7 @@ export const useSetRole = createMutationHook<
   options: {
     cache: async (qc, rsp, req) => {
       await qc.invalidateQueries({
-        queryKey: queryKeys.getRole({ name: req.name }),
+        queryKey: queryKeys.roles({ name: req.name }),
       });
     },
   },
@@ -173,7 +182,7 @@ export const useCreateRole = createMutationHook<
   options: {
     cache: async (qc) => {
       await qc.invalidateQueries({
-        queryKey: queryKeys.getRoleList(),
+        queryKey: queryKeys.roleList(),
       });
     },
   },
@@ -189,22 +198,22 @@ export const useDeleteRoles = createMutationHook<
   options: {
     cache: async (qc, rsp, req) => {
       await qc.invalidateQueries({
-        queryKey: queryKeys.getRoleList(),
+        queryKey: queryKeys.roleList(),
       });
       await Promise.all(
         req.roleNames.map((name) =>
           qc.invalidateQueries({
-            queryKey: queryKeys.getRole({ name }),
+            queryKey: queryKeys.roles({ name }),
           }),
         ),
       );
     },
     // on error we don't know what actually got deleted so invalidate all associated caches
     cacheError: async (qc, err, req) => {
-      await qc.invalidateQueries({ queryKey: queryKeys.getRoleList() });
+      await qc.invalidateQueries({ queryKey: queryKeys.roleList() });
       await Promise.all(
         req.roleNames.map((name) =>
-          qc.invalidateQueries({ queryKey: queryKeys.getRole({ name }) }),
+          qc.invalidateQueries({ queryKey: queryKeys.roles({ name }) }),
         ),
       );
     },

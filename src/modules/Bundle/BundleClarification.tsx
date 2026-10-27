@@ -13,7 +13,7 @@ export const BundleClarification = () => {
   return (
     <>
       {bundleStream === 'awaiting' && clarification ? (
-        <div className='page-section'>
+        <div className='page-section field-warn-bg py-2'>
           <h2>Clarification Needed:</h2>
           <div className='prose max-w-none'>
             <ReactMarkdown components={MarkdownComponents}>

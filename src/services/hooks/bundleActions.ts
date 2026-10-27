@@ -1,5 +1,9 @@
 import { useSubmitBundle, useResumeBundle } from '>/services/queryHooks';
-import { messageStoreActions, useCodeStore } from '>/services/stores';
+import {
+  messageStoreActions,
+  useCodeStore,
+  configStoreActions,
+} from '>/services/stores';
 import { useEditor } from './editor';
 
 export const useBundleActions = () => {
@@ -38,6 +42,7 @@ export const useBundleActions = () => {
       bundleStream === 'awaiting' ? resumeBundle : submitBundle;
     setBundleStream('processing');
     processBundle({
+      role: configStoreActions.getCurrentRole(),
       bundleId,
       textTrees,
       bundleContent: contentEditor.getContent(),
