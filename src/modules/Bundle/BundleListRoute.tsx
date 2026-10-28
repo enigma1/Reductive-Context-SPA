@@ -51,6 +51,7 @@ export const BundleListRoute = () => {
       tableStore.api.clearSelected();
       codeStoreActions.setBundleSession();
       codeStoreActions.setActiveFile();
+      codeStoreActions.setActiveBundleId();
     },
     onError: () => {
       messageStoreActions.addMessage({

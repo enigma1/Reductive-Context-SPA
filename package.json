@@ -1,7 +1,7 @@
 {
   "author": "Mark Samios",
   "name": "Reductive-Context-SPA",
-  "version": "0.0.50",
+  "version": "0.0.51",
   "license": "GPL-3.0",
   "description": "LLM Context Control Application with Human-in-the-loop workspace for curating and reducing content context",
   "keywords": [

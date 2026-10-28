@@ -2,7 +2,12 @@ import { useNavigate } from 'react-router';
 import { DeleteIcon, EyeIcon, FolderTreeIcon } from 'lucide-react';
 import { useCodeStore, dialogStoreActions } from '>/services/stores';
 import { routes } from '>/config';
-import { TextAreaField, RadioFields, dialogFactories } from '>/modules';
+import {
+  TextAreaField,
+  RadioFields,
+  dialogFactories,
+  TruncateSpan,
+} from '>/modules';
 import type { FileNode, FileMode, ContentRange } from '>/contracts';
 import type { FilesByFolder } from '>/types';
 
@@ -162,7 +167,9 @@ export const FileSelector = ({ filesByFolder }: FileSelectorProps) => {
         <div className='selection-section inline-wrapper'>
           <div className='selection-outer'>
             <RadioFields
-              label='Select All/None with Content/Signature'
+              label={
+                <TruncateSpan content='Select All/None with Content/Signature' />
+              }
               value={getRadioMode(topMode)}
               wrapLayout='inline'
               onChange={onSetAll}
@@ -194,7 +201,7 @@ export const FileSelector = ({ filesByFolder }: FileSelectorProps) => {
               <div className='selection-outer'>
                 <div className='inline-wrapper'>
                   <RadioFields
-                    label={folder}
+                    label={<TruncateSpan content={folder} />}
                     wrapLayout='inline'
                     value={getRadioMode(mode)}
                     onChange={(mode) => onSetGroup(folderFiles, mode)}
@@ -218,7 +225,7 @@ export const FileSelector = ({ filesByFolder }: FileSelectorProps) => {
                             <EyeIcon size={14} />
                           </button>
                           <RadioFields
-                            label={file.name}
+                            label={<TruncateSpan content={file.name} />}
                             wrapLayout='inline'
                             value={getRadioMode(file.mode)}
                             onChange={(mode) => onSetFile(file, mode)}

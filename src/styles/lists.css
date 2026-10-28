@@ -24,7 +24,12 @@
   }
 
   .selection-list {
-    @apply flex flex-col gap-2;
+    @apply flex flex-col gap-2 overflow-hidden;
+
+    & div,
+    & .check-label {
+      @apply min-w-0;
+    }
   }
 
   .selection-section {
@@ -48,7 +53,6 @@
       @apply font-bold;
       color: var(--color-text-dim);
     }
-
   }
 
   .selection-item {

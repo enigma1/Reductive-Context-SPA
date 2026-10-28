@@ -1,3 +1,4 @@
+import { type ReactNode } from 'react';
 import { StatusType, WrapLayout } from '>/types';
 
 export type FootNoticeProps = {
@@ -11,7 +12,7 @@ export const FootNotice = ({ $status, $notice }: FootNoticeProps) => {
 };
 
 type FieldWrapperProps = FootNoticeProps & {
-  label?: string;
+  label?: ReactNode;
   htmlFor?: string;
   children: React.ReactNode;
   wrapLayout?: WrapLayout;

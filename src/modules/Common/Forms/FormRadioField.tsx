@@ -4,7 +4,7 @@
   You must not specify 'value' prop for uncontrolled implementations
   Supports specified RadioOptions or automatic options woth a 0-based radio counter
 */
-import { useState, InputHTMLAttributes } from 'react';
+import { type ReactNode, useState, InputHTMLAttributes } from 'react';
 import { CheckIcon, AsteriskIcon } from 'lucide-react';
 import { hasObjectProps } from '>/services/utils';
 import { FormFieldWrapper } from './FormCommon';
@@ -20,7 +20,7 @@ type RadioFieldProps = Omit<
   InputHTMLAttributes<HTMLInputElement>,
   'type' | 'value' | 'onChange' | 'defaultValue'
 > & {
-  label?: string;
+  label?: ReactNode;
   notice?: string;
   status?: StatusType;
   value?: string;
@@ -192,7 +192,7 @@ export const RadioFields = (props: RadioFieldProps) => {
               <span className='inline-flex items-center justify-center box'>
                 {isSelected && <CheckIcon size={24} />}
               </span>
-              <span>{opt.label}</span>
+              <span className='truncate min-w-0'>{opt.label}</span>
             </label>
           );
         })}

@@ -129,7 +129,7 @@
   }
 
   .check-label {
-    @apply flex items-center gap-2 cursor-pointer text-sm w-fit select-none;
+    @apply flex items-center gap-2 cursor-pointer text-sm w-fit max-w-full select-none;
     white-space: nowrap;
     color: var(--color-text);
   }
