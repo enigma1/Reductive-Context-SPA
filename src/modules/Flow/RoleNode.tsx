@@ -32,30 +32,29 @@ export const RoleNode = memo(({ data, selected }: NodeProps<RoleNodeType>) => {
       <div
         className={`node-container min-h-4 role-node ${selected ? 'role-selected' : ''}`}
       >
+        {/* Flow: incoming from previous role */}
         <Handle type='target' position={Position.Left} />
 
-        <span className='font-medium'>{data.roleName}</span>
-        {/* <div className='flex items-center gap-2'>
-          <span>
-            {image ? <img src={imageUrl} className='w-5 h-5 rounded' /> : '🤖'}
-          </span>
-          <span className='font-medium truncate max-w-[160px]'>
-            {data.roleName}
-          </span>
-        </div>
-        {roleMain && (
-          <div className='text-xs opacity-60 mt-1 line-clamp-2 max-w-[180px]'>
-            {roleMain}
-          </div>
-        )} */}
-
+        {/* Flow: outgoing to next role */}
         <Handle type='source' position={Position.Right} />
+
+        {/* Tool: bottom node acts as source to send towards top node */}
         <Handle
-          id='tool-input'
-          type='target'
+          id='tool-source'
+          type='source'
           position={Position.Bottom}
           className='handle--tool'
         />
+
+        {/* Tool: top node acts as target to receive from bottom node */}
+        <Handle
+          id='tool-target'
+          type='target'
+          position={Position.Top}
+          className='handle--tool'
+        />
+
+        <span className='text-sm'>{data.roleName}</span>
       </div>
     </>
   );

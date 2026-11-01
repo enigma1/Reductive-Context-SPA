@@ -11,6 +11,7 @@ import {
   applyNodeChanges,
   applyEdgeChanges,
   useReactFlow,
+  MarkerType,
   type OnConnect,
   type IsValidConnection,
   type NodeChange,
@@ -28,17 +29,6 @@ const nodeTypes = { role: RoleNode, mcp: McpNode };
 const edgeTypes = { tool: ToolEdge };
 
 export const FlowViewRoute = () => {
-  // The critical validation: MCP can only connect to a Role's tool-input handle
-  const isValidConnection: IsValidConnection = useCallback((edge) => {
-    // MCP source → Role tool-input target
-    // Role source → Role target (flow)
-    // Reject: MCP → Role left handle, Role → MCP, Role tool-input → anything
-    if (edge.sourceHandle === 'tool-input') return false; // tool-input is target-only
-    return true;
-  }, []);
-
-  const { screenToFlowPosition } = useReactFlow();
-
   const { currentFlow, flowGraphs, setGraphs, setCurrentFlow, getGraph } =
     useFlowStore(({ state, api }) => ({
       currentFlow: state.currentFlow,
@@ -51,6 +41,29 @@ export const FlowViewRoute = () => {
   const activeGraph = currentFlow ? flowGraphs[currentFlow] : undefined;
   const nodes = activeGraph?.nodes ?? [];
   const edges = activeGraph?.edges ?? [];
+
+  // Validation: ensure tool-source connects to tool-target, prevent self-connections, and restrict to single connection between any two nodes
+  const isValidConnection: IsValidConnection = useCallback(
+    (edge) => {
+      if (edge.source === edge.target) return false;
+      if (edge.sourceHandle === 'tool-target') return false;
+      if (edge.targetHandle === 'tool-source') return false;
+
+      // Prevent multiple connections between the same source and target nodes
+      const existingEdges = edges;
+      const alreadyConnected = existingEdges.some(
+        (e) =>
+          (e.source === edge.source && e.target === edge.target) ||
+          (e.source === edge.target && e.target === edge.source),
+      );
+      if (alreadyConnected) return false;
+
+      return true;
+    },
+    [edges],
+  );
+
+  const { screenToFlowPosition } = useReactFlow();
 
   // Write changes back to the store (debounced or on each change)
   const onNodesChange = useCallback(
@@ -77,7 +90,9 @@ export const FlowViewRoute = () => {
     (params: Connection) => {
       if (!currentFlow) return;
 
-      const isToolEdge = params.targetHandle === 'tool-input';
+      const isToolEdge =
+        params.sourceHandle === 'tool-source' ||
+        params.targetHandle === 'tool-target';
       const newEdge: Edge = {
         ...params,
         id: `${params.source}-${params.target}-${Date.now()}`,
@@ -97,7 +112,7 @@ export const FlowViewRoute = () => {
         },
       });
     },
-    [currentFlow, setGraphs],
+    [currentFlow, getGraph, setGraphs],
   );
 
   const onDragOver = useCallback((e: DragEvent) => {
@@ -135,7 +150,7 @@ export const FlowViewRoute = () => {
         },
       });
     },
-    [currentFlow, setGraphs, setCurrentFlow, screenToFlowPosition],
+    [currentFlow, getGraph, setGraphs, setCurrentFlow, screenToFlowPosition],
   );
 
   return (
@@ -150,6 +165,9 @@ export const FlowViewRoute = () => {
         nodeTypes={nodeTypes}
         edgeTypes={edgeTypes}
         fitView
+        defaultEdgeOptions={{
+          markerEnd: { type: MarkerType.ArrowClosed, width: 20, height: 20 },
+        }}
         connectionMode={ConnectionMode.Strict}
       >
         <Background gap={16} size={1} />

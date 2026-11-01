@@ -1,9 +1,8 @@
-// edges/ToolEdge.tsx
 import { memo } from 'react';
 import {
   BaseEdge,
   EdgeLabelRenderer,
-  getSmoothStepPath,
+  getBezierPath,
   type EdgeProps,
 } from '@xyflow/react';
 
@@ -16,8 +15,9 @@ export const ToolEdge = memo(
     targetY,
     sourcePosition,
     targetPosition,
+    markerEnd,
   }: EdgeProps) => {
-    const [edgePath, labelX, labelY] = getSmoothStepPath({
+    const [edgePath, labelX, labelY] = getBezierPath({
       sourceX,
       sourceY,
       targetX,
@@ -31,6 +31,7 @@ export const ToolEdge = memo(
         <BaseEdge
           id={id}
           path={edgePath}
+          markerEnd={markerEnd}
           style={{ strokeDasharray: '5 5', stroke: '#888' }}
         />
         <EdgeLabelRenderer>

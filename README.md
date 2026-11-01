@@ -24,6 +24,7 @@ written by: Mark Samios [@enigma1](https://github.com/enigma1)
 - Extracts file signatures for LLM submission
 - Support virtually unlimited LLM Roles.
 - Supports LLM clarification
+- Supports composition of multiple roles and mcp servers
 - File and folder selection
 - Token/context information
 - Interaction with the backend API
@@ -48,6 +49,8 @@ written by: Mark Samios [@enigma1](https://github.com/enigma1)
 | `POST /api/getRole`            | `{ GetRoleRequest }`       | Returns AI role details               |
 | `POST /api/setRole`            | `{ SetRoleRequest }`       | Creates or updates an AI role         |
 | `POST /api/deleteRoles`        | `{ DeleteRolesRequest }`   | Deletes the specified AI roles        |
+| `POST /api/getFlow`            | `{ GetFlowRequest }`       | Returns Flow details                  |
+| `POST /api/getFlowList`        | `{ GetFlowListRequest }`   | Returns Flow List                     |
 | `POST /api/getTableData`       | `{ GetTableDataRequest }`  | Returns table data                    |
 | `GET /api/getOpenRouterModels` | n/a                        | Returns available OpenRouter models   |
 | `POST /api/saveSettings`       | `{ SaveSettingsRequest }`  | Saves application settings            |
@@ -81,6 +84,7 @@ The intended workflow is:
 - Custom Forms with state and presets support
 - Monaco Editor for code view and code merges
 - React Markdown for prompts, summary, reasoning
+- xyflow for role/mcp node compositions
 - Axios API with manifest-driven mock setup and error resolution
 - TailwindCSS with custom multi-theme options
 - Zod for API runtime validation
