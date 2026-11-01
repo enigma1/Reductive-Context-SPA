@@ -35,6 +35,7 @@ export const routes: AllRoutes = {
     getOpenRouterModels: '/api/get-open-router-models',
     loadSettings: '/api/load-settings',
     saveSettings: '/api/save-settings',
+    exportDatabase: '/db/export-database',
   },
   front: {
     home: '/',
@@ -45,6 +46,8 @@ export const routes: AllRoutes = {
     roleView: '/role-view',
     roleList: '/role-list',
     readFile: '/read-file',
+    flowView: '/flow-view',
+    flowList: '/flow-list',
     tableData: '/tableData',
     networkDown: '/network-down',
     openRouterModelsView: '/open-router-models-view',

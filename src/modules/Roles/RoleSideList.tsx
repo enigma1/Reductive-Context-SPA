@@ -30,12 +30,24 @@ export const RoleSideList = () => {
   const isBusy = isFetching || isPending;
   if (isBusy) return <ScreenLoader />;
 
+  const onDragStart = (
+    e: React.DragEvent,
+    type: 'role' | 'mcp',
+    name: string,
+  ) => {
+    e.dataTransfer.setData(
+      'application/reactflow',
+      JSON.stringify({ type, name }),
+    );
+    e.dataTransfer.effectAllowed = 'move';
+  };
+
   const onDeleteRole = (name: string) => {
     const onConfirm = () => {
       dialogStoreActions.closeDialog();
       mutate({ roleNames: [name] });
       if (location.pathname !== routes.front.roleList)
-        navigate(routes.front.bundleList);
+        navigate(routes.front.roleList);
     };
 
     const columnsOrder = ['Role Name'];
@@ -60,7 +72,7 @@ export const RoleSideList = () => {
                 key={`${role}-${idx}`}
               >
                 <button
-                  className='btn-square border-0 error shrink-0 px-1'
+                  className='btn-side field-error'
                   onClick={() => onDeleteRole(role.name)}
                 >
                   <FileXIcon size={16} />
@@ -72,6 +84,8 @@ export const RoleSideList = () => {
                     setCurrentRole(role.name);
                     navigate(routes.front.roleList);
                   }}
+                  draggable
+                  onDragStart={(e) => onDragStart(e, 'role', role.name)}
                 >
                   {role.name}
                 </button>

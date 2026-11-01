@@ -42,7 +42,11 @@ export const LeftSide = () => {
       getTitle: () => {
         return 'Roles';
       },
-      getRoute: () => routes.front.roleList,
+      getRoute: () => {
+        return location.pathname === routes.front.flowView
+          ? routes.front.flowView
+          : routes.front.roleList;
+      },
       component: <RoleSideList />,
       icon: (
         <span title='New Role'>

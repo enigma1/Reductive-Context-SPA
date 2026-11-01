@@ -1,7 +1,7 @@
 {
   "author": "Mark Samios",
   "name": "Reductive-Context-SPA",
-  "version": "0.0.51",
+  "version": "0.0.52",
   "license": "GPL-3.0",
   "description": "LLM Context Control Application with Human-in-the-loop workspace for curating and reducing content context",
   "keywords": [
@@ -21,6 +21,7 @@
     "@tailwindcss/typography": "^0.5.20",
     "@tanstack/react-query": "^5.102.8",
     "@vitejs/plugin-basic-ssl": "^2.3.0",
+    "@xyflow/react": "^12.12.0",
     "axios": "^1.19.0",
     "classnames": "^2.5.1",
     "clsx": "^2.1.1",

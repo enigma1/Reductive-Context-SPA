@@ -12,3 +12,4 @@ export * from './Bundle';
 export * from './DataTable';
 export * from './Network';
 export * from './FileReader';
+export * from './Flow';

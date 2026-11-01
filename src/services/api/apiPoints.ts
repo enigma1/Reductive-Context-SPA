@@ -20,6 +20,9 @@ import {
   DeleteRolesContract,
   DeleteBundlesContract,
   GetLanguagesContract,
+  GetFlowContract,
+  GetFlowListContract,
+  DeleteFlowsContract,
   GetOpenRouterModelsContract,
 } from '>/contracts';
 import type {
@@ -54,8 +57,14 @@ import type {
   DeleteRolesResponse,
   DeleteBundlesRequest,
   DeleteBundlesResponse,
+  GetFlowRequest,
+  GetFlowResponse,
+  GetFlowListResponse,
+  DeleteFlowsRequest,
+  DeleteFlowsResponse,
   GetLanguagesResponse,
   GetOpenRouterModelsResponse,
+  ExportDatabaseRequest,
 } from '>/contracts';
 import { defaultResponseOk } from '>/config';
 
@@ -190,6 +199,21 @@ const deleteRoles = (data: DeleteRolesRequest) =>
     apiClient.post(routes.back.deleteRoles, data, DeleteRolesContract),
   );
 
+const getFlow = (data: GetFlowRequest) =>
+  apiCall<GetFlowResponse>(() =>
+    apiClient.post(routes.back.getFlow, data, GetFlowContract),
+  );
+
+const getFlowList = () =>
+  apiCall<GetFlowListResponse>(() =>
+    apiClient.get(routes.back.getFlowList, GetFlowListContract),
+  );
+
+const deleteFlows = (data: DeleteFlowsRequest) =>
+  apiCall<DeleteFlowsResponse>(() =>
+    apiClient.post(routes.back.deleteFlows, data, DeleteFlowsContract),
+  );
+
 const getTableData = (data: GetTableDataRequest) =>
   apiCall<GetTableDataResponse>(() =>
     apiClient.post(routes.back.getTableData, data, GetTableDataContract),
@@ -203,6 +227,14 @@ const getLanguages = () =>
 const getOpenRouterModels = () =>
   apiCall<GetOpenRouterModelsResponse>(() =>
     apiClient.get(routes.back.getOpenRouterModels, GetOpenRouterModelsContract),
+  );
+
+const exportDatabase = (data: ExportDatabaseRequest) =>
+  apiCallRaw(() =>
+    apiClient.post(routes.back.exportDatabases, data, {
+      responseType: 'blob',
+      timeout: 0, // Let it finish
+    }),
   );
 
 const saveSettings = (data: SaveSettingsRequest) =>
@@ -230,9 +262,14 @@ export const apiPoints = {
   setRole,
   activateRole,
   deleteRoles,
+  getFlowList,
+  getFlow,
+  deleteFlows,
+  // setFlow,
   getTableData,
   getLanguages,
   getOpenRouterModels,
   saveSettings,
   loadSettings,
+  exportDatabase,
 } as const;

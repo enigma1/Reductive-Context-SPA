@@ -20,6 +20,9 @@ import type {
   SetRoleResponse,
   DeleteRolesRequest,
   DeleteRolesResponse,
+  DeleteFlowsRequest,
+  DeleteFlowsResponse,
+  ExportDatabaseRequest,
 } from '>/contracts';
 import { createMutationHook } from './mutationBuilder';
 import { queryKeys } from './defs';
@@ -220,10 +223,51 @@ export const useDeleteRoles = createMutationHook<
   },
 });
 
+export const useDeleteFlows = createMutationHook<
+  MutationFunction<DeleteFlowsResponse, DeleteFlowsRequest>
+>({
+  fn: apiPoints.deleteFlows,
+  state: {
+    ...defaultResponse,
+  },
+  options: {
+    cache: async (qc, rsp, req) => {
+      await qc.invalidateQueries({
+        queryKey: queryKeys.flowList(),
+      });
+      await Promise.all(
+        req.flowNames.map((name) =>
+          qc.invalidateQueries({
+            queryKey: queryKeys.flows({ name }),
+          }),
+        ),
+      );
+    },
+    // on error we don't know what actually got deleted so invalidate all associated caches
+    cacheError: async (qc, err, req) => {
+      await qc.invalidateQueries({ queryKey: queryKeys.flowList() });
+      await Promise.all(
+        req.flowNames.map((name) =>
+          qc.invalidateQueries({ queryKey: queryKeys.flows({ name }) }),
+        ),
+      );
+    },
+  },
+});
+
 export const useActivateRole = createMutationHook<
   MutationFunction<ActivateRoleResponse, ActivateRoleRequest>
 >({
   fn: apiPoints.activateRole,
+  state: {
+    ...defaultResponse,
+  },
+});
+
+export const useExportDatabase = createMutationHook<
+  MutationFunction<unknown, ExportDatabaseRequest>
+>({
+  fn: apiPoints.exportDatabase,
   state: {
     ...defaultResponse,
   },

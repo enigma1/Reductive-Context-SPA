@@ -22,6 +22,8 @@ export const HeaderMenu = () => {
           Set Root Files
         </button>
         <Link to={routes.front.bundleList}>All Bundles</Link>
+        <Link to={routes.front.flowList}>All Flows</Link>
+        <Link to={routes.front.flowView}>New Flow</Link>
         <Link to={routes.front.home}>Go Home</Link>
       </DropdownMenu>
       <div className='menu-separator'>|</div>

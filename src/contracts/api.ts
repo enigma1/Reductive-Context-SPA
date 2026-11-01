@@ -392,6 +392,78 @@ export const DeleteRolesContract = {
   responseSchema: DeleteRolesResponseSchema,
 };
 
+export const FlowPalleteSchema = z.object({
+  flowName: z.string(),
+  flowGraph: z.string(),
+  flowIcon: z.base64().optional(),
+});
+
+export const GetFlowRequestSchema = z.object({
+  name: z.string().min(1),
+});
+export type GetFlowRequest = z.infer<typeof GetFlowRequestSchema>;
+
+const FlowNodeSchema = z.discriminatedUnion('type', [
+  z.object({
+    id: z.string(),
+    type: z.literal('role'),
+    position: z.object({ x: z.number(), y: z.number() }),
+    data: z.object({ roleName: z.string() }),
+  }),
+  z.object({
+    id: z.string(),
+    type: z.literal('mcp'),
+    position: z.object({ x: z.number(), y: z.number() }),
+    data: z.object({ mcpName: z.string() }),
+  }),
+]);
+export type FlowNode = z.infer<typeof FlowNodeSchema>;
+
+export const FlowEdgeSchema = z.object({
+  id: z.string(),
+  source: z.string(),
+  target: z.string(),
+});
+export type FlowEdge = z.infer<typeof FlowEdgeSchema>;
+
+export const GetFlowResponseSchema = BasicResponseSchema.extend({
+  nodes: z.array(FlowNodeSchema),
+  edges: z.array(FlowEdgeSchema),
+  icon: z.base64().optional(),
+});
+export type GetFlowResponse = z.infer<typeof GetFlowResponseSchema>;
+
+export const GetFlowContract = {
+  requestSchema: GetFlowRequestSchema,
+  responseSchema: GetFlowResponseSchema,
+};
+
+export const GetFlowListRequestSchema = z.void();
+export type GetFlowListRequest = z.infer<typeof GetFlowListRequestSchema>;
+export const GetFlowListResponseSchema = BasicResponseSchema.extend({
+  flows: z.record(z.string(), FlowPalleteSchema),
+});
+
+export type GetFlowListResponse = z.infer<typeof GetFlowListResponseSchema>;
+
+export const GetFlowListContract = {
+  requestSchema: GetFlowListRequestSchema,
+  responseSchema: GetFlowListResponseSchema,
+};
+
+export const DeleteFlowsRequestSchema = z.object({
+  flowNames: z.array(z.string()).min(1),
+});
+export type DeleteFlowsRequest = z.infer<typeof DeleteFlowsRequestSchema>;
+
+export const DeleteFlowsResponseSchema = BasicResponseSchema;
+export type DeleteFlowsResponse = z.infer<typeof DeleteFlowsResponseSchema>;
+
+export const DeleteFlowsContract = {
+  requestSchema: DeleteFlowsRequestSchema,
+  responseSchema: DeleteFlowsResponseSchema,
+};
+
 export const GetLanguagesRequestSchema = z.void();
 export type GetLanguagesRequest = z.infer<typeof GetLanguagesRequestSchema>;
 
@@ -407,6 +479,21 @@ export type GetLanguagesResponse = z.infer<typeof GetLanguagesResponseSchema>;
 export const GetLanguagesContract = {
   requestSchema: GetLanguagesRequestSchema,
   responseSchema: GetLanguagesResponseSchema,
+};
+
+export const ExportDatabaseRequestSchema = z.object({
+  dbName: z.string().min(1).optional(),
+});
+export type ExportDatabaseRequest = z.infer<typeof ExportDatabaseRequestSchema>;
+
+export const ExportDatabaseResponseSchema = z.void();
+export type ExportDatabaseResponse = z.infer<
+  typeof ExportDatabaseResponseSchema
+>;
+
+export const ExportDatabaseContract = {
+  requestSchema: ExportDatabaseRequestSchema,
+  responseSchema: ExportDatabaseResponseSchema,
 };
 
 export const GetOpenRouterModelsRequestSchema = z.void();

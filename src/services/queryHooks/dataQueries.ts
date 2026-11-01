@@ -18,6 +18,10 @@ import type {
   GetRoleListResponse,
   GetRoleRequest,
   GetRoleResponse,
+  GetFlowRequest,
+  GetFlowResponse,
+  GetFlowListRequest,
+  GetFlowListResponse,
   GetLanguagesResponse,
   GetLanguagesRequest,
   GetOpenRouterModelsRequest,
@@ -212,6 +216,39 @@ export const useGetRole = createDataQueryHook<
     scopeExamples: '',
   }),
   enabled: (req) => !!req.name,
+});
+
+export const useGetFlowList = createDataQueryHook<
+  GetFlowListResponse,
+  GetFlowListRequest,
+  {}
+>({
+  queryKey: () => queryKeys.flowList(),
+  queryFn: async () => {
+    const rsp = await apiPoints.getFlowList();
+    return rsp;
+  },
+  initialData: () => ({
+    ...defaultResponse,
+    flows: {},
+  }),
+});
+
+export const useGetFlow = createDataQueryHook<
+  GetFlowResponse,
+  GetFlowRequest,
+  {}
+>({
+  queryKey: (req) => queryKeys.flows(req),
+  queryFn: async (req) => {
+    const rsp = await apiPoints.getFlow(req);
+    return rsp;
+  },
+  initialData: () => ({
+    ...defaultResponse,
+    nodes: [],
+    edges: [],
+  }),
 });
 
 export const useGetLanguages = createDataQueryHook<

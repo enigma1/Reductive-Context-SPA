@@ -13,6 +13,7 @@ import {
   ReadFileRequest,
   GetBundleRequest,
   GetRoleRequest,
+  GetFlowRequest,
 } from '>/contracts';
 
 export const STALE_TIME = 3 * 60 * 1000; // Set default to 3 minutes
@@ -117,6 +118,9 @@ export const queryKeys = {
     'bundles',
     { ...req },
   ],
+
+  flowList: () => ['root', 'flows'],
+  flows: (req: GetFlowRequest) => ['root', 'flows', { ...req }],
 
   // Root -> Roles -> Paths -> Files
   files: (req: ReadFileRequest) => [

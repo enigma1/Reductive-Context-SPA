@@ -1,5 +1,6 @@
 import './styles/globals.css';
 import { StrictMode } from 'react';
+import { ReactFlowProvider } from '@xyflow/react';
 import { RouterProvider, createBrowserRouter } from 'react-router';
 import ReactDOM from 'react-dom/client';
 import { QueryClientProvider } from '@tanstack/react-query';
@@ -18,6 +19,8 @@ import {
   BundleListRoute,
   BundleAnswerRoute,
   PathsViewRoute,
+  FlowViewRoute,
+  FlowListRoute,
   Reader,
   DataTable,
   OpenRouterModelsViewRoute,
@@ -62,6 +65,18 @@ export const browserRouter = createBrowserRouter([
       {
         path: routes.front.bundleAnswer,
         element: <BundleAnswerRoute />,
+      },
+      {
+        path: routes.front.flowView,
+        element: (
+          <ReactFlowProvider>
+            <FlowViewRoute />
+          </ReactFlowProvider>
+        ),
+      },
+      {
+        path: routes.front.flowList,
+        element: <FlowListRoute />,
       },
       {
         path: routes.front.openRouterModelsView,

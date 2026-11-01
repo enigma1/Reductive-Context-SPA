@@ -1,0 +1,21 @@
+@layer components {
+  .node-container {
+    @apply p-4 border rounded-xl font-semibold;
+    border-color: var(--color-border-separate);
+    background-color: var(--color-srf-elevated);
+
+    >.font-medium {
+      @apply text-sm;
+    }
+
+    &.role-selected {
+      background-color: var(--color-srf-high);
+      color: var(--color-text-peak)
+    }
+
+    &.mcp-selected {
+      background-color: var(--color-srf-peak);
+      color: var(--color-text-high)
+    }
+  }
+}

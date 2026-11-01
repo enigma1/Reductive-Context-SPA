@@ -8,3 +8,4 @@ export * from './resizableSplit';
 export * from './bundleActions';
 export * from './bundleSync';
 export * from './activateRoleSync';
+export * from './transforms';
