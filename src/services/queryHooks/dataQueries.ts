@@ -246,6 +246,7 @@ export const useGetFlow = createDataQueryHook<
   },
   initialData: () => ({
     ...defaultResponse,
+    flowName: '',
     nodes: [],
     edges: [],
   }),

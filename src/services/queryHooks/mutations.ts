@@ -22,6 +22,8 @@ import type {
   DeleteRolesResponse,
   DeleteFlowsRequest,
   DeleteFlowsResponse,
+  CreateFlowRequest,
+  CreateFlowResponse,
   ExportDatabaseRequest,
 } from '>/contracts';
 import { createMutationHook } from './mutationBuilder';
@@ -259,6 +261,15 @@ export const useActivateRole = createMutationHook<
   MutationFunction<ActivateRoleResponse, ActivateRoleRequest>
 >({
   fn: apiPoints.activateRole,
+  state: {
+    ...defaultResponse,
+  },
+});
+
+export const createFlow = createMutationHook<
+  MutationFunction<CreateFlowResponse, CreateFlowRequest>
+>({
+  fn: apiPoints.createFlow,
   state: {
     ...defaultResponse,
   },

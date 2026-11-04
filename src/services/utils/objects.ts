@@ -10,6 +10,16 @@ export const hasObjectProps = <K extends string>(
   return props.every((key) => Object.hasOwn(obj, key));
 };
 
+export const hasObjectSomeProps = <K extends string>(
+  obj: unknown,
+  props: K[],
+): obj is Record<K, unknown> => {
+  if (typeof obj !== 'object' || obj === null || Array.isArray(obj)) {
+    return false;
+  }
+  return props.some((key) => Object.hasOwn(obj, key));
+};
+
 export const hasStringPropValue = <K extends string, V extends string>(
   obj: unknown,
   key: K,

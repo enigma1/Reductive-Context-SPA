@@ -1,7 +1,7 @@
 /* File src/modules/Flow/FlowViewRoute.tsx
   landing route for a specific flow
 */
-import { useCallback, type DragEvent } from 'react';
+import { useState, useCallback, type DragEvent } from 'react';
 import {
   ReactFlow,
   Background,
@@ -20,7 +20,13 @@ import {
   type Connection,
 } from '@xyflow/react';
 import '@xyflow/react/dist/style.css';
+import {
+  ListRestartIcon,
+  SaveCheckIcon,
+  ArrowLeftToLineIcon,
+} from 'lucide-react';
 import { useFlowStore } from '>/services/stores';
+import { InputField } from '>/modules';
 import { RoleNode } from './RoleNode';
 import { McpNode } from './McpNode';
 import { ToolEdge } from './ToolEdge';
@@ -29,6 +35,7 @@ const nodeTypes = { role: RoleNode, mcp: McpNode };
 const edgeTypes = { tool: ToolEdge };
 
 export const FlowViewRoute = () => {
+  const [flowChanged, setFlowChanged] = useState<boolean>();
   const { currentFlow, flowGraphs, setGraphs, setCurrentFlow, getGraph } =
     useFlowStore(({ state, api }) => ({
       currentFlow: state.currentFlow,
@@ -121,7 +128,7 @@ export const FlowViewRoute = () => {
   }, []);
 
   const onDrop = useCallback(
-    (e: React.DragEvent) => {
+    (e: DragEvent) => {
       e.preventDefault();
       const raw = e.dataTransfer.getData('application/reactflow');
       if (!raw) return;
@@ -153,27 +160,108 @@ export const FlowViewRoute = () => {
     [currentFlow, getGraph, setGraphs, setCurrentFlow, screenToFlowPosition],
   );
 
+  const onRefetch = () => {};
+
+  const onSave = () => {
+    const graph = {
+      flowName: currentFlow,
+      flowIcon: undefined,
+      nodes: nodes.map(({ id, type, position, data }) => ({
+        id,
+        type,
+        position,
+        data,
+      })),
+      edges: edges.map(
+        ({ id, source, target, sourceHandle, targetHandle, type }) => ({
+          id,
+          source,
+          target,
+          sourceHandle,
+          targetHandle,
+          type,
+        }),
+      ),
+    };
+  };
+
+  const onGoBack = () => {};
+  const isDirty = false;
+
   return (
-    <div className='wrapper full' onDragOver={onDragOver} onDrop={onDrop}>
-      <ReactFlow
-        nodes={nodes}
-        edges={edges}
-        onNodesChange={onNodesChange}
-        onEdgesChange={onEdgesChange}
-        onConnect={onConnect}
-        isValidConnection={isValidConnection}
-        nodeTypes={nodeTypes}
-        edgeTypes={edgeTypes}
-        fitView
-        defaultEdgeOptions={{
-          markerEnd: { type: MarkerType.ArrowClosed, width: 20, height: 20 },
-        }}
-        connectionMode={ConnectionMode.Strict}
-      >
-        <Background gap={16} size={1} />
-        <Controls />
-        <MiniMap />
-      </ReactFlow>
-    </div>
+    <>
+      <div className='page-heading'>
+        <div className='page-toolbar'>
+          <div className='inline-wrapper'>
+            <button
+              className='btn-micro'
+              title='Back to the flow List'
+              onClick={onGoBack}
+            >
+              <ArrowLeftToLineIcon size={18} />
+            </button>
+            <div
+              className='page-title'
+              title={`Editing ${currentFlow ?? 'New Flow'}`}
+            >
+              {currentFlow ?? 'New Flow'}
+            </div>
+          </div>
+          <div className='page-actions'>
+            <InputField
+              id='flow-name'
+              label='Flow Name:'
+              value={currentFlow}
+              title={`Flow Name`}
+              onValueChange={(value) => {
+                setCurrentFlow(value);
+              }}
+              $status={flowChanged && !currentFlow ? 'error' : undefined}
+              placeholder='Flow Name'
+              wrapLayout='inline'
+            />
+            {currentFlow && (
+              <button
+                className='btn-secondary'
+                onClick={onRefetch}
+                title={`Refetch ${currentFlow}`}
+              >
+                <ListRestartIcon size={24} />
+              </button>
+            )}
+            <button
+              className='btn'
+              onClick={onSave}
+              title='Save Flow'
+              data-status={!isDirty ? 'disabled' : undefined}
+            >
+              <SaveCheckIcon size={24} />
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <div className='page-content' onDragOver={onDragOver} onDrop={onDrop}>
+        <ReactFlow
+          nodes={nodes}
+          edges={edges}
+          onNodesChange={onNodesChange}
+          onEdgesChange={onEdgesChange}
+          onConnect={onConnect}
+          isValidConnection={isValidConnection}
+          nodeTypes={nodeTypes}
+          edgeTypes={edgeTypes}
+          fitView
+          defaultEdgeOptions={{
+            markerEnd: { type: MarkerType.ArrowClosed, width: 20, height: 20 },
+          }}
+          connectionMode={ConnectionMode.Strict}
+        >
+          <Background gap={16} size={1} />
+          <Controls />
+          <MiniMap />
+        </ReactFlow>
+      </div>
+    </>
   );
 };

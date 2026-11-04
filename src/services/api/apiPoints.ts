@@ -20,7 +20,9 @@ import {
   DeleteRolesContract,
   DeleteBundlesContract,
   GetLanguagesContract,
+  CreateFlowContract,
   GetFlowContract,
+  SetFlowContract,
   GetFlowListContract,
   DeleteFlowsContract,
   GetOpenRouterModelsContract,
@@ -57,8 +59,12 @@ import type {
   DeleteRolesResponse,
   DeleteBundlesRequest,
   DeleteBundlesResponse,
+  CreateFlowRequest,
+  CreateFlowResponse,
   GetFlowRequest,
   GetFlowResponse,
+  SetFlowRequest,
+  SetFlowResponse,
   GetFlowListResponse,
   DeleteFlowsRequest,
   DeleteFlowsResponse,
@@ -199,9 +205,19 @@ const deleteRoles = (data: DeleteRolesRequest) =>
     apiClient.post(routes.back.deleteRoles, data, DeleteRolesContract),
   );
 
+const createFlow = (data: CreateFlowRequest) =>
+  apiCall<CreateFlowResponse>(() =>
+    apiClient.post(routes.back.createFlow, data, CreateFlowContract),
+  );
+
 const getFlow = (data: GetFlowRequest) =>
   apiCall<GetFlowResponse>(() =>
     apiClient.post(routes.back.getFlow, data, GetFlowContract),
+  );
+
+const setFlow = (data: SetFlowRequest) =>
+  apiCall<SetFlowResponse>(() =>
+    apiClient.post(routes.back.setFlow, data, SetFlowContract),
   );
 
 const getFlowList = () =>
@@ -262,10 +278,11 @@ export const apiPoints = {
   setRole,
   activateRole,
   deleteRoles,
+  createFlow,
   getFlowList,
   getFlow,
+  setFlow,
   deleteFlows,
-  // setFlow,
   getTableData,
   getLanguages,
   getOpenRouterModels,

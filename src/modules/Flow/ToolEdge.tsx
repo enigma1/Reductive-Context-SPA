@@ -38,7 +38,7 @@ export const ToolEdge = memo(
           <div
             style={{
               position: 'absolute',
-              transform: `translate(-50%, -50%) translate(${labelX}px,${labelY}px)`,
+              transform: `translate(-50%, -50%) translate(${labelX}px, ${labelY}px)`,
             }}
             className='nodrag nopan edge-label'
           >

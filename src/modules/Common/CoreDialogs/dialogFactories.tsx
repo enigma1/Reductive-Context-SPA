@@ -108,7 +108,7 @@ const setFilePaths = () => {
   const labels = [undefined, 'Set Paths'];
   const payload: DialogPayload = {
     initialSize: 'xl',
-    caption: 'Set Paths',
+    caption: 'Context Setup',
     component: <FilePathsForm formHandlers={handlers} />,
     variant: 'info',
     actions: dialogActions

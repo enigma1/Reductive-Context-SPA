@@ -1,6 +1,6 @@
 @layer components {
   .node-container {
-    @apply p-4 border rounded-xl font-semibold;
+    @apply p-4 border rounded-md font-semibold;
     border-color: var(--color-border-separate);
     background-color: var(--color-srf-elevated);
 

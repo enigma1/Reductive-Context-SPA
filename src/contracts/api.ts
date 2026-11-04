@@ -392,17 +392,6 @@ export const DeleteRolesContract = {
   responseSchema: DeleteRolesResponseSchema,
 };
 
-export const FlowPalleteSchema = z.object({
-  flowName: z.string(),
-  flowGraph: z.string(),
-  flowIcon: z.base64().optional(),
-});
-
-export const GetFlowRequestSchema = z.object({
-  name: z.string().min(1),
-});
-export type GetFlowRequest = z.infer<typeof GetFlowRequestSchema>;
-
 const FlowNodeSchema = z.discriminatedUnion('type', [
   z.object({
     id: z.string(),
@@ -426,10 +415,35 @@ export const FlowEdgeSchema = z.object({
 });
 export type FlowEdge = z.infer<typeof FlowEdgeSchema>;
 
+export const FlowShortSchema = z.object({
+  flowName: z.string(),
+  flowIcon: z.base64().optional(),
+});
+
+export const FlowFullSchema = z.object({
+  ...FlowShortSchema.shape,
+  nodes: z.array(FlowNodeSchema).min(1),
+  edges: z.array(FlowNodeSchema).min(1),
+});
+
+export const CreateFlowRequestSchema = FlowFullSchema;
+export type CreateFlowRequest = z.infer<typeof CreateFlowRequestSchema>;
+
+export const CreateFlowResponseSchema = BasicResponseSchema;
+export type CreateFlowResponse = z.infer<typeof CreateFlowResponseSchema>;
+
+export const CreateFlowContract = {
+  requestSchema: CreateFlowRequestSchema,
+  responseSchema: CreateFlowResponseSchema,
+};
+
+export const GetFlowRequestSchema = z.object({
+  name: z.string().min(1),
+});
+export type GetFlowRequest = z.infer<typeof GetFlowRequestSchema>;
+
 export const GetFlowResponseSchema = BasicResponseSchema.extend({
-  nodes: z.array(FlowNodeSchema),
-  edges: z.array(FlowEdgeSchema),
-  icon: z.base64().optional(),
+  ...FlowFullSchema.shape,
 });
 export type GetFlowResponse = z.infer<typeof GetFlowResponseSchema>;
 
@@ -441,7 +455,7 @@ export const GetFlowContract = {
 export const GetFlowListRequestSchema = z.void();
 export type GetFlowListRequest = z.infer<typeof GetFlowListRequestSchema>;
 export const GetFlowListResponseSchema = BasicResponseSchema.extend({
-  flows: z.record(z.string(), FlowPalleteSchema),
+  flows: z.record(z.string(), FlowShortSchema),
 });
 
 export type GetFlowListResponse = z.infer<typeof GetFlowListResponseSchema>;
@@ -449,6 +463,19 @@ export type GetFlowListResponse = z.infer<typeof GetFlowListResponseSchema>;
 export const GetFlowListContract = {
   requestSchema: GetFlowListRequestSchema,
   responseSchema: GetFlowListResponseSchema,
+};
+
+export const SetFlowRequestSchema = FlowFullSchema.extend({
+  orgName: z.string().min(1),
+});
+export type SetFlowRequest = z.infer<typeof SetFlowRequestSchema>;
+
+export const SetFlowResponseSchema = BasicResponseSchema;
+export type SetFlowResponse = z.infer<typeof SetFlowResponseSchema>;
+
+export const SetFlowContract = {
+  requestSchema: SetFlowRequestSchema,
+  responseSchema: SetFlowResponseSchema,
 };
 
 export const DeleteFlowsRequestSchema = z.object({

@@ -3,6 +3,8 @@ import type { CommonFieldProps } from '>/types';
 
 export type InputFieldProps = CommonFieldProps & {
   inputClassName?: string;
+  wrapClass?: string;
+  wrapLayout?: 'inline' | 'stack';
 };
 
 export const InputField = ({
@@ -12,6 +14,8 @@ export const InputField = ({
   $status,
   endAdornment,
   inputClassName,
+  wrapLayout = 'stack',
+  wrapClass = 'label-left',
   value,
   type,
   onChange,
@@ -23,6 +27,8 @@ export const InputField = ({
     htmlFor={id}
     $notice={$notice}
     $status={$status}
+    wrapLayout={wrapLayout}
+    wrapClass={wrapClass}
   >
     <div className='field-control'>
       <input

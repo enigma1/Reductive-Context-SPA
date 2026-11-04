@@ -218,7 +218,7 @@ export const PathsViewRoute = () => {
             >
               <ArrowLeftToLineIcon size={18} />
             </button>
-            <div className='page-title'>{`Paths View ${activeBundleId ? 'for bundle ' + activeBundleId : '(New Bundle)'}`}</div>
+            <div className='page-title'>{`Job and Context ${activeBundleId ? 'for bundle ' + activeBundleId : '(New Bundle)'}`}</div>
           </div>
           <div className='page-actions'>
             {activeBundleId ? (

@@ -32,8 +32,8 @@ type EditorSectionKey =
 
 const editorSections: { key: EditorSectionKey; title: string }[] = [
   { key: 'roleMain', title: 'Main Role Description' },
-  { key: 'contentRules', title: 'Content Rules' },
-  { key: 'contentExamples', title: 'Content Examples' },
+  { key: 'contentRules', title: `Content Rules - Do and Don't` },
+  { key: 'contentExamples', title: 'Content Examples - How To Do' },
   { key: 'scopePrompt', title: 'Scope Prompt' },
   { key: 'scopeRules', title: 'Scope Rules' },
   { key: 'scopeExamples', title: 'Scope Examples' },
