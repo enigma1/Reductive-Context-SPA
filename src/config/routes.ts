@@ -30,11 +30,19 @@ export const routes: AllRoutes = {
     setRole: '/api/set-role',
     activateRole: '/api/activate-role',
     deleteRoles: '/api/delete-roles',
+
+    createMcp: 'api/create-mcp',
+    getMcpList: '/api/get-mcps',
+    getMcp: '/api/get-mcp',
+    setMcp: '/api/set-mcp',
+    deleteMcps: '/api/delete-mcps',
+
     getFlow: '/api/get-flow',
     setFlow: '/api/set-flow',
     getFlowList: '/api/get-flow-list',
     createFlow: '/api/create-flow',
     deleteFlows: '/api/delete-flows',
+
     getTableData: '/api/get-table-data',
     getLanguages: '/api/get-languages',
     getOpenRouterModels: '/api/get-open-router-models',
@@ -50,6 +58,8 @@ export const routes: AllRoutes = {
     pathsView: '/paths-view',
     roleView: '/role-view',
     roleList: '/role-list',
+    mcpView: '/mcp-view',
+    mcpList: '/mcp-list',
     readFile: '/read-file',
     flowView: '/flow-view',
     flowList: '/flow-list',

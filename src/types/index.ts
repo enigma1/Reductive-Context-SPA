@@ -1,3 +1,4 @@
+/** Shared Types used that do not require runtime validation */
 export * from './ai';
 export * from './fileCode';
 export * from './errors';

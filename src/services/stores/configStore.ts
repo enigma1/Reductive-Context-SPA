@@ -6,7 +6,7 @@ import { userPrefs } from '>/config';
 import type { UserPrefs, LayoutPrefs, ConversationMode } from '>/contracts';
 import { makeState } from './estate';
 
-type ConfigStoreState = UserPrefs & { aiModel?: string };
+type ConfigStoreState = UserPrefs & { aiModel?: string; currentMcp?: string };
 
 export type ConfigStoreActions = {
   setTheme: (value?: string) => void;
@@ -20,9 +20,9 @@ export type ConfigStoreActions = {
   getCurrentRole: () => string;
   setCurrentRole: (role: string) => void;
   setCurrentModel: (model?: string) => void;
+  getCurrentMcp: () => string | undefined;
+  setCurrentMcp: (mcp?: string) => void;
 };
-
-// type ConfigStore = ConfigStoreState & ConfigStoreActions;
 
 const initialState: ConfigStoreState = userPrefs;
 
@@ -73,6 +73,13 @@ export const configStoreActions: ConfigStoreActions = {
 
   setCurrentModel: (model) => {
     setAuto({ aiModel: model });
+  },
+
+  getCurrentMcp: () => {
+    return get().currentMcp;
+  },
+  setCurrentMcp: (mcp) => {
+    setAuto({ currentMcp: mcp });
   },
 };
 

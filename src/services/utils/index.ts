@@ -1,3 +1,4 @@
+/** Common utilities contain common/shared functions  */
 export * from './time';
 export * from './comparisons';
 export * from './results';

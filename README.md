@@ -24,7 +24,8 @@ written by: Mark Samios [@enigma1](https://github.com/enigma1)
 - Extracts file signatures for LLM submission
 - Support virtually unlimited LLM Roles.
 - Supports LLM clarification
-- Supports composition of multiple roles and mcp servers
+- Supports composition of multiple roles and mcp services
+- Internal (bult-in), External (local system/servicer) and Network/Remote based mcp services
 - File and folder selection
 - Token/context information
 - Interaction with the backend API
@@ -32,29 +33,37 @@ written by: Mark Samios [@enigma1](https://github.com/enigma1)
 
 ## Current API
 
-| API Command                    | Data Parameters            | Result                                |
-| ------------------------------ | -------------------------- | ------------------------------------- |
-| `POST /api/getPaths`           | `{ root, config }`         | Returns folders with files underneath |
-| `POST /api/readFile`           | `{ FileNode }`             | Returns file contents                 |
-| `POST /api/writeFile`          | `{ FileNode }`             | Writes file contents                  |
-| `GET /api/getLanguages`        | n/a                        | Returns supported file languages      |
-| `GET /api/getBundleList`       | n/a                        | Returns all bundles from the database |
-| `POST /api/getBundle`          | `{ GetBundleRequest }`     | Returns bundle details                |
-| `POST /api/createBundle`       | `{ CreateBundleRequest }`  | Creates a new bundle                  |
-| `POST /api/setBundle`          | `{ SetBundleRequest }`     | Updates an existing bundle            |
-| `POST /api/deleteBundles`      | `{ DeleteBundlesRequest }` | Deletes the specified bundles         |
-| `POST /api/submitBundle`       | `{ SubmitBundleRequest }`  | Sends the user bundle to the LLM      |
-| `POST /api/resumeBundle`       | `{ ResumeBundleRequest }`  | Resumes bundle processing             |
-| `GET /api/getRoleList`         | n/a                        | Returns all AI roles                  |
-| `POST /api/getRole`            | `{ GetRoleRequest }`       | Returns AI role details               |
-| `POST /api/setRole`            | `{ SetRoleRequest }`       | Creates or updates an AI role         |
-| `POST /api/deleteRoles`        | `{ DeleteRolesRequest }`   | Deletes the specified AI roles        |
-| `POST /api/getFlow`            | `{ GetFlowRequest }`       | Returns Flow details                  |
-| `POST /api/getFlowList`        | `{ GetFlowListRequest }`   | Returns Flow List                     |
-| `POST /api/getTableData`       | `{ GetTableDataRequest }`  | Returns table data                    |
-| `GET /api/getOpenRouterModels` | n/a                        | Returns available OpenRouter models   |
-| `POST /api/saveSettings`       | `{ SaveSettingsRequest }`  | Saves application settings            |
-| `GET /api/loadSettings`        | n/a                        | Loads application settings            |
+| API Command                    | Data Parameters            | Result                                     |
+| ------------------------------ | -------------------------- | ------------------------------------------ |
+| `POST /api/getPaths`           | `{ root, config }`         | Returns folders with files underneath      |
+| `POST /api/readFile`           | `{ FileNode }`             | Returns file contents                      |
+| `POST /api/writeFile`          | `{ FileNode }`             | Writes file contents                       |
+| `GET /api/getLanguages`        | n/a                        | Returns supported file languages           |
+| `GET /api/getBundleList`       | n/a                        | Returns all bundles from the database      |
+| `POST /api/getBundle`          | `{ GetBundleRequest }`     | Returns bundle details                     |
+| `POST /api/createBundle`       | `{ CreateBundleRequest }`  | Creates a new bundle                       |
+| `POST /api/setBundle`          | `{ SetBundleRequest }`     | Updates an existing bundle                 |
+| `POST /api/deleteBundles`      | `{ DeleteBundlesRequest }` | Deletes the specified bundles              |
+| `POST /api/submitBundle`       | `{ SubmitBundleRequest }`  | Sends the user bundle to the LLM           |
+| `POST /api/resumeBundle`       | `{ ResumeBundleRequest }`  | Resumes bundle processing                  |
+| `GET /api/getRoleList`         | n/a                        | Returns all AI roles                       |
+| `POST /api/getRole`            | `{ GetRoleRequest }`       | Returns AI role details                    |
+| `POST /api/setRole`            | `{ SetRoleRequest }`       | Creates or updates an AI role              |
+| `POST /api/activateRole`       | `{ ActivateRoleRequest }`  | Activates the specified assistant          |
+| `POST /api/deleteRoles`        | `{ DeleteRolesRequest }`   | Deletes the specified AI roles             |
+| `GET /api/getMcpList`          | n/a                        | Returns all MCP services                   |
+| `POST /api/getMcp`             | `{ GetMcpRequest }`        | Returns MCP json, transport, details       |
+| `POST /api/setMcp`             | `{ SetMcpRequest }`        | Creates or updates an MCP service          |
+| `POST /api/deleteMcps`         | `{ DeleteMcpsRequest }`    | Deletes the specified MCP services         |
+| `POST /api/getFlow`            | `{ GetFlowRequest }`       | Returns Flow details                       |
+| `POST /api/getFlowList`        | `{ GetFlowListRequest }`   | Returns Flow List                          |
+| `POST /api/createFlow`         | `{ CreateFlowRequest }`    | Make a Flow of assistants and mcp services |
+| `POST /api/setFlow`            | `{ SetFlowRequest }`       | Updates a Flow                             |
+| `POST /api/deleteFlows`        | `{ DeleteFlowsRequest }`   | Deletes the specified Flows by name        |
+| `POST /api/getTableData`       | `{ GetTableDataRequest }`  | Returns table data                         |
+| `GET /api/getOpenRouterModels` | n/a                        | Returns available OpenRouter models        |
+| `POST /api/saveSettings`       | `{ SaveSettingsRequest }`  | Saves application settings                 |
+| `GET /api/loadSettings`        | n/a                        | Loads application settings                 |
 
 ### Planned Workflow
 
@@ -76,17 +85,17 @@ The intended workflow is:
 
 ### Tech Stack
 
-- ReactJS,
+- ReactJS v19,
 - React Router,
-- TypeScript,
+- TypeScript v6,
 - TanStack Query: server-state management with custom selector-based hook interfaces
 - Custom Store: application state management with selector-based access
 - Custom Forms with state and presets support
 - Monaco Editor for code view and code merges
 - React Markdown for prompts, summary, reasoning
-- xyflow for role/mcp node compositions
-- Axios API with manifest-driven mock setup and error resolution
-- TailwindCSS with custom multi-theme options
+- xyflow for role/mcp node flow compositions
+- Axios API with manifest-driven mock support and error resolution
+- TailwindCSS v4 with custom multi-theme options
 - Zod for API runtime validation
 - Playwright for e2e tests
 

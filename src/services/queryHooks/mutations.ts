@@ -20,6 +20,12 @@ import type {
   SetRoleResponse,
   DeleteRolesRequest,
   DeleteRolesResponse,
+  CreateMcpRequest,
+  CreateMcpResponse,
+  SetMcpRequest,
+  SetMcpResponse,
+  DeleteMcpsRequest,
+  DeleteMcpsResponse,
   DeleteFlowsRequest,
   DeleteFlowsResponse,
   CreateFlowRequest,
@@ -155,25 +161,6 @@ export const useWriteFile = createMutationHook<
   },
 });
 
-const defaultSetRole = {};
-
-export const useSetRole = createMutationHook<
-  MutationFunction<SetRoleResponse, SetRoleRequest>
->({
-  fn: apiPoints.setRole,
-  state: {
-    ...defaultResponse,
-    ...defaultSetRole,
-  },
-  options: {
-    cache: async (qc, rsp, req) => {
-      await qc.invalidateQueries({
-        queryKey: queryKeys.roles({ name: req.name }),
-      });
-    },
-  },
-});
-
 const defaultCreateRole = {};
 
 export const useCreateRole = createMutationHook<
@@ -188,6 +175,28 @@ export const useCreateRole = createMutationHook<
     cache: async (qc) => {
       await qc.invalidateQueries({
         queryKey: queryKeys.roleList(),
+      });
+    },
+  },
+});
+
+const defaultSetRole = {};
+
+export const useSetRole = createMutationHook<
+  MutationFunction<SetRoleResponse, SetRoleRequest>
+>({
+  fn: apiPoints.setRole,
+  state: {
+    ...defaultResponse,
+    ...defaultSetRole,
+  },
+  options: {
+    cache: async (qc, rsp, req) => {
+      await qc.invalidateQueries({
+        queryKey: queryKeys.roleList(),
+      });
+      await qc.invalidateQueries({
+        queryKey: queryKeys.roles({ name: req.name }),
       });
     },
   },
@@ -219,6 +228,79 @@ export const useDeleteRoles = createMutationHook<
       await Promise.all(
         req.roleNames.map((name) =>
           qc.invalidateQueries({ queryKey: queryKeys.roles({ name }) }),
+        ),
+      );
+    },
+  },
+});
+
+const defaultCreateMcp = {};
+
+export const useCreateMcp = createMutationHook<
+  MutationFunction<CreateMcpResponse, CreateMcpRequest>
+>({
+  fn: apiPoints.createMcp,
+  state: {
+    ...defaultResponse,
+    ...defaultCreateMcp,
+  },
+  options: {
+    cache: async (qc) => {
+      await qc.invalidateQueries({
+        queryKey: queryKeys.mcpList(),
+      });
+    },
+  },
+});
+
+const defaultSetMcp = {};
+
+export const useSetMcp = createMutationHook<
+  MutationFunction<SetMcpResponse, SetMcpRequest>
+>({
+  fn: apiPoints.setMcp,
+  state: {
+    ...defaultResponse,
+    ...defaultSetMcp,
+  },
+  options: {
+    cache: async (qc, rsp, req) => {
+      await qc.invalidateQueries({
+        queryKey: queryKeys.mcpList(),
+      });
+      await qc.invalidateQueries({
+        queryKey: queryKeys.mcps({ name: req.mcpName }),
+      });
+    },
+  },
+});
+
+export const useDeleteMcps = createMutationHook<
+  MutationFunction<DeleteMcpsResponse, DeleteMcpsRequest>
+>({
+  fn: apiPoints.deleteMcps,
+  state: {
+    ...defaultResponse,
+  },
+  options: {
+    cache: async (qc, rsp, req) => {
+      await qc.invalidateQueries({
+        queryKey: queryKeys.mcpList(),
+      });
+      await Promise.all(
+        req.mcpNames.map((name) =>
+          qc.invalidateQueries({
+            queryKey: queryKeys.mcps({ name }),
+          }),
+        ),
+      );
+    },
+    // on error we don't know what actually got deleted so invalidate all associated caches
+    cacheError: async (qc, err, req) => {
+      await qc.invalidateQueries({ queryKey: queryKeys.mcpList() });
+      await Promise.all(
+        req.mcpNames.map((name) =>
+          qc.invalidateQueries({ queryKey: queryKeys.mcps({ name }) }),
         ),
       );
     },

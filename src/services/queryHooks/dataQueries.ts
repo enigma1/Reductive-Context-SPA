@@ -18,6 +18,10 @@ import type {
   GetRoleListResponse,
   GetRoleRequest,
   GetRoleResponse,
+  GetMcpListRequest,
+  GetMcpListResponse,
+  GetMcpRequest,
+  GetMcpResponse,
   GetFlowRequest,
   GetFlowResponse,
   GetFlowListRequest,
@@ -193,6 +197,13 @@ export const useGetRoleList = createDataQueryHook<
     ...defaultResponse,
     roles: [],
   }),
+  createApi: (state) => ({
+    getObject: () => {
+      const { roles } = state;
+      const obj = roles.map((role) => [role.name, role]);
+      return Object.fromEntries([obj]);
+    },
+  }),
 });
 
 export const useGetRole = createDataQueryHook<
@@ -217,6 +228,46 @@ export const useGetRole = createDataQueryHook<
   }),
   enabled: (req) => !!req.name,
 });
+
+export const useGetMcpList = createDataQueryHook<
+  GetMcpListResponse,
+  GetMcpListRequest,
+  {}
+>({
+  queryKey: () => queryKeys.mcpList(),
+  queryFn: async () => {
+    const rsp = await apiPoints.getMcpList();
+    return rsp;
+  },
+  initialData: () => ({
+    ...defaultResponse,
+    services: [],
+  }),
+  createApi: (state) => ({
+    getObject: () => {
+      const { services } = state;
+      const obj = services.map((service) => [service.mcpName, service]);
+      return Object.fromEntries([obj]);
+    },
+  }),
+});
+
+export const useGetMcp = createDataQueryHook<GetMcpResponse, GetMcpRequest, {}>(
+  {
+    queryKey: (req) => queryKeys.mcps(req),
+    queryFn: async (req) => {
+      const rsp = await apiPoints.getMcp(req);
+      return rsp;
+    },
+    initialData: (req) => ({
+      ...defaultResponse,
+      mcpName: '',
+      mcpJson: '',
+      mcpTransport: 'internal',
+    }),
+    enabled: (req) => !!req.name,
+  },
+);
 
 export const useGetFlowList = createDataQueryHook<
   GetFlowListResponse,

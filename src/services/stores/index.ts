@@ -1,4 +1,4 @@
-/** Client state stores — custom selector pattern (estate.ts), actions separated from state */
+/** Client state stores singleton and factory with custom selector pattern (core: estate.ts), actions separate from state */
 export * from './appStore';
 export * from './estate';
 export * from './dialogStore';

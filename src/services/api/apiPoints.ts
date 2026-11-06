@@ -12,13 +12,18 @@ import {
   GetBundleContract,
   SetBundleContract,
   GetBundleListContract,
+  DeleteBundlesContract,
   CreateRoleContract,
   GetRoleListContract,
   GetRoleContract,
   SetRoleContract,
   ActivateRoleContract,
   DeleteRolesContract,
-  DeleteBundlesContract,
+  CreateMcpContract,
+  GetMcpListContract,
+  GetMcpContract,
+  SetMcpContract,
+  DeleteMcpsContract,
   GetLanguagesContract,
   CreateFlowContract,
   GetFlowContract,
@@ -46,6 +51,8 @@ import type {
   SubmitBundleRequest,
   ResumeBundleRequest,
   GetBundleListResponse,
+  DeleteBundlesRequest,
+  DeleteBundlesResponse,
   CreateRoleRequest,
   CreateRoleResponse,
   GetRoleListResponse,
@@ -57,8 +64,15 @@ import type {
   ActivateRoleResponse,
   DeleteRolesRequest,
   DeleteRolesResponse,
-  DeleteBundlesRequest,
-  DeleteBundlesResponse,
+  CreateMcpRequest,
+  CreateMcpResponse,
+  GetMcpListResponse,
+  GetMcpRequest,
+  GetMcpResponse,
+  SetMcpRequest,
+  SetMcpResponse,
+  DeleteMcpsRequest,
+  DeleteMcpsResponse,
   CreateFlowRequest,
   CreateFlowResponse,
   GetFlowRequest,
@@ -177,11 +191,11 @@ const deleteBundles = (data: DeleteBundlesRequest) =>
     apiClient.post(routes.back.deleteBundles, data, DeleteBundlesContract),
   );
 
+// Role APIs
 const createRole = (data: CreateRoleRequest) =>
   apiCall<CreateRoleResponse>(() =>
     apiClient.post(routes.back.createRole, data, CreateRoleContract),
   );
-
 const getRole = (data: GetRoleRequest) =>
   apiCall<GetRoleResponse>(() =>
     apiClient.post(routes.back.getRole, data, GetRoleContract),
@@ -203,6 +217,28 @@ const activateRole = (data: ActivateRoleRequest) =>
 const deleteRoles = (data: DeleteRolesRequest) =>
   apiCall<DeleteRolesResponse>(() =>
     apiClient.post(routes.back.deleteRoles, data, DeleteRolesContract),
+  );
+
+// Mcp APIs
+const createMcp = (data: CreateMcpRequest) =>
+  apiCall<CreateMcpResponse>(() =>
+    apiClient.post(routes.back.createMcp, data, CreateMcpContract),
+  );
+const getMcp = (data: GetMcpRequest) =>
+  apiCall<GetMcpResponse>(() =>
+    apiClient.post(routes.back.getMcp, data, GetMcpContract),
+  );
+const setMcp = (data: SetMcpRequest) =>
+  apiCall<SetMcpResponse>(() =>
+    apiClient.post(routes.back.setMcp, data, SetMcpContract),
+  );
+const getMcpList = () =>
+  apiCall<GetMcpListResponse>(() =>
+    apiClient.get(routes.back.getMcpList, GetMcpListContract),
+  );
+const deleteMcps = (data: DeleteMcpsRequest) =>
+  apiCall<DeleteMcpsResponse>(() =>
+    apiClient.post(routes.back.deleteMcps, data, DeleteMcpsContract),
   );
 
 const createFlow = (data: CreateFlowRequest) =>
@@ -278,6 +314,13 @@ export const apiPoints = {
   setRole,
   activateRole,
   deleteRoles,
+
+  createMcp,
+  getMcpList,
+  getMcp,
+  setMcp,
+  deleteMcps,
+
   createFlow,
   getFlowList,
   getFlow,

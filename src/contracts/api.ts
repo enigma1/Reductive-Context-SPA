@@ -392,6 +392,83 @@ export const DeleteRolesContract = {
   responseSchema: DeleteRolesResponseSchema,
 };
 
+const mcpTransports = ['http', 'internal', 'external'] as const;
+export const McpShortSchema = z.object({
+  mcpName: z.string().min(1),
+  mcpTransport: z.enum(mcpTransports),
+  mcpIcon: z.string().optional(),
+});
+export const McpDetailedSchema = z.object({
+  ...McpShortSchema.shape,
+  mcpJson: z.string().min(20),
+});
+
+export const CreateMcpRequestSchema = z.object({
+  ...McpDetailedSchema.shape,
+});
+export type CreateMcpRequest = z.infer<typeof CreateMcpRequestSchema>;
+
+export const CreateMcpResponseSchema = BasicResponseSchema;
+export type CreateMcpResponse = z.infer<typeof CreateMcpResponseSchema>;
+
+export const CreateMcpContract = {
+  requestSchema: CreateMcpRequestSchema,
+  responseSchema: CreateMcpResponseSchema,
+};
+
+export const GetMcpListRequestSchema = z.void();
+export type GetMcpListRequest = z.infer<typeof GetMcpListRequestSchema>;
+export const GetMcpListResponseSchema = BasicResponseSchema.extend({
+  services: z.array(McpShortSchema),
+});
+export type GetMcpListResponse = z.infer<typeof GetMcpListResponseSchema>;
+
+export const GetMcpListContract = {
+  requestSchema: GetMcpListRequestSchema,
+  responseSchema: GetMcpListResponseSchema,
+};
+
+export const GetMcpRequestSchema = z.object({
+  name: z.string().min(1),
+});
+export type GetMcpRequest = z.infer<typeof GetMcpRequestSchema>;
+
+export const GetMcpResponseSchema = BasicResponseSchema.extend({
+  ...McpDetailedSchema.shape,
+});
+export type GetMcpResponse = z.infer<typeof GetMcpResponseSchema>;
+
+export const GetMcpContract = {
+  requestSchema: GetMcpRequestSchema,
+  responseSchema: GetMcpResponseSchema,
+};
+
+export const SetMcpRequestSchema = McpDetailedSchema.extend({
+  orgName: z.string().min(1),
+});
+export type SetMcpRequest = z.infer<typeof SetMcpRequestSchema>;
+
+export const SetMcpResponseSchema = BasicResponseSchema;
+export type SetMcpResponse = z.infer<typeof SetMcpResponseSchema>;
+
+export const SetMcpContract = {
+  requestSchema: SetMcpRequestSchema,
+  responseSchema: SetMcpResponseSchema,
+};
+
+export const DeleteMcpsRequestSchema = z.object({
+  mcpNames: z.array(z.string()).min(1),
+});
+export type DeleteMcpsRequest = z.infer<typeof DeleteMcpsRequestSchema>;
+
+export const DeleteMcpsResponseSchema = BasicResponseSchema;
+export type DeleteMcpsResponse = z.infer<typeof DeleteMcpsResponseSchema>;
+
+export const DeleteMcpsContract = {
+  requestSchema: DeleteMcpsRequestSchema,
+  responseSchema: DeleteMcpsResponseSchema,
+};
+
 const FlowNodeSchema = z.discriminatedUnion('type', [
   z.object({
     id: z.string(),
