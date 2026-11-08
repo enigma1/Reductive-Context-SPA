@@ -17,7 +17,7 @@ import {
   InputField,
   NumberField,
   CheckboxField,
-  DropFileField,
+  DropIconField,
 } from '>/modules';
 import { CommonDialogHandlers } from '>/types';
 import { RoleEditSection } from './RoleEditSection';
@@ -64,7 +64,7 @@ export const RoleForm = ({ name, formHandlers }: RoleFormProps) => {
     scopeExamples,
     sortOrder,
     status,
-    image,
+    roleIcon,
     isFetching,
   } = useGetRole({ name: name ?? '' }, ({ state, query }) => ({
     roleMain: state.roleMain,
@@ -75,7 +75,7 @@ export const RoleForm = ({ name, formHandlers }: RoleFormProps) => {
     scopeExamples: state.scopeExamples,
     sortOrder: state.sortOrder,
     status: state.status,
-    image: state.image,
+    roleIcon: state.roleIcon,
     isFetching: query.isFetching,
   }));
 
@@ -89,7 +89,7 @@ export const RoleForm = ({ name, formHandlers }: RoleFormProps) => {
     scopePrompt,
     scopeRules,
     scopeExamples,
-    image,
+    roleIcon,
     sortOrder,
     status,
   });
@@ -317,16 +317,16 @@ export const RoleForm = ({ name, formHandlers }: RoleFormProps) => {
             </div>
           ))}
           <div className='one-line center border-t border-b p-3'>
-            <DropFileField
-              value={form.values.image}
+            <DropIconField
+              value={form.values.roleIcon}
               onValueChange={(value) => {
-                form.setValue('image', value ?? undefined);
+                form.setValue('roleIcon', value ?? undefined);
               }}
               containerProps={{
                 className: 'center gap-2',
               }}
               inputProps={{
-                accept: '.png,.jpg,.webp',
+                accept: '.svg, .png,.jpg,.webp',
               }}
               texts={{
                 title: 'Drop Image file here',

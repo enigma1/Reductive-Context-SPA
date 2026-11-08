@@ -225,6 +225,8 @@ export const useGetRole = createDataQueryHook<
     scopePrompt: '',
     scopeRules: '',
     scopeExamples: '',
+    sortOrder: 0,
+    status: 0,
   }),
   enabled: (req) => !!req.name,
 });
@@ -234,9 +236,9 @@ export const useGetMcpList = createDataQueryHook<
   GetMcpListRequest,
   {}
 >({
-  queryKey: (req) => queryKeys.mcpList(req),
-  queryFn: async (req) => {
-    const rsp = await apiPoints.getMcpList(req);
+  queryKey: () => queryKeys.mcpList(),
+  queryFn: async () => {
+    const rsp = await apiPoints.getMcpList();
     return rsp;
   },
   initialData: () => ({
@@ -264,7 +266,7 @@ export const useGetMcp = createDataQueryHook<GetMcpResponse, GetMcpRequest, {}>(
       mcpName: '',
       mcpJson: '',
       mcpTransport: 'internal',
-      status: false,
+      status: 0,
       sortOrder: 0,
     }),
     enabled: (req) => !!req.name,
@@ -283,7 +285,7 @@ export const useGetFlowList = createDataQueryHook<
   },
   initialData: () => ({
     ...defaultResponse,
-    flows: {},
+    flows: [],
   }),
 });
 
@@ -302,6 +304,8 @@ export const useGetFlow = createDataQueryHook<
     flowName: '',
     nodes: [],
     edges: [],
+    status: 0,
+    sortOrder: 0,
   }),
 });
 

@@ -1,10 +1,11 @@
+import { useState } from 'react';
 import { useGetMcpList } from '>/services/queryHooks';
 import { ScreenLoader, ListingPageHeader, Card } from '>/modules';
 import { McpControls, McpListHeader } from './McpControls';
 
 export const McpListRoute = () => {
   const { services, isFetching, refetch } = useGetMcpList(
-    { mode: undefined },
+    undefined,
     ({ state, query }) => ({
       services: state.services,
       isFetching: query.isFetching,

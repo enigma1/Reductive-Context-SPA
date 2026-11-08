@@ -124,7 +124,7 @@ export const queryKeys = {
   flowList: () => ['root', 'flows'],
   flows: (req: GetFlowRequest) => ['root', 'flows', { ...req }],
 
-  mcpList: (req?: GetMcpListRequest) => ['root', 'mcps', ...(req ? [req] : [])],
+  mcpList: () => ['root', 'mcps'],
   mcps: (req: GetMcpRequest) => ['root', 'mcps', { ...req }],
 
   // Root -> Roles -> Paths -> Files

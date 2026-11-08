@@ -1,5 +1,5 @@
 /* File: src/config/routes.ts
-  All routes definitions for front and back-ends
+  All route definitions for front and back-ends
 */
 type Endpoint = Record<string, string>;
 
@@ -17,6 +17,8 @@ export const routes: AllRoutes = {
     getPaths: '/api/get-paths',
     readFile: '/api/read-file',
     writeFile: '/api/write-file',
+
+    // Bundles API
     createBundle: '/api/create-bundle',
     getBundle: '/api/get-bundle',
     setBundle: '/api/set-bundle',
@@ -24,6 +26,8 @@ export const routes: AllRoutes = {
     resumeBundle: '/api/resume-bundle',
     getBundleList: '/api/get-bundle-list',
     deleteBundles: '/api/delete-bundles',
+
+    // Roles API
     createRole: 'api/create-role',
     getRoleList: '/api/get-roles',
     getRole: '/api/get-role',
@@ -31,12 +35,14 @@ export const routes: AllRoutes = {
     activateRole: '/api/activate-role',
     deleteRoles: '/api/delete-roles',
 
+    // MCP Api
     createMcp: 'api/create-mcp',
     getMcpList: '/api/get-mcps',
     getMcp: '/api/get-mcp',
     setMcp: '/api/set-mcp',
     deleteMcps: '/api/delete-mcps',
 
+    // Workflows API
     getFlow: '/api/get-flow',
     setFlow: '/api/set-flow',
     getFlowList: '/api/get-flow-list',

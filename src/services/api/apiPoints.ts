@@ -233,9 +233,9 @@ const setMcp = (data: SetMcpRequest) =>
   apiCall<SetMcpResponse>(() =>
     apiClient.post(routes.back.setMcp, data, SetMcpContract),
   );
-const getMcpList = (data: GetMcpListRequest) =>
+const getMcpList = () =>
   apiCall<GetMcpListResponse>(() =>
-    apiClient.post(routes.back.getMcpList, data, GetMcpListContract),
+    apiClient.get(routes.back.getMcpList, GetMcpListContract),
   );
 const deleteMcps = (data: DeleteMcpsRequest) =>
   apiCall<DeleteMcpsResponse>(() =>

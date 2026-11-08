@@ -228,12 +228,12 @@ export const McpForm = ({ name, formHandlers }: McpFormProps) => {
                 <CheckboxField
                   id='show-mcp'
                   label='Show:'
-                  checked={form.values.status}
+                  checked={form.values.status === 1}
                   wrapClass='center'
                   wrapLayout='stack'
                   // wrapClass='label-left'
                   onChange={(checked) => {
-                    form.setValue('status', true);
+                    form.setValue('status', checked ? 1 : 0);
                   }}
                 />
               </div>

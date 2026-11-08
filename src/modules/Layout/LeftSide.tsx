@@ -1,16 +1,25 @@
 import { useState, useEffect, type ReactNode } from 'react';
 import { useNavigate, useLocation } from 'react-router';
 import {
+  CpuAiIcon,
   CircleChevronLeftIcon,
-  PackagePlusIcon,
   UserRoundPlusIcon,
+  DiagramFlowHorizontalIcon,
+  WorkflowIcon,
 } from 'lucide-react';
 import {
   dialogStoreActions,
   useConfigStore,
   useCodeStore,
+  flowStoreActions,
 } from '>/services/stores';
-import { dialogFactories, BundleSideList, RoleSideList } from '>/modules';
+import {
+  dialogFactories,
+  BundleSideList,
+  RoleSideList,
+  McpSideList,
+  FlowSideList,
+} from '>/modules';
 import { routes } from '>/config';
 
 export const LeftSide = () => {
@@ -38,6 +47,52 @@ export const LeftSide = () => {
 
   const sideSections: SidebarSection[] = [
     {
+      id: 'conversations',
+      getTitle: () => {
+        return activeBundleId ? `Bundle: ${activeBundleId}` : 'Bundles';
+      },
+      getRoute: () => routes.front.bundleList,
+      component: <BundleSideList />,
+      icon: (
+        <span title='New Bundle'>
+          <CpuAiIcon
+            size={20}
+            onClick={() => {
+              dialogStoreActions.openDialog({
+                payload: dialogFactories.setFilePaths(),
+              });
+            }}
+          />
+        </span>
+      ),
+    },
+    {
+      id: 'flows',
+      getTitle: () => {
+        return 'Workflows';
+      },
+      getRoute: () => {
+        return location.pathname === routes.front.flowView
+          ? routes.front.flowView
+          : routes.front.roleList;
+      },
+      component: <FlowSideList />,
+      icon: (
+        <span title='New Flow'>
+          <DiagramFlowHorizontalIcon
+            size={20}
+            onClick={() => {
+              flowStoreActions.setCurrentFlow();
+              if (location.pathname !== routes.front.flowView) {
+                navigate(routes.front.flowView);
+              }
+            }}
+          />
+        </span>
+      ),
+    },
+
+    {
       id: 'roles',
       getTitle: () => {
         return 'Roles';
@@ -62,19 +117,19 @@ export const LeftSide = () => {
       ),
     },
     {
-      id: 'conversations',
+      id: 'mcps',
       getTitle: () => {
-        return activeBundleId ? `Bundle: ${activeBundleId}` : 'Bundles';
+        return 'MCP Services';
       },
-      getRoute: () => routes.front.bundleList,
-      component: <BundleSideList />,
+      getRoute: () => routes.front.mcpList,
+      component: <McpSideList />,
       icon: (
-        <span title='New Bundle'>
-          <PackagePlusIcon
+        <span title='New MCP Service'>
+          <WorkflowIcon
             size={20}
             onClick={() => {
               dialogStoreActions.openDialog({
-                payload: dialogFactories.setFilePaths(),
+                payload: dialogFactories.setMcp(),
               });
             }}
           />

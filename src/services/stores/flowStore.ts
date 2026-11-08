@@ -17,14 +17,14 @@ const initialState: FlowStore = {
 const baseStore = makeState<FlowStore>(() => ({ ...initialState }));
 const { get, setAuto } = baseStore;
 
-export type FlowStoreActions = {
+export type flowStoreActions = {
   setGraphs: (graphs: Record<string, GraphItem>) => void;
   getGraph: (name: string) => GraphItem | undefined;
   getCurrentFlow: () => string | undefined;
   setCurrentFlow: (name?: string) => void;
 };
 
-export const FlowStoreActions: FlowStoreActions = {
+export const flowStoreActions: flowStoreActions = {
   getGraph: (name) => {
     return get().flowGraphs[name];
   },
@@ -45,14 +45,14 @@ export const FlowStoreActions: FlowStoreActions = {
 
 type FlowProps = {
   state: FlowStore;
-  api: typeof FlowStoreActions;
+  api: typeof flowStoreActions;
 };
 
 export const useFlowStore = <TSelected = FlowProps>(
   selector?: (props: FlowProps) => TSelected,
 ): TSelected => {
   const state = baseStore();
-  const api = FlowStoreActions;
+  const api = flowStoreActions;
 
   return selector ? selector({ state, api }) : ({ state, api } as TSelected);
 };

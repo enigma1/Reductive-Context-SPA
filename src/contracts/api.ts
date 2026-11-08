@@ -23,6 +23,11 @@ const ColumnSchema = z.object({
   label: z.string().optional(),
 });
 
+const CommonColumnsSchema = z.object({
+  status: z.number().min(0).max(1).default(1),
+  sortOrder: z.number().int(),
+});
+
 export const BasicRowsShapeSchema = z.object({
   rows: z.array(z.unknown()),
   cols: z.record(z.string(), ColumnSchema),
@@ -291,6 +296,7 @@ export const DeleteBundlesContract = {
 };
 
 export const AssistantRoleSchema = z.object({
+  ...CommonColumnsSchema.shape,
   name: z.string().min(1),
   roleMain: z.string(),
 });
@@ -301,17 +307,7 @@ export const AssistantRoleDetailedSchema = AssistantRoleSchema.extend({
   scopePrompt: z.string(),
   scopeRules: z.string(),
   scopeExamples: z.string(),
-  image: z
-    .instanceof(File)
-    .refine((f) => f.size <= MAX_ROLE_IMAGE_SIZE, {
-      message: 'Image must be under 1 MB',
-    })
-    .refine((f) => ['image/jpeg', 'image/png', 'image/webp'].includes(f.type), {
-      message: 'Must be JPG, PNG, or WebP',
-    })
-    .optional(),
-  status: z.number().min(0).max(1).optional(),
-  sortOrder: z.number().int().min(0).optional(),
+  roleIcon: z.string().optional(),
 });
 
 export const CreateRoleRequestSchema = AssistantRoleDetailedSchema;
@@ -393,8 +389,13 @@ export const DeleteRolesContract = {
 };
 
 const mcpListMode = ['enabled', 'all'] as const;
+export type McpListMode = z.infer<typeof mcpListMode>;
+
 const mcpTransports = ['http', 'internal', 'external'] as const;
+export type McpTransports = z.infer<typeof mcpTransports>;
+
 export const McpShortSchema = z.object({
+  ...CommonColumnsSchema.shape,
   mcpName: z.string().min(1),
   mcpTransport: z.enum(mcpTransports),
   mcpIcon: z.string().optional(),
@@ -402,8 +403,6 @@ export const McpShortSchema = z.object({
 export const McpDetailedSchema = z.object({
   ...McpShortSchema.shape,
   mcpJson: z.string().min(20),
-  sortOrder: z.number(),
-  status: z.boolean(),
 });
 
 export const CreateMcpRequestSchema = z.object({
@@ -419,9 +418,7 @@ export const CreateMcpContract = {
   responseSchema: CreateMcpResponseSchema,
 };
 
-export const GetMcpListRequestSchema = z.object({
-  mode: z.enum(mcpListMode).optional,
-});
+export const GetMcpListRequestSchema = z.void();
 
 export type GetMcpListRequest = z.infer<typeof GetMcpListRequestSchema>;
 export const GetMcpListResponseSchema = BasicResponseSchema.extend({
@@ -499,6 +496,7 @@ export const FlowEdgeSchema = z.object({
 export type FlowEdge = z.infer<typeof FlowEdgeSchema>;
 
 export const FlowShortSchema = z.object({
+  ...CommonColumnsSchema.shape,
   flowName: z.string(),
   flowIcon: z.base64().optional(),
 });
@@ -538,7 +536,7 @@ export const GetFlowContract = {
 export const GetFlowListRequestSchema = z.void();
 export type GetFlowListRequest = z.infer<typeof GetFlowListRequestSchema>;
 export const GetFlowListResponseSchema = BasicResponseSchema.extend({
-  flows: z.record(z.string(), FlowShortSchema),
+  flows: z.array(FlowShortSchema),
 });
 
 export type GetFlowListResponse = z.infer<typeof GetFlowListResponseSchema>;

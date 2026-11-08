@@ -87,7 +87,7 @@ export const FlowSideList = () => {
           })}
         </>
       ) : (
-        <div className='side-list-empty'>No Roles Found</div>
+        <div className='side-list-empty'>No Flows Found</div>
       )}
     </div>
   );
