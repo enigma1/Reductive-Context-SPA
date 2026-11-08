@@ -32,6 +32,7 @@ import type {
   CreateFlowResponse,
   ExportDatabaseRequest,
 } from '>/contracts';
+import { codeStoreActions } from '>/services/stores';
 import { createMutationHook } from './mutationBuilder';
 import { queryKeys } from './defs';
 
@@ -119,11 +120,8 @@ export const useDeleteBundles = createMutationHook<
   },
   options: {
     cache: async (qc, rsp, req) => {
-      await qc.invalidateQueries({
-        queryKey: queryKeys.bundleList(),
-      });
+      codeStoreActions.clearActiveBundle(req.bundleIds);
       // Remove the deleted bundles from the cache instead of invalidating them,
-      // since invalidating causes React Query to refetch a deleted resource (resulting in a backend error).
       await Promise.all(
         req.bundleIds.map((id) =>
           qc.removeQueries({
@@ -131,8 +129,12 @@ export const useDeleteBundles = createMutationHook<
           }),
         ),
       );
+      await qc.invalidateQueries({
+        queryKey: queryKeys.bundleList(),
+      });
     },
     cacheError: async (qc, err, req) => {
+      codeStoreActions.clearActiveBundle(req.bundleIds);
       await Promise.all(
         req.bundleIds.map((id) =>
           qc.removeQueries({
@@ -211,25 +213,25 @@ export const useDeleteRoles = createMutationHook<
   },
   options: {
     cache: async (qc, rsp, req) => {
-      await qc.invalidateQueries({
-        queryKey: queryKeys.roleList(),
-      });
       await Promise.all(
         req.roleNames.map((name) =>
-          qc.invalidateQueries({
+          qc.removeQueries({
             queryKey: queryKeys.roles({ name }),
           }),
         ),
       );
+      await qc.invalidateQueries({
+        queryKey: queryKeys.roleList(),
+      });
     },
     // on error we don't know what actually got deleted so invalidate all associated caches
     cacheError: async (qc, err, req) => {
-      await qc.invalidateQueries({ queryKey: queryKeys.roleList() });
       await Promise.all(
         req.roleNames.map((name) =>
-          qc.invalidateQueries({ queryKey: queryKeys.roles({ name }) }),
+          qc.removeQueries({ queryKey: queryKeys.roles({ name }) }),
         ),
       );
+      await qc.invalidateQueries({ queryKey: queryKeys.roleList() });
     },
   },
 });
@@ -284,25 +286,25 @@ export const useDeleteMcps = createMutationHook<
   },
   options: {
     cache: async (qc, rsp, req) => {
-      await qc.invalidateQueries({
-        queryKey: queryKeys.mcpList(),
-      });
       await Promise.all(
         req.mcpNames.map((name) =>
-          qc.invalidateQueries({
+          qc.removeQueries({
             queryKey: queryKeys.mcps({ name }),
           }),
         ),
       );
+      await qc.invalidateQueries({
+        queryKey: queryKeys.mcpList(),
+      });
     },
     // on error we don't know what actually got deleted so invalidate all associated caches
     cacheError: async (qc, err, req) => {
-      await qc.invalidateQueries({ queryKey: queryKeys.mcpList() });
       await Promise.all(
         req.mcpNames.map((name) =>
           qc.invalidateQueries({ queryKey: queryKeys.mcps({ name }) }),
         ),
       );
+      await qc.invalidateQueries({ queryKey: queryKeys.mcpList() });
     },
   },
 });
@@ -316,25 +318,25 @@ export const useDeleteFlows = createMutationHook<
   },
   options: {
     cache: async (qc, rsp, req) => {
-      await qc.invalidateQueries({
-        queryKey: queryKeys.flowList(),
-      });
       await Promise.all(
         req.flowNames.map((name) =>
-          qc.invalidateQueries({
+          qc.removeQueries({
             queryKey: queryKeys.flows({ name }),
           }),
         ),
       );
+      await qc.invalidateQueries({
+        queryKey: queryKeys.flowList(),
+      });
     },
     // on error we don't know what actually got deleted so invalidate all associated caches
     cacheError: async (qc, err, req) => {
-      await qc.invalidateQueries({ queryKey: queryKeys.flowList() });
       await Promise.all(
         req.flowNames.map((name) =>
-          qc.invalidateQueries({ queryKey: queryKeys.flows({ name }) }),
+          qc.removeQueries({ queryKey: queryKeys.flows({ name }) }),
         ),
       );
+      await qc.invalidateQueries({ queryKey: queryKeys.flowList() });
     },
   },
 });

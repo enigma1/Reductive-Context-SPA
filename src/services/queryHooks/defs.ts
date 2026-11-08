@@ -14,6 +14,7 @@ import {
   GetBundleRequest,
   GetRoleRequest,
   GetMcpRequest,
+  GetMcpListRequest,
   GetFlowRequest,
 } from '>/contracts';
 
@@ -123,7 +124,7 @@ export const queryKeys = {
   flowList: () => ['root', 'flows'],
   flows: (req: GetFlowRequest) => ['root', 'flows', { ...req }],
 
-  mcpList: () => ['root', 'mcps'],
+  mcpList: (req?: GetMcpListRequest) => ['root', 'mcps', ...(req ? [req] : [])],
   mcps: (req: GetMcpRequest) => ['root', 'mcps', { ...req }],
 
   // Root -> Roles -> Paths -> Files

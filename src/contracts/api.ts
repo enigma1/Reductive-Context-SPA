@@ -392,6 +392,7 @@ export const DeleteRolesContract = {
   responseSchema: DeleteRolesResponseSchema,
 };
 
+const mcpListMode = ['enabled', 'all'] as const;
 const mcpTransports = ['http', 'internal', 'external'] as const;
 export const McpShortSchema = z.object({
   mcpName: z.string().min(1),
@@ -401,6 +402,8 @@ export const McpShortSchema = z.object({
 export const McpDetailedSchema = z.object({
   ...McpShortSchema.shape,
   mcpJson: z.string().min(20),
+  sortOrder: z.number(),
+  status: z.boolean(),
 });
 
 export const CreateMcpRequestSchema = z.object({
@@ -416,7 +419,10 @@ export const CreateMcpContract = {
   responseSchema: CreateMcpResponseSchema,
 };
 
-export const GetMcpListRequestSchema = z.void();
+export const GetMcpListRequestSchema = z.object({
+  mode: z.enum(mcpListMode).optional,
+});
+
 export type GetMcpListRequest = z.infer<typeof GetMcpListRequestSchema>;
 export const GetMcpListResponseSchema = BasicResponseSchema.extend({
   services: z.array(McpShortSchema),

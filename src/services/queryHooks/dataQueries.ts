@@ -234,9 +234,9 @@ export const useGetMcpList = createDataQueryHook<
   GetMcpListRequest,
   {}
 >({
-  queryKey: () => queryKeys.mcpList(),
-  queryFn: async () => {
-    const rsp = await apiPoints.getMcpList();
+  queryKey: (req) => queryKeys.mcpList(req),
+  queryFn: async (req) => {
+    const rsp = await apiPoints.getMcpList(req);
     return rsp;
   },
   initialData: () => ({
@@ -264,6 +264,8 @@ export const useGetMcp = createDataQueryHook<GetMcpResponse, GetMcpRequest, {}>(
       mcpName: '',
       mcpJson: '',
       mcpTransport: 'internal',
+      status: false,
+      sortOrder: 0,
     }),
     enabled: (req) => !!req.name,
   },

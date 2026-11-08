@@ -5,6 +5,7 @@ import {
   Preferences,
   FilePathsForm,
   RoleForm,
+  McpForm,
   ContentDifferencesDlg,
   WriteFileDlg,
   ActionPreview,
@@ -84,6 +85,36 @@ const setRole = (props: SetRoleProps | void) => {
     initialSize: 'xxl',
     caption: 'Set Roles',
     component: <RoleForm name={name} formHandlers={handlers} />,
+    variant: 'info',
+    actions: dialogActions
+      .enabledConfirmCancel({
+        onConfirm: () => {
+          handlers.confirm();
+          dialogStoreActions.closeDialog();
+        },
+      })
+      .map((control, idx) => ({
+        ...control,
+        label: labels[idx] ?? control.label,
+      })),
+  };
+  return payload;
+};
+
+type SetMcpProps = {
+  name: string;
+};
+const setMcp = (props: SetMcpProps | void) => {
+  const { name } = props ?? {};
+  const handlers: CommonDialogHandlers = {
+    confirm: () => {},
+  };
+
+  const labels = [undefined, name ? 'Update' : 'Create'];
+  const payload: DialogPayload = {
+    initialSize: 'xl',
+    caption: 'MCP Services',
+    component: <McpForm name={name} formHandlers={handlers} />,
     variant: 'info',
     actions: dialogActions
       .enabledConfirmCancel({
@@ -243,6 +274,7 @@ type DialogFactories = {
   confirmation: Factory<ConfirmationProps>;
   editPreferences: Factory<void>;
   setRole: Factory<SetRoleProps | void>;
+  setMcp: Factory<SetMcpProps | void>;
   setFilePaths: Factory<void>;
   showTextTree: Factory<void>;
   contentDifferences: Factory<ContentDifferencesProps>;
@@ -254,6 +286,7 @@ export const dialogFactories: DialogFactories = {
   confirmation,
   editPreferences,
   setRole,
+  setMcp,
   setFilePaths,
   showTextTree,
   contentDifferences,

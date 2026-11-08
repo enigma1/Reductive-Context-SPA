@@ -14,7 +14,7 @@ type DropFileAreaText = {
 };
 
 type DropFileAreaProps = {
-  value?: File | null;
+  value?: File | string | null;
   label?: string;
   notice?: string;
   status?: StatusType;
@@ -36,6 +36,17 @@ const DropFileArea = ({
   const dragCounter = useRef(0);
   const [isDragging, setIsDragging] = useState(false);
   const { title, subtitle, browseButton, replaceButton, removeButton } = texts;
+
+  const isString = typeof value === 'string';
+  const name = isString ? 'icon' : (value?.name ?? '');
+  const size = isString ? new Blob([value]).size : (value?.size ?? 0);
+  const previewSrc = isString
+    ? value.startsWith('data:')
+      ? value
+      : `data:image/svg+xml,${encodeURIComponent(value)}`
+    : value
+      ? URL.createObjectURL(value)
+      : null;
 
   const handleDragOver = (e: DragEvent<HTMLDivElement>) => {
     e.preventDefault();
@@ -83,8 +94,9 @@ const DropFileArea = ({
       {value ? (
         <>
           <FileIcon />
-          <div>{value.name}</div>
-          <div>{formatSize(value.size)}</div>
+          {previewSrc && <img src={previewSrc} alt='' className='w-8 h-8' />}
+          <div>{name || 'icon'}</div>
+          <div>{formatSize(size)}</div>
           <button type='button'>{replaceButton}</button>
           <button
             type='button'
@@ -108,36 +120,54 @@ const DropFileArea = ({
   );
 };
 
-type DropFileFieldProps = {
+type DropFileFieldBaseProps = {
   status?: StatusType;
   notice?: string;
-  value?: File | null;
+  value?: File | string | null;
   texts: DropFileAreaText;
-  onValueChange: (file: File | null) => void;
+  onValueChange: (value: File | string | null) => void;
   inputProps?: React.InputHTMLAttributes<HTMLInputElement>;
   containerProps?: React.HTMLAttributes<HTMLDivElement>;
+  convertToDataUrl?: boolean;
 };
-export const DropFileField = ({
+
+export const DropFileFieldBase = ({
   value,
   texts,
   onValueChange,
   inputProps,
   containerProps,
-}: DropFileFieldProps) => {
+  convertToDataUrl,
+}: DropFileFieldBaseProps) => {
   const inputRef = useRef<HTMLInputElement>(null);
-  const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
+
+  const fileToDataUrl = (file: File): Promise<string> =>
+    new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onload = () => resolve(reader.result as string);
+      reader.onerror = reject;
+      reader.readAsDataURL(file);
+    });
+
+  const handleDrop = async (file: File | null) => {
+    if (!file) return onValueChange(null);
+    if (convertToDataUrl) {
+      onValueChange(await fileToDataUrl(file));
+    } else {
+      onValueChange(file); // raw File, no conversion
+    }
+  };
+
+  const handleChange = async (e: ChangeEvent<HTMLInputElement>) => {
     const file = e.currentTarget.files?.[0] ?? null;
-    onValueChange(file);
+    if (!file) return onValueChange(null);
+    if (convertToDataUrl) {
+      onValueChange(await fileToDataUrl(file));
+    } else {
+      onValueChange(file);
+    }
   };
-
-  const handleDrop = (file: File | null) => {
-    onValueChange(file);
-  };
-
-  const handleRemove = () => {
-    onValueChange(null);
-  };
-
+  const handleRemove = () => onValueChange(null);
   const open = () => inputRef.current?.click();
 
   return (
@@ -161,3 +191,34 @@ export const DropFileField = ({
     </>
   );
 };
+
+type DropFileFieldProps = Omit<
+  DropFileFieldBaseProps,
+  'value' | 'onValueChange' | 'convertToDataUrl'
+> & {
+  value?: File | null;
+  onValueChange: (value: File | null) => void;
+};
+export const DropFileField = (props: DropFileFieldProps) => (
+  <DropFileFieldBase
+    {...props}
+    onValueChange={props.onValueChange as (value: File | string | null) => void}
+    convertToDataUrl={false}
+  />
+);
+
+type DropIconFieldProps = Omit<
+  DropFileFieldBaseProps,
+  'value' | 'onValueChange' | 'convertToDataUrl'
+> & {
+  value?: string | null;
+  onValueChange: (value: string | null) => void;
+};
+
+export const DropIconField = (props: DropIconFieldProps) => (
+  <DropFileFieldBase
+    {...props}
+    onValueChange={props.onValueChange as (value: File | string | null) => void}
+    convertToDataUrl
+  />
+);

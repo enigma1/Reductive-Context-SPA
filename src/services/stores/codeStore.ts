@@ -83,6 +83,7 @@ export type CodeStoreActions = {
   getActivePrompt: () => string;
   getActiveBundleId: () => number | undefined;
   setActiveBundleId: (bundleId?: number) => void;
+  clearActiveBundle: (bundleIds: number[]) => void;
 
   setBundleStream: (mode: BundleStream) => void;
   setBundleResponse: (response: FrontRequest) => void;
@@ -228,6 +229,14 @@ export const codeStoreActions: CodeStoreActions = {
   },
   setActiveBundleId: (bundleId) => {
     setAuto({ activeBundleId: bundleId });
+  },
+  clearActiveBundle: (bundleIds) => {
+    const current = get().activeBundleId;
+    if (!current) return;
+
+    if (bundleIds.includes(current)) {
+      setAuto({ activeBundleId: undefined });
+    }
   },
 
   setBundleSession: (session) => {

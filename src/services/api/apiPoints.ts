@@ -66,6 +66,7 @@ import type {
   DeleteRolesResponse,
   CreateMcpRequest,
   CreateMcpResponse,
+  GetMcpListRequest,
   GetMcpListResponse,
   GetMcpRequest,
   GetMcpResponse,
@@ -232,9 +233,9 @@ const setMcp = (data: SetMcpRequest) =>
   apiCall<SetMcpResponse>(() =>
     apiClient.post(routes.back.setMcp, data, SetMcpContract),
   );
-const getMcpList = () =>
+const getMcpList = (data: GetMcpListRequest) =>
   apiCall<GetMcpListResponse>(() =>
-    apiClient.get(routes.back.getMcpList, GetMcpListContract),
+    apiClient.post(routes.back.getMcpList, data, GetMcpListContract),
   );
 const deleteMcps = (data: DeleteMcpsRequest) =>
   apiCall<DeleteMcpsResponse>(() =>
