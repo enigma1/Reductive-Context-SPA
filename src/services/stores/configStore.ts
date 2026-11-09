@@ -3,10 +3,19 @@
 */
 import cloneDeep from 'lodash-es/cloneDeep';
 import { userPrefs } from '>/config';
-import type { UserPrefs, LayoutPrefs, ConversationMode } from '>/contracts';
+import type {
+  UserPrefs,
+  LayoutPrefs,
+  ConversationMode,
+  ListMode,
+} from '>/contracts';
 import { makeState } from './estate';
 
-type ConfigStoreState = UserPrefs & { aiModel?: string; currentMcp?: string };
+type ConfigStoreState = UserPrefs & {
+  aiModel?: string;
+  currentMcp?: string;
+  listMode: ListMode;
+};
 
 export type ConfigStoreActions = {
   setTheme: (value?: string) => void;
@@ -16,6 +25,9 @@ export type ConfigStoreActions = {
   setLayoutPrefs: (prefs: Partial<LayoutPrefs>) => void;
   getConversationMode: () => ConversationMode;
   setConversationMode: (mode: ConversationMode) => void;
+  getListMode: () => ListMode;
+  setListMode: (mode: ListMode) => void;
+
   setSidebarWidth: (width: number) => void;
   getCurrentRole: () => string;
   setCurrentRole: (role: string) => void;
@@ -58,6 +70,10 @@ export const configStoreActions: ConfigStoreActions = {
   getConversationMode: () => get().conversationMode,
   setConversationMode: (mode) => {
     setAuto({ conversationMode: mode });
+  },
+  getListMode: () => get().listMode,
+  setListMode: (mode) => {
+    setAuto({ listMode: mode });
   },
 
   setSidebarWidth: (width) => {

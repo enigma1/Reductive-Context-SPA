@@ -1,7 +1,11 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo } from 'react';
 import { useNavigate, useLocation } from 'react-router';
 import Editor, { type OnMount } from '@monaco-editor/react';
-import { BasicResponse } from '>/contracts';
+import {
+  type BasicResponse,
+  type McpTransports,
+  mcpTransports,
+} from '>/contracts';
 import { routes, editorSimpleOptions } from '>/config';
 import { useGetMcp, useSetMcp, useCreateMcp } from '>/services/queryHooks';
 import {
@@ -16,6 +20,7 @@ import {
   ErrorDetails,
   ScreenLoader,
   InputField,
+  ComboField,
   NumberField,
   CheckboxField,
   DropIconField,
@@ -126,12 +131,11 @@ export const McpForm = ({ name, formHandlers }: McpFormProps) => {
   );
 
   const onConfirm = async () => {
-    const { isNewMcp, orgName, mcpName, ...params } = form.values;
+    const { isNewMcp, orgName, ...params } = form.values;
     if (!mcpName) return;
 
     const payload = {
       ...params,
-      mcpName,
     };
 
     if (isNewMcp) {
@@ -148,6 +152,13 @@ export const McpForm = ({ name, formHandlers }: McpFormProps) => {
     formHandlers.confirm = onConfirm;
   }, [onConfirm]);
 
+  const transportOptions = useMemo(() => {
+    return mcpTransports.map((t) => ({
+      label: t,
+      value: t,
+    }));
+  }, []);
+
   // ----------------
   // No-Hooks Section
   // ----------------
@@ -156,6 +167,10 @@ export const McpForm = ({ name, formHandlers }: McpFormProps) => {
 
   const handleError = () => {
     clearError();
+  };
+
+  const handleTransportChange = (value: McpTransports) => {
+    form.setValue('mcpTransport', value);
   };
 
   return (
@@ -200,8 +215,8 @@ export const McpForm = ({ name, formHandlers }: McpFormProps) => {
           <div className='area-item'>
             <div className='one-line'>
               <InputField
-                id='role-name'
-                label='MCP Name'
+                id='mcp-name'
+                label='MCP Name:'
                 value={form.values.mcpName}
                 title={`MCP Name`}
                 $status={
@@ -215,6 +230,23 @@ export const McpForm = ({ name, formHandlers }: McpFormProps) => {
                 }}
                 placeholder='Enter MCP Name'
               />
+              <ComboField
+                id='mcp-transport'
+                label='Transport:'
+                value={form.values.mcpTransport}
+                title={`MCP Transport to use`}
+                $status={
+                  form.submitAttempted && !form.values.mcpTransport
+                    ? 'error'
+                    : undefined
+                }
+                $notice={form.values.mcpTransport ? undefined : 'Required'}
+                $editable={false}
+                onChange={(v) => handleTransportChange(v as McpTransports)}
+                $options={transportOptions}
+                placeholder='Transport to use'
+              />
+
               <NumberField
                 id='sort-order'
                 label='Sort:'
@@ -239,12 +271,14 @@ export const McpForm = ({ name, formHandlers }: McpFormProps) => {
               </div>
             </div>
           </div>
-          <div className='area-content edit'>
+          <div className='area-item h-full'>
+            <div className='area-subtitle'>MCP JSON:</div>
             <Editor
               onMount={onMount}
               value={form.values.mcpJson}
               language='json'
               options={editorSimpleOptions}
+              onChange={(value) => form.setValue('mcpJson', value ?? '')}
             />
           </div>
           <div className='one-line center border-t border-b p-3'>

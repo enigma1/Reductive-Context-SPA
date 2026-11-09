@@ -20,6 +20,9 @@ export type LayoutPrefs = z.infer<typeof LayoutPrefsSchema>;
 const conversationMode = ['initial', 'listing'] as const;
 export type ConversationMode = (typeof conversationMode)[number];
 
+const listMode = ['card', 'table'] as const;
+export type ListMode = (typeof listMode)[number];
+
 export const UserPrefsConfigSchema = z.object({
   backPort: z.number().int().min(1).max(65535),
   frontPort: z.number().int().min(1).max(65535),
@@ -29,6 +32,7 @@ export const UserPrefsConfigSchema = z.object({
   headerVisibility: z.boolean(),
   layout: LayoutPrefsSchema,
   conversationMode: z.enum(conversationMode),
+  listMode: z.enum(listMode),
   currentRole: z.string().min(1),
 });
 export type UserPrefs = z.infer<typeof UserPrefsConfigSchema>;

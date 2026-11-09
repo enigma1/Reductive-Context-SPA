@@ -14,9 +14,7 @@ import {
   Home,
   NetworkDown,
   RoleListRoute,
-  RoleViewRoute,
   McpListRoute,
-  McpViewRoute,
   BundleViewRoute,
   BundleListRoute,
   BundleAnswerRoute,
@@ -42,16 +40,8 @@ export const browserRouter = createBrowserRouter([
         element: <RoleListRoute />,
       },
       {
-        path: routes.front.roleView,
-        element: <RoleViewRoute />,
-      },
-      {
         path: routes.front.mcpList,
         element: <McpListRoute />,
-      },
-      {
-        path: routes.front.mcpView,
-        element: <McpViewRoute />,
       },
       {
         path: routes.front.pathsView,

@@ -1,4 +1,4 @@
-import { useCallback, useState } from 'react';
+import { useRef, useEffect, useCallback, useState } from 'react';
 import { keys } from 'object-hash';
 import { formsStoreActions } from '>/services/stores';
 import isEqual from 'lodash-es/isEqual';
@@ -15,6 +15,7 @@ export const useSimpleForm = <T extends Record<string, unknown>>(
   const { autoTouch = false } = options;
   const [values, setValues] = useState<T>(initialValues);
   const [touched, setTouched] = useState<Set<string>>(new Set());
+  const everTouched = useRef<Set<string>>(new Set());
   const [profileId] = useState(() => {
     const { presetFields } = options;
     if (!presetFields) return keys(initialValues);
@@ -27,6 +28,22 @@ export const useSimpleForm = <T extends Record<string, unknown>>(
     return keys(specificValues);
   });
   const [submitAttempted, setSubmitAttempted] = useState(false);
+
+  useEffect(() => {
+    setValues((current) => {
+      const next = { ...current };
+      let changed = false;
+      for (const key of Object.keys(initialValues) as (keyof T)[]) {
+        if (!everTouched.current.has(String(key))) {
+          if (current[key] !== initialValues[key]) {
+            next[key] = initialValues[key];
+            changed = true;
+          }
+        }
+      }
+      return changed ? next : current; // ← same reference = no re-render
+    });
+  }, [initialValues]);
 
   const saveProfile = useCallback(
     (customProfileId?: string) => {
@@ -57,6 +74,7 @@ export const useSimpleForm = <T extends Record<string, unknown>>(
 
   const setValue = useCallback(
     <K extends keyof T>(key: K, value: T[K]) => {
+      everTouched.current.add(String(key));
       setValues((current) => ({
         ...current,
         [key]: value,

@@ -389,10 +389,10 @@ export const DeleteRolesContract = {
 };
 
 const mcpListMode = ['enabled', 'all'] as const;
-export type McpListMode = z.infer<typeof mcpListMode>;
+export type McpListMode = (typeof mcpListMode)[number];
 
-const mcpTransports = ['http', 'internal', 'external'] as const;
-export type McpTransports = z.infer<typeof mcpTransports>;
+export const mcpTransports = ['http', 'internal', 'external'] as const;
+export type McpTransports = (typeof mcpTransports)[number];
 
 export const McpShortSchema = z.object({
   ...CommonColumnsSchema.shape,

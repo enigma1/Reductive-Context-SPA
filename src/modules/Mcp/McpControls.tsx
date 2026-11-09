@@ -1,14 +1,16 @@
-import { useState } from 'react';
-import { ListRestartIcon } from 'lucide-react';
+import { ListRestartIcon, ChevronsLeftRightEllipsisIcon } from 'lucide-react';
 import { dialogStoreActions, useConfigStore } from '>/services/stores';
 import { dialogFactories } from '>/modules';
 
-type McpListMode = 'table' | 'card';
 type McpListHeaderProps = {
   onRefresh: () => void;
 };
 export const McpListHeader = ({ onRefresh }: McpListHeaderProps) => {
-  const [listMode, setListMode] = useState<McpListMode>('card');
+  const { listMode, setListMode } = useConfigStore(({ state, api }) => ({
+    listMode: state.listMode,
+    setListMode: api.setListMode,
+  }));
+
   const commonActions = (
     <>
       <button className='btn-secondary' onClick={onRefresh} title='Refresh'>
@@ -17,9 +19,16 @@ export const McpListHeader = ({ onRefresh }: McpListHeaderProps) => {
       <button
         className='btn-secondary'
         onClick={() => setListMode(listMode === 'card' ? 'table' : 'card')}
-        title='Refresh'
+        title={
+          listMode === 'card'
+            ? 'Switch to table listing'
+            : 'Switch into card listing'
+        }
       >
-        <ListRestartIcon size={24} />
+        <ChevronsLeftRightEllipsisIcon
+          className={listMode === 'table' ? '-rotate-90' : ''}
+          size={24}
+        />
       </button>
     </>
   );
