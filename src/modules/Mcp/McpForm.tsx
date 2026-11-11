@@ -1,6 +1,5 @@
 import { useEffect, useMemo } from 'react';
 import { useNavigate, useLocation } from 'react-router';
-import Editor, { type OnMount } from '@monaco-editor/react';
 import {
   type BasicResponse,
   type McpTransports,
@@ -24,6 +23,7 @@ import {
   NumberField,
   CheckboxField,
   DropIconField,
+  MonacoEditor,
 } from '>/modules';
 import { CommonDialogHandlers } from '>/types';
 
@@ -276,12 +276,11 @@ export const McpForm = ({ name, formHandlers }: McpFormProps) => {
           </div>
           <div className="area-item h-full">
             <div className="area-subtitle">MCP JSON:</div>
-            <Editor
-              onMount={onMount}
+            <MonacoEditor
               value={form.values.mcpJson}
               language="json"
               options={editorSimpleOptions}
-              onChange={(value) => form.setValue('mcpJson', value ?? '')}
+              onChange={(v) => form.setValue('mcpJson', v ?? '')}
             />
           </div>
           <div className="one-line center border-t border-b p-3">

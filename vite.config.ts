@@ -38,6 +38,7 @@ export default defineConfig({
   },
   optimizeDeps: {
     include: ['@floating-ui/react-dom'],
+    exclude: ['monaco-editor'],
   },
   plugins: [
     ssl(),

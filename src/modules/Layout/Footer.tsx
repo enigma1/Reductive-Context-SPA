@@ -18,17 +18,17 @@ export const Footer = () => {
 
   return (
     <>
-      <MessageList mode='footer' />
-      <footer className='inline-wrapper text-sm px-3'>
+      <MessageList mode="footer" />
+      <footer className="inline-wrapper text-sm px-3">
         <a
-          target='_blank'
-          href='https://github.com/enigma1/Reductive-Context-SPA'
-          title='reductive context workspace'
+          target="_blank"
+          href="https://github.com/enigma1/Reductive-Context-SPA"
+          title="reductive context workspace on github"
         >
           <GraphStarIcon size={16} />
         </a>
         {`Reductive Context Workspace - Copyright (c) ${timeRange} Mark Samios`}
-        <div className='ml-auto flex gap-2 inverted-text'>
+        <div className="ml-auto flex gap-2 inverted-text">
           <Link to={routes.front.roleList}>{currentRole}</Link>
         </div>
       </footer>

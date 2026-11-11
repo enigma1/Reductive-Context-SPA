@@ -62,7 +62,6 @@ export const McpSideList = () => {
   };
 
   const services = getColumnValues(['mcpName']);
-  console.log('services', services);
   return (
     <div className="side-list">
       {services && services.length > 0 ? (

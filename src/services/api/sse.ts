@@ -59,7 +59,6 @@ export const streamPost = async <TData>(
 };
 
 export const bundlePostResponse = (msg: StreamMessage) => {
-  console.log('stream-msgs', msg);
   if (msg.error) {
     codeStoreActions.setBundleStream('error');
     const error = new Error(msg.error) as ApiError;

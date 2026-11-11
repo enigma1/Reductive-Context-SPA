@@ -2,10 +2,11 @@
   Implements monaco editor hooks for file editing/reading
 */
 import isEqual from 'lodash-es/isEqual';
-import { useState, useRef } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import type { OnMount } from '@monaco-editor/react';
 import { ContentRange, FileNode } from '>/contracts';
-import { getLanguageFromFilename } from '>/services/utils';
+import { getLanguageFromFilename, ensureMonaco } from '>/services/utils';
+import '>/services/utils/editor';
 
 type CodeRangesComparison = {
   original: ContentRange[];
@@ -38,14 +39,20 @@ const areRangesEqual = ({ original, modified }: CodeRangesComparison) =>
 const useEditorBase = () => {
   const editorRef = useRef<Parameters<OnMount>[0] | null>(null);
   const [isDirty, setIsDirty] = useState(false);
+  const [ready, setReady] = useState(false);
+
+  useEffect(() => {
+    ensureMonaco().then(() => setReady(true));
+  }, []);
+
   const getContent = () => editorRef.current?.getValue() ?? '';
   const clearDirty = () => setIsDirty(false);
 
-  return { editorRef, isDirty, setIsDirty, getContent, clearDirty };
+  return { editorRef, isDirty, setIsDirty, getContent, clearDirty, ready };
 };
 
 export const useEditor = (filename?: string) => {
-  const { editorRef, isDirty, setIsDirty, getContent, clearDirty } =
+  const { editorRef, isDirty, setIsDirty, getContent, clearDirty, ready } =
     useEditorBase();
   const language = filename
     ? getLanguageFromFilename({ filePath: filename, view: 'monaco' })
@@ -56,11 +63,11 @@ export const useEditor = (filename?: string) => {
     editor.onDidChangeModelContent(() => setIsDirty(true));
   };
 
-  return { onMount, isDirty, language, getContent, clearDirty };
+  return { onMount, isDirty, language, getContent, clearDirty, ready };
 };
 
 export const useEditorBundle = () => {
-  const { editorRef, isDirty, setIsDirty, getContent, clearDirty } =
+  const { editorRef, isDirty, setIsDirty, getContent, clearDirty, ready } =
     useEditorBase();
 
   const onMount: OnMount = (editor) => {
@@ -68,11 +75,11 @@ export const useEditorBundle = () => {
     editor.onDidChangeModelContent(() => setIsDirty(true));
   };
 
-  return { onMount, isDirty, getContent, clearDirty };
+  return { onMount, isDirty, getContent, clearDirty, ready };
 };
 
 export const useViewerSelection = (file?: FileNode) => {
-  const { editorRef, isDirty, setIsDirty, getContent, clearDirty } =
+  const { editorRef, isDirty, setIsDirty, getContent, clearDirty, ready } =
     useEditorBase();
   const language = file
     ? getLanguageFromFilename({ filePath: file.name, view: 'monaco' })
@@ -133,5 +140,6 @@ export const useViewerSelection = (file?: FileNode) => {
     getContent,
     clearDirty,
     editorRef,
+    ready,
   };
 };

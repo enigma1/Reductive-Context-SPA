@@ -18,6 +18,15 @@ export const snakeToCamel = (str: string): string =>
 export const getCamelKeys = (keys: string[]) =>
   keys.map((key) => snakeToCamel(key));
 
+export const getCamelObject = (obj: Record<string, unknown>) => {
+  const result: Record<string, unknown> = {};
+  for (const [k, v] of Object.entries(obj)) {
+    const key = snakeToCamel(k);
+    result[key] = v;
+  }
+  return result;
+};
+
 export const trimString = (query: string) => query.replace(/\s+/g, ' ').trim();
 export const truncateString = (value: string, max = MAX_TEXT_STRING) =>
   value.length > max ? value.slice(0, max) + '...' : value;
