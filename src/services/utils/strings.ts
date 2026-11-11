@@ -15,6 +15,9 @@ export const kebabCase = (str: string) =>
 export const snakeToCamel = (str: string): string =>
   str.replace(/_([a-z])/g, (_, char) => char.toUpperCase());
 
+export const getCamelKeys = (keys: string[]) =>
+  keys.map((key) => snakeToCamel(key));
+
 export const trimString = (query: string) => query.replace(/\s+/g, ' ').trim();
 export const truncateString = (value: string, max = MAX_TEXT_STRING) =>
   value.length > max ? value.slice(0, max) + '...' : value;

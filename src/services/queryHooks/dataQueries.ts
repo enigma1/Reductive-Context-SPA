@@ -32,13 +32,15 @@ import type {
   GetOpenRouterModelsResponse,
 } from '>/contracts';
 import { apiPoints } from '>/services/api';
-import { getOnlyColumnsFromResult } from '>/services/utils';
+import { getCamelKeys, getOnlyColumnsFromResult } from '>/services/utils';
 import {
   defaultResponse,
   defaultTableResponse,
   defaultExtTableResponse,
   BUNDLE_ID,
   BUNDLE_PROMPT,
+  MCP_NAME,
+  MCP_TRANSPORT,
 } from '>/config';
 import type { JsonArray } from '>/types';
 import { createDataQueryHook } from './dataQueryBuilder';
@@ -234,7 +236,7 @@ export const useGetRole = createDataQueryHook<
 export const useGetMcpList = createDataQueryHook<
   GetMcpListResponse,
   GetMcpListRequest,
-  {}
+  { getColumnValues: (colNames: string[]) => JsonArray[] }
 >({
   queryKey: () => queryKeys.mcpList(),
   queryFn: async () => {
@@ -243,13 +245,16 @@ export const useGetMcpList = createDataQueryHook<
   },
   initialData: () => ({
     ...defaultResponse,
-    services: [],
+    ...defaultExtTableResponse,
   }),
   createApi: (state) => ({
-    getObject: () => {
-      const { services } = state;
-      const obj = services.map((service) => [service.mcpName, service]);
-      return Object.fromEntries([obj]);
+    getColumnValues: (colNames: string[]) => {
+      const columnValues = getOnlyColumnsFromResult({
+        rows: state.rows as unknown as JsonArray[],
+        columnsOrder: getCamelKeys(state.columnsOrder),
+        fields: colNames,
+      });
+      return columnValues;
     },
   }),
 });
@@ -263,8 +268,9 @@ export const useGetMcp = createDataQueryHook<GetMcpResponse, GetMcpRequest, {}>(
     },
     initialData: (req) => ({
       ...defaultResponse,
-      mcpName: '',
+      mcpName: req.name,
       mcpJson: '',
+      mcpSummary: '',
       mcpTransport: 'internal',
       status: 0,
       sortOrder: 0,

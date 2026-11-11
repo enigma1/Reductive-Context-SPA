@@ -16,6 +16,9 @@ export const useSimpleForm = <T extends Record<string, unknown>>(
   const [values, setValues] = useState<T>(initialValues);
   const [touched, setTouched] = useState<Set<string>>(new Set());
   const everTouched = useRef<Set<string>>(new Set());
+  const prevInitials = useRef(initialValues);
+  const [submitAttempted, setSubmitAttempted] = useState(false);
+
   const [profileId] = useState(() => {
     const { presetFields } = options;
     if (!presetFields) return keys(initialValues);
@@ -27,9 +30,12 @@ export const useSimpleForm = <T extends Record<string, unknown>>(
     }, {});
     return keys(specificValues);
   });
-  const [submitAttempted, setSubmitAttempted] = useState(false);
 
   useEffect(() => {
+    // Skip entirely if content hasn't actually changed
+    if (isEqual(prevInitials.current, initialValues)) return;
+    prevInitials.current = initialValues;
+
     setValues((current) => {
       const next = { ...current };
       let changed = false;

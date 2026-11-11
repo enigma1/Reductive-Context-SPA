@@ -37,7 +37,7 @@ export const routes: AllRoutes = {
 
     // MCP Api
     createMcp: 'api/create-mcp',
-    getMcpList: '/api/get-mcps',
+    getMcpList: '/api/get-mcp-list',
     getMcp: '/api/get-mcp',
     setMcp: '/api/set-mcp',
     deleteMcps: '/api/delete-mcps',

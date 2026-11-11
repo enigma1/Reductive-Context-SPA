@@ -3,7 +3,6 @@
   Validates APIs requests/responses with the back end
 */
 import { z } from 'zod';
-import { MAX_ROLE_IMAGE_SIZE } from '>/config';
 import { OpenRouterModelSchema } from './openRouter';
 
 export const AiStatusSchema = z.object({
@@ -23,17 +22,26 @@ const ColumnSchema = z.object({
   label: z.string().optional(),
 });
 
+const ColumnRecordSchema = z.record(z.string(), ColumnSchema);
+export type ColumnRecords = z.infer<typeof ColumnRecordSchema>;
+
 const CommonColumnsSchema = z.object({
   status: z.number().min(0).max(1).default(1),
   sortOrder: z.number().int(),
 });
+export type CommonColumns = z.infer<typeof CommonColumnsSchema>;
 
-export const BasicRowsShapeSchema = z.object({
-  rows: z.array(z.unknown()),
-  cols: z.record(z.string(), ColumnSchema),
+export const BasicColumnsSchema = z.object({
+  cols: ColumnRecordSchema,
   columnsOrder: z.array(z.string()),
 });
-export type BasicRowsShape = z.infer<typeof BasicRowsShapeSchema>;
+export type BasicColumns = z.infer<typeof BasicColumnsSchema>;
+
+export const BasicRowsSchema = z.object({
+  ...BasicColumnsSchema.shape,
+  rows: z.array(z.json()),
+});
+export type BasicRows = z.infer<typeof BasicRowsSchema>;
 
 export const TableDataSchema = z.object({
   columnsOrder: z.array(z.string()),
@@ -272,7 +280,7 @@ export const GetTableDataContract = {
 export const GetBundleListRequestSchema = z.void();
 export type GetBundleListRequest = z.infer<typeof GetBundleListRequestSchema>;
 export const GetBundleListResponseSchema = BasicResponseSchema.extend({
-  ...BasicRowsShapeSchema.shape,
+  ...BasicRowsSchema.shape,
 });
 
 export type GetBundleListResponse = z.infer<typeof GetBundleListResponseSchema>;
@@ -397,9 +405,13 @@ export type McpTransports = (typeof mcpTransports)[number];
 export const McpShortSchema = z.object({
   ...CommonColumnsSchema.shape,
   mcpName: z.string().min(1),
+  mcpSummary: z.string().min(1),
   mcpTransport: z.enum(mcpTransports),
   mcpIcon: z.string().optional(),
 });
+
+export type McpShort = z.infer<typeof McpShortSchema>;
+
 export const McpDetailedSchema = z.object({
   ...McpShortSchema.shape,
   mcpJson: z.string().min(20),
@@ -422,7 +434,7 @@ export const GetMcpListRequestSchema = z.void();
 
 export type GetMcpListRequest = z.infer<typeof GetMcpListRequestSchema>;
 export const GetMcpListResponseSchema = BasicResponseSchema.extend({
-  services: z.array(McpShortSchema),
+  ...BasicRowsSchema.shape,
 });
 export type GetMcpListResponse = z.infer<typeof GetMcpListResponseSchema>;
 

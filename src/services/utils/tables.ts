@@ -1,7 +1,7 @@
 /* File: src/services/utils/tables.ts
   Utility functions for table JSX components
 */
-import type { DataRows, JsonArray, JsonObject } from '>/types';
+import type { DataRow, JsonArray, JsonObject } from '>/types';
 
 export const getMergedSimpleColumnData = (
   row: JsonArray,
@@ -16,7 +16,7 @@ export const getMergedSimpleColumnData = (
   return mergedData;
 };
 
-export const intoViewRows = (rows: DataRows, offset?: number) =>
+export const intoViewRows = <T = DataRow>(rows: T[], offset?: number) =>
   rows.map((r, idx) => ({
     offset: idx + (offset ?? 0),
     row: r,

@@ -44,6 +44,7 @@ export const McpForm = ({ name, formHandlers }: McpFormProps) => {
 
   const {
     mcpName,
+    mcpSummary,
     mcpTransport,
     mcpJson,
     sortOrder,
@@ -52,6 +53,7 @@ export const McpForm = ({ name, formHandlers }: McpFormProps) => {
     isFetching,
   } = useGetMcp({ name: name ?? '' }, ({ state, query }) => ({
     mcpName: state.mcpName,
+    mcpSummary: state.mcpSummary,
     mcpTransport: state.mcpTransport,
     mcpJson: state.mcpJson,
     mcpIcon: state.mcpIcon,
@@ -67,6 +69,7 @@ export const McpForm = ({ name, formHandlers }: McpFormProps) => {
     mcpTransport,
     mcpJson,
     mcpIcon,
+    mcpSummary,
     sortOrder,
     status,
   });
@@ -174,13 +177,13 @@ export const McpForm = ({ name, formHandlers }: McpFormProps) => {
   };
 
   return (
-    <div className='area-container'>
+    <div className="area-container">
       {errorResponse && (
-        <div className='animate-top-slide overflow-hidden border-b border-t'>
+        <div className="animate-top-slide overflow-hidden border-b border-t">
           <DialogContent
-            className='animate-in zoom-in-95 duration-300'
-            classSpacer='caption error'
-            note='Reading Files to compare failed'
+            className="animate-in zoom-in-95 duration-300"
+            classSpacer="caption error"
+            note="Reading Files to compare failed"
             onClose={handleError}
           >
             <ErrorDetails error={errorResponse} />
@@ -193,14 +196,14 @@ export const McpForm = ({ name, formHandlers }: McpFormProps) => {
           errorResponse && 'opacity-40 pointer-events-none',
         )}
       >
-        <div className='area-spacer'>
-          <h1 className='area-title'>{`MCP: ${name ?? 'New'}`}</h1>
-          <div className='area-actions'>
+        <div className="area-spacer">
+          <h1 className="area-title">{`MCP: ${name ?? 'New'}`}</h1>
+          <div className="area-actions">
             <CheckboxField
-              id='newMcp'
-              label='New MCP:'
+              id="newMcp"
+              label="New MCP:"
               checked={form.values.isNewMcp}
-              wrapClass='label-left'
+              wrapClass="label-left"
               onChange={(checked) => {
                 if (checked) {
                   form.setValue('isNewMcp', true);
@@ -211,12 +214,12 @@ export const McpForm = ({ name, formHandlers }: McpFormProps) => {
             />
           </div>
         </div>
-        <div className='area-listing gap-0'>
-          <div className='area-item'>
-            <div className='one-line'>
+        <div className="area-listing gap-0">
+          <div className="area-item">
+            <div className="one-line">
               <InputField
-                id='mcp-name'
-                label='MCP Name:'
+                id="mcp-name"
+                label="MCP Name:"
                 value={form.values.mcpName}
                 title={`MCP Name`}
                 $status={
@@ -228,11 +231,11 @@ export const McpForm = ({ name, formHandlers }: McpFormProps) => {
                 onValueChange={(value) => {
                   form.setValue('mcpName', value);
                 }}
-                placeholder='Enter MCP Name'
+                placeholder="Enter MCP Name"
               />
               <ComboField
-                id='mcp-transport'
-                label='Transport:'
+                id="mcp-transport"
+                label="Transport:"
                 value={form.values.mcpTransport}
                 title={`MCP Transport to use`}
                 $status={
@@ -244,25 +247,25 @@ export const McpForm = ({ name, formHandlers }: McpFormProps) => {
                 $editable={false}
                 onChange={(v) => handleTransportChange(v as McpTransports)}
                 $options={transportOptions}
-                placeholder='Transport to use'
+                placeholder="Transport to use"
               />
 
               <NumberField
-                id='sort-order'
-                label='Sort:'
+                id="sort-order"
+                label="Sort:"
                 value={form.values.sortOrder}
                 title={`Sort Order`}
                 onValueChange={(value) => {
                   form.setValue('sortOrder', value || 0);
                 }}
               />
-              <div className='h-full center'>
+              <div className="h-full center">
                 <CheckboxField
-                  id='show-mcp'
-                  label='Show:'
+                  id="show-mcp"
+                  label="Show:"
                   checked={form.values.status === 1}
-                  wrapClass='center'
-                  wrapLayout='stack'
+                  wrapClass="center"
+                  wrapLayout="stack"
                   // wrapClass='label-left'
                   onChange={(checked) => {
                     form.setValue('status', checked ? 1 : 0);
@@ -271,17 +274,17 @@ export const McpForm = ({ name, formHandlers }: McpFormProps) => {
               </div>
             </div>
           </div>
-          <div className='area-item h-full'>
-            <div className='area-subtitle'>MCP JSON:</div>
+          <div className="area-item h-full">
+            <div className="area-subtitle">MCP JSON:</div>
             <Editor
               onMount={onMount}
               value={form.values.mcpJson}
-              language='json'
+              language="json"
               options={editorSimpleOptions}
               onChange={(value) => form.setValue('mcpJson', value ?? '')}
             />
           </div>
-          <div className='one-line center border-t border-b p-3'>
+          <div className="one-line center border-t border-b p-3">
             <DropIconField
               value={form.values.mcpIcon}
               onValueChange={(value) => {

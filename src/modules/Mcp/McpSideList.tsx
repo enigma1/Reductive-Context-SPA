@@ -1,6 +1,6 @@
 import { useLocation, useNavigate } from 'react-router';
 import { FileXIcon } from 'lucide-react';
-import { routes } from '>/config';
+import { routes, MCP_NAME } from '>/config';
 import { useGetMcpList, useDeleteMcps } from '>/services/queryHooks';
 import { useConfigStore, dialogStoreActions } from '>/services/stores';
 import { ScreenLoader, dialogFactories } from '>/modules';
@@ -14,10 +14,10 @@ export const McpSideList = () => {
     setCurrentMcp: api.setCurrentMcp,
   }));
 
-  const { services, isFetching } = useGetMcpList(
+  const { getColumnValues, isFetching } = useGetMcpList(
     undefined,
-    ({ state, query }) => ({
-      services: state.services,
+    ({ api, query }) => ({
+      getColumnValues: api.getColumnValues,
       isFetching: query.isFetching,
     }),
   );
@@ -61,26 +61,29 @@ export const McpSideList = () => {
     });
   };
 
+  const services = getColumnValues(['mcpName']);
+  console.log('services', services);
   return (
-    <div className='side-list'>
+    <div className="side-list">
       {services && services.length > 0 ? (
         <>
-          {services.map((mcp, idx) => {
-            const name = typeof mcp === 'string' ? mcp : mcp.mcpName;
+          {services.map(([name], idx) => {
+            if (typeof name !== 'string') return 'error';
+
             const isSelected = currentMcp === name;
             return (
               <div
-                className='btn-group side-list-item min-w-0 gap-0.5'
+                className="btn-group side-list-item min-w-0 gap-0.5"
                 key={`${name}-${idx}`}
               >
                 <button
-                  className='btn-side field-error'
+                  className="btn-side field-error"
                   onClick={() => onDeleteMcp(name)}
                 >
                   <FileXIcon size={16} />
                 </button>
                 <button
-                  className='truncate min-w-0 flex-1 text-left'
+                  className="truncate min-w-0 flex-1 text-left"
                   data-active={isSelected}
                   onClick={() => {
                     setCurrentMcp(name);
@@ -96,7 +99,7 @@ export const McpSideList = () => {
           })}
         </>
       ) : (
-        <div className='side-list-empty'>No MCP Services Found</div>
+        <div className="side-list-empty">No MCP Services Found</div>
       )}
     </div>
   );

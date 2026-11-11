@@ -28,7 +28,7 @@ export const BundleHeader = ({
 
   const firstActions = (
     <>
-      <button className='btn' onClick={onSubmitBundle} title='Submit Bundle'>
+      <button className="btn" onClick={onSubmitBundle} title="Submit Bundle">
         <FileSlidersIcon size={24} />
       </button>
     </>
@@ -41,11 +41,11 @@ export const BundleHeader = ({
 
   const commonActions = (
     <>
-      <button className='btn-secondary' onClick={onRefresh} title='Refresh'>
+      <button className="btn-secondary" onClick={onRefresh} title="Refresh">
         <ListRestartIcon size={24} />
       </button>
       <button
-        className='btn-secondary'
+        className="btn-secondary"
         onClick={() =>
           setConversationMode(
             conversationMode === 'initial' ? 'listing' : 'initial',
@@ -54,7 +54,10 @@ export const BundleHeader = ({
         title={switchNote}
         data-status={!hasConversations ? 'disabled' : undefined}
       >
-        <ChevronsLeftRightEllipsisIcon size={24} />
+        <ChevronsLeftRightEllipsisIcon
+          size={24}
+          className={`transition-transform duration-300 ${conversationMode === 'listing' ? 'rotate-90' : ''}`}
+        />
       </button>
     </>
   );

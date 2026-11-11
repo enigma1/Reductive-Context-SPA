@@ -245,12 +245,12 @@ const deleteTableEntries = ({
   const labels = [undefined, 'Confirm Removal'];
   const payload: DialogPayload = {
     initialSize: 'lg',
-    caption: 'Bundles Removal',
+    caption: 'Entries Removal',
     component: (
       <ActionPreview
         rows={rows}
         columnsOrder={columnsOrder}
-        message='The following entries will be permanently removed'
+        message="The following entries will be permanently removed"
       />
     ),
     variant: 'warn',

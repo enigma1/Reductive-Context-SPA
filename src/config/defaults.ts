@@ -1,7 +1,9 @@
 import type {
   BasicResponse,
   TableData,
-  BasicRowsShape,
+  BasicRows,
+  BasicColumns,
+  CommonColumns,
   FrontRequest,
 } from '>/contracts';
 
@@ -22,7 +24,17 @@ export const defaultTableResponse: TableData = {
   columnsOrder: [],
 };
 
-export const defaultExtTableResponse: BasicRowsShape = {
+export const defaultCommonColumns: CommonColumns = {
+  status: 0,
+  sortOrder: 0,
+};
+
+export const defaultColumnsResponse: BasicColumns = {
+  cols: {},
+  columnsOrder: [],
+};
+
+export const defaultExtTableResponse = {
   cols: {},
   rows: [],
   columnsOrder: [],
