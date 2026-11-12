@@ -295,7 +295,7 @@ export const useGetMcp = createDataQueryHook<GetMcpResponse, GetMcpRequest, {}>(
 export const useGetFlowList = createDataQueryHook<
   GetFlowListResponse,
   GetFlowListRequest,
-  {}
+  { getColumnValues: (colNames: string[]) => JsonArray[] }
 >({
   queryKey: () => queryKeys.flowList(),
   queryFn: async () => {
@@ -304,7 +304,17 @@ export const useGetFlowList = createDataQueryHook<
   },
   initialData: () => ({
     ...defaultResponse,
-    flows: [],
+    ...defaultExtTableResponse,
+  }),
+  createApi: (state) => ({
+    getColumnValues: (colNames: string[]) => {
+      const columnValues = getOnlyColumnsFromResult({
+        rows: state.rows as unknown as JsonArray[],
+        columnsOrder: getCamelKeys(state.columnsOrder),
+        fields: colNames,
+      });
+      return columnValues;
+    },
   }),
 });
 

@@ -1,40 +1,7 @@
-import { ListRestartIcon, ChevronsLeftRightEllipsisIcon } from 'lucide-react';
+import { useDeleteMcps } from '>/services/queryHooks';
 import { dialogStoreActions, useConfigStore } from '>/services/stores';
 import { dialogFactories } from '>/modules';
-
-type McpListHeaderProps = {
-  onRefresh: () => void;
-};
-export const McpListHeader = ({ onRefresh }: McpListHeaderProps) => {
-  const { listMode, setListMode } = useConfigStore(({ state, api }) => ({
-    listMode: state.listMode,
-    setListMode: api.setListMode,
-  }));
-
-  const commonActions = (
-    <>
-      <button className='btn-secondary' onClick={onRefresh} title='Refresh'>
-        <ListRestartIcon size={24} />
-      </button>
-      <button
-        className='btn-secondary'
-        onClick={() => setListMode(listMode === 'card' ? 'table' : 'card')}
-        title={
-          listMode === 'card'
-            ? 'Switch to table listing'
-            : 'Switch into card listing'
-        }
-      >
-        <ChevronsLeftRightEllipsisIcon
-          className={listMode === 'table' ? '-rotate-90' : ''}
-          size={24}
-        />
-      </button>
-    </>
-  );
-  return commonActions;
-};
-
+import { MCP_NAME } from '>/config';
 type McpControlProps = {
   mcpName: string;
 };
@@ -45,22 +12,44 @@ export const McpControls = ({ mcpName }: McpControlProps) => {
     setCurrentMcp: api.setCurrentMcp,
   }));
 
+  const { mutate, isPending } = useDeleteMcps(({ query, api }) => ({
+    mutate: api.mutate,
+    isPending: query.isPending,
+  }));
+
   const onEdit = (name: string) => {
     dialogStoreActions.openDialog({
       payload: dialogFactories.setMcp({ name }),
     });
   };
 
-  const onDelete = (name: string) => {};
+  const onDelete = () => {
+    if (isPending) return;
+    const columnsOrder = [MCP_NAME];
+    const rows = [[mcpName]];
+
+    const onConfirm = () => {
+      dialogStoreActions.closeDialog();
+      mutate({ mcpNames: [mcpName] });
+    };
+
+    dialogStoreActions.openDialog({
+      payload: dialogFactories.deleteTableEntries({
+        columnsOrder,
+        rows,
+        onConfirm,
+      }),
+    });
+  };
 
   return (
-    <div className='one-line no-stretch'>
-      <button className='btn-secondary' onClick={() => onEdit(mcpName)}>
+    <div className="one-line no-stretch">
+      <button className="btn-secondary" onClick={() => onEdit(mcpName)}>
         Edit
       </button>
       <button
-        className='btn'
-        onClick={() => onDelete(mcpName)}
+        className="btn"
+        onClick={onDelete}
         data-status={currentMcp === mcpName ? 'disabled' : undefined}
       >
         Delete

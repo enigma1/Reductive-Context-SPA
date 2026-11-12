@@ -1,6 +1,6 @@
-import { ListingPageHeader, Card } from '>/modules';
+import { ListingPageHeader, Card, ListingMode } from '>/modules';
 import type { McpTransports } from '>/contracts';
-import { McpControls, McpListHeader } from './McpControls';
+import { McpControls } from './McpControls';
 import { JsonTypes, JsonArray } from '>/types';
 
 type McpCardViewProps = {
@@ -21,7 +21,7 @@ export const McpCardView = ({
     <>
       <ListingPageHeader
         title="MCP Services"
-        actions={<McpListHeader onRefresh={onRefetch} />}
+        actions={<ListingMode onRefresh={onRefetch} />}
       />
       <div className="page-content">
         {services.length === 0 ? (

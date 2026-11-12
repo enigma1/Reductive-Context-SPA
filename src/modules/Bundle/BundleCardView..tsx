@@ -13,7 +13,7 @@ import {
 } from '>/modules';
 import { DeleteBundlesResponse } from '>/contracts';
 import { JsonArray } from '>/types';
-import { BUNDLE_ID, BUNDLE_PROMPT } from '>/config';
+import { routes, BUNDLE_ID, BUNDLE_PROMPT } from '>/config';
 
 type BundleControlProps = {
   bundleId: number;
@@ -31,6 +31,7 @@ export const BundleControls = ({ bundleId, prompt }: BundleControlProps) => {
     }));
   const onEdit = () => {
     setActiveBundleId(bundleId);
+    navigate(routes.front.bundleView);
   };
 
   const deleteCallbacks = {
@@ -78,14 +79,10 @@ export const BundleControls = ({ bundleId, prompt }: BundleControlProps) => {
 
   return (
     <div className="one-line no-stretch">
-      <button className="btn-secondary" onClick={onEdit}>
+      <button className="btn" onClick={onEdit}>
         Edit
       </button>
-      <button
-        className="btn"
-        onClick={onDelete}
-        data-status={bundleId === activeBundleId ? 'disabled' : undefined}
-      >
+      <button className="btn btn-error" onClick={onDelete}>
         Delete
       </button>
     </div>

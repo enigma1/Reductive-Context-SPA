@@ -1,39 +1,7 @@
-import { ListRestartIcon, ChevronsLeftRightEllipsisIcon } from 'lucide-react';
 import { dialogStoreActions, useConfigStore } from '>/services/stores';
+import { useDeleteRoles } from '>/services/queryHooks';
 import { dialogFactories } from '>/modules';
-
-type RoleListHeaderProps = {
-  onRefresh: () => void;
-};
-export const RoleListHeader = ({ onRefresh }: RoleListHeaderProps) => {
-  const { listMode, setListMode } = useConfigStore(({ state, api }) => ({
-    listMode: state.listMode,
-    setListMode: api.setListMode,
-  }));
-
-  const commonActions = (
-    <>
-      <button className='btn-secondary' onClick={onRefresh} title='Refresh'>
-        <ListRestartIcon size={24} />
-      </button>
-      <button
-        className='btn-secondary'
-        onClick={() => setListMode(listMode === 'card' ? 'table' : 'card')}
-        title={
-          listMode === 'card'
-            ? 'Switch to table listing'
-            : 'Switch into card listing'
-        }
-      >
-        <ChevronsLeftRightEllipsisIcon
-          className={listMode === 'table' ? '-rotate-90' : ''}
-          size={24}
-        />
-      </button>
-    </>
-  );
-  return commonActions;
-};
+import { ROLE_NAME } from '>/config';
 
 type RoleControlProps = {
   roleName: string;
@@ -43,10 +11,33 @@ export const RoleControls = ({ roleName }: RoleControlProps) => {
     currentRole: state.currentRole,
     setCurrentRole: api.setCurrentRole,
   }));
+  const { mutate, isPending } = useDeleteRoles(({ query, api }) => ({
+    mutate: api.mutate,
+    isPending: query.isPending,
+  }));
 
   const onEdit = (name: string) => {
     dialogStoreActions.openDialog({
       payload: dialogFactories.setRole({ name }),
+    });
+  };
+
+  const onDelete = () => {
+    if (isPending) return;
+    const columnsOrder = [ROLE_NAME];
+    const rows = [[roleName]];
+
+    const onConfirm = () => {
+      dialogStoreActions.closeDialog();
+      mutate({ roleNames: [roleName] });
+    };
+
+    dialogStoreActions.openDialog({
+      payload: dialogFactories.deleteTableEntries({
+        columnsOrder,
+        rows,
+        onConfirm,
+      }),
     });
   };
 
@@ -55,16 +46,23 @@ export const RoleControls = ({ roleName }: RoleControlProps) => {
   };
 
   return (
-    <div className='one-line no-stretch'>
-      <button className='btn-secondary' onClick={() => onEdit(roleName)}>
+    <div className="one-line no-stretch">
+      <button className="btn-secondary" onClick={() => onEdit(roleName)}>
         Edit
       </button>
       <button
-        className='btn'
+        className="btn"
         onClick={() => onActivate(roleName)}
         data-status={currentRole === roleName ? 'disabled' : undefined}
       >
         Activate
+      </button>
+      <button
+        className="btn"
+        onClick={onDelete}
+        data-status={currentRole === roleName ? 'disabled' : undefined}
+      >
+        Delete
       </button>
     </div>
   );

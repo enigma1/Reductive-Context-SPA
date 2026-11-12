@@ -6,3 +6,5 @@ export const MCP_TRANSPORT = 'mcp_transport';
 
 export const ROLE_NAME = 'role_name';
 export const ROLE_MAIN = 'role_main';
+
+export const FLOW_NAME = 'flow_name';

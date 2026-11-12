@@ -2,11 +2,7 @@ import { useLocation, useNavigate } from 'react-router';
 import { FileXIcon } from 'lucide-react';
 import { routes } from '>/config';
 import { useDeleteFlows, useGetFlowList } from '>/services/queryHooks';
-import {
-  useFlowStore,
-  useConfigStore,
-  dialogStoreActions,
-} from '>/services/stores';
+import { useFlowStore, dialogStoreActions } from '>/services/stores';
 import { ScreenLoader, dialogFactories } from '>/modules';
 
 export const FlowSideList = () => {
@@ -18,16 +14,14 @@ export const FlowSideList = () => {
     setCurrentFlow: api.setCurrentFlow,
   }));
 
-  const { flows, isFetching, refetch } = useGetFlowList(
+  const { getColumnValues, isFetching, refetch } = useGetFlowList(
     undefined,
-    ({ state, query }) => ({
-      flows: state.flows,
+    ({ state, query, api }) => ({
+      getColumnValues: api.getColumnValues,
       isFetching: query.isFetching,
       refetch: query.refetch,
     }),
   );
-
-  const flowsList = Object.entries(flows).map((item) => item[1]);
 
   const { mutate, isPending } = useDeleteFlows(({ query, api }) => ({
     mutate: api.mutate,
@@ -55,39 +49,43 @@ export const FlowSideList = () => {
       }),
     });
   };
+
+  const flowsList = getColumnValues(['flowName']);
+
   return (
-    <div className='side-list'>
+    <div className="side-list">
       {flowsList.length > 0 ? (
         <>
-          {flowsList.map((flow, idx) => {
-            const isSelected = currentFlow === flow.flowName;
+          {flowsList.map(([name], idx) => {
+            if (typeof name !== 'string') return 'error';
+            const isSelected = currentFlow === name;
             return (
               <div
-                className='btn-group side-list-item min-w-0 gap-0.5'
-                key={`${flow}-${idx}`}
+                className="btn-group side-list-item min-w-0 gap-0.5"
+                key={`${name}-${idx}`}
               >
                 <button
-                  className='btn-side field-error'
-                  onClick={() => onDeleteFlow(flow.flowName)}
+                  className="btn-side field-error"
+                  onClick={() => onDeleteFlow(name)}
                 >
                   <FileXIcon size={16} />
                 </button>
                 <button
-                  className='truncate min-w-0 flex-1 text-left'
+                  className="truncate min-w-0 flex-1 text-left"
                   data-active={isSelected}
                   onClick={() => {
-                    setCurrentFlow(flow.flowName);
+                    setCurrentFlow(name);
                     navigate(routes.front.flowList);
                   }}
                 >
-                  {flow.flowName}
+                  {name}
                 </button>
               </div>
             );
           })}
         </>
       ) : (
-        <div className='side-list-empty'>No Flows Found</div>
+        <div className="side-list-empty">No Flows Found</div>
       )}
     </div>
   );

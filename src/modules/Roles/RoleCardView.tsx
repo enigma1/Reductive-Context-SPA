@@ -1,5 +1,5 @@
-import { ListingPageHeader, Card } from '>/modules';
-import { RoleControls, RoleListHeader } from './RoleControls';
+import { ListingPageHeader, Card, ListingMode } from '>/modules';
+import { RoleControls } from './RoleControls';
 import { JsonArray } from '>/types';
 
 type RoleCardViewProps = {
@@ -20,7 +20,7 @@ export const RoleCardView = ({
     <>
       <ListingPageHeader
         title="Roles"
-        actions={<RoleListHeader onRefresh={onRefetch} />}
+        actions={<ListingMode onRefresh={onRefetch} />}
       />
       <div className="page-content">
         {services.length === 0 ? (
