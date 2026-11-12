@@ -140,6 +140,7 @@ export const useGetBundleList = createDataQueryHook<
   GetBundleListResponse,
   GetBundleListRequest,
   {
+    getColumnValues: (colNames: string[]) => JsonArray[];
     getBundleNames: () => string[];
     getBundleFields: () => EntryFields[];
   }
@@ -154,6 +155,15 @@ export const useGetBundleList = createDataQueryHook<
     ...defaultExtTableResponse,
   }),
   createApi: (state) => ({
+    getColumnValues: (colNames: string[]) => {
+      const columnValues = getOnlyColumnsFromResult({
+        rows: state.rows as unknown as JsonArray[],
+        columnsOrder: getCamelKeys(state.columnsOrder),
+        fields: colNames,
+      });
+      return columnValues;
+    },
+
     getBundleFields: () => {
       const fields = [BUNDLE_ID, BUNDLE_PROMPT];
       return getOnlyColumnsFromResult({

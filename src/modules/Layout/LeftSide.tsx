@@ -54,7 +54,7 @@ export const LeftSide = () => {
       getRoute: () => routes.front.bundleList,
       component: <BundleSideList />,
       icon: (
-        <span title='New Bundle'>
+        <span title="New Bundle">
           <CpuAiIcon
             size={20}
             onClick={() => {
@@ -71,14 +71,10 @@ export const LeftSide = () => {
       getTitle: () => {
         return 'Workflows';
       },
-      getRoute: () => {
-        return location.pathname === routes.front.flowView
-          ? routes.front.flowView
-          : routes.front.roleList;
-      },
+      getRoute: () => routes.front.flowView,
       component: <FlowSideList />,
       icon: (
-        <span title='New Flow'>
+        <span title="New Flow">
           <DiagramFlowHorizontalIcon
             size={20}
             onClick={() => {
@@ -104,7 +100,7 @@ export const LeftSide = () => {
       },
       component: <RoleSideList />,
       icon: (
-        <span title='New Role'>
+        <span title="New Role">
           <UserRoundPlusIcon
             size={20}
             onClick={() => {
@@ -121,10 +117,14 @@ export const LeftSide = () => {
       getTitle: () => {
         return 'MCP Services';
       },
-      getRoute: () => routes.front.mcpList,
+      getRoute: () => {
+        return location.pathname === routes.front.flowView
+          ? routes.front.flowView
+          : routes.front.mcpList;
+      },
       component: <McpSideList />,
       icon: (
-        <span title='New MCP Service'>
+        <span title="New MCP Service">
           <WorkflowIcon
             size={20}
             onClick={() => {
@@ -157,15 +157,15 @@ export const LeftSide = () => {
         return (
           <section
             key={section.id}
-            className='side-accordion'
+            className="side-accordion"
             data-open={isActive}
           >
-            <div className='side-accordion-header'>
+            <div className="side-accordion-header">
               <button
                 onClick={() => toggleSection(section)}
-                className='side-accordion-trigger'
+                className="side-accordion-trigger"
               >
-                <span className='flex items-center gap-2'>
+                <span className="flex items-center gap-2">
                   {section.icon}
                   <span>{section.getTitle()}</span>
                 </span>
@@ -179,7 +179,7 @@ export const LeftSide = () => {
               </button>
             </div>
 
-            <div className='side-accordion-content'>
+            <div className="side-accordion-content">
               <div>{section.component}</div>
             </div>
           </section>

@@ -75,7 +75,7 @@ export const TablePageHeader = ({
     onToggle,
     onBack,
   } = shellActions;
-
+  console.log('onToggle', onToggle);
   const [isPacked, setIsPacked] = useState(false);
   return (
     <>

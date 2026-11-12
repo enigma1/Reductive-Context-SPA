@@ -6,5 +6,6 @@ export * from './Settings';
 export * from './Offline';
 export * from './Messages';
 export * from './CoreDialogs';
+export * from './Sections';
 export * from './Wrappers';
 export * from './Empty';

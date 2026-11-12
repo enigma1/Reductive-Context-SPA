@@ -34,7 +34,7 @@ export const ToolEdge = memo(
           markerEnd={markerEnd}
           style={{ strokeDasharray: '5 5', stroke: '#888' }}
         />
-        <EdgeLabelRenderer>
+        {/* <EdgeLabelRenderer>
           <div
             style={{
               position: 'absolute',
@@ -44,7 +44,7 @@ export const ToolEdge = memo(
           >
             tools
           </div>
-        </EdgeLabelRenderer>
+        </EdgeLabelRenderer> */}
       </>
     );
   },

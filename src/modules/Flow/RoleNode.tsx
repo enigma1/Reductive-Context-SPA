@@ -12,18 +12,18 @@ export type RoleNodeData = {
 export type RoleNodeType = Node<RoleNodeData>;
 
 export const RoleNode = memo(({ data, selected }: NodeProps<RoleNodeType>) => {
-  const { name, roleMain, image, isFetching, refetch } = useGetRole(
+  const { name, roleMain, roleIcon, isFetching, refetch } = useGetRole(
     { name: data.roleName },
     ({ query, state }) => ({
       name: state.name,
       roleMain: state.roleMain,
-      image: state.image,
+      roleIcon: state.roleIcon,
       isFetching: query.isFetching,
       refetch: query.refetch,
     }),
   );
 
-  const imageUrl = useFileAsDataUrl(image);
+  // const imageUrl = useFileAsDataUrl(roleIcon);
   const isBusy = isFetching;
 
   return (
@@ -33,28 +33,28 @@ export const RoleNode = memo(({ data, selected }: NodeProps<RoleNodeType>) => {
         className={`node-container min-h-4 role-node ${selected ? 'role-selected' : ''}`}
       >
         {/* Flow: incoming from previous role */}
-        <Handle type='target' position={Position.Left} />
+        <Handle type="target" position={Position.Left} />
 
         {/* Flow: outgoing to next role */}
-        <Handle type='source' position={Position.Right} />
+        <Handle type="source" position={Position.Right} />
 
         {/* Tool: bottom node acts as source to send towards top node */}
         <Handle
-          id='tool-source'
-          type='source'
+          id="tool-source"
+          type="source"
           position={Position.Bottom}
-          className='handle--tool'
+          className="handle--tool"
         />
 
         {/* Tool: top node acts as target to receive from bottom node */}
         <Handle
-          id='tool-target'
-          type='target'
+          id="tool-target"
+          type="target"
           position={Position.Top}
-          className='handle--tool'
+          className="handle--tool"
         />
 
-        <span className='text-sm'>{data.roleName}</span>
+        <span className="text-sm">{data.roleName}</span>
       </div>
     </>
   );

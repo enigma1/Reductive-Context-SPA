@@ -100,16 +100,21 @@ export const FlowViewRoute = () => {
       const isToolEdge =
         params.sourceHandle === 'tool-source' ||
         params.targetHandle === 'tool-target';
+
+      const existing = getGraph(currentFlow) ?? { nodes: [], edges: [] };
+      const isMcpEdge =
+        existing.nodes.find((n) => n.id === params.source)?.type === 'mcp' ||
+        existing.nodes.find((n) => n.id === params.target)?.type === 'mcp';
+
       const newEdge: Edge = {
         ...params,
         id: `${params.source}-${params.target}-${Date.now()}`,
         type: isToolEdge ? 'tool' : 'default',
         animated: !isToolEdge,
-      };
-
-      const existing = getGraph(currentFlow) ?? {
-        nodes: [],
-        edges: [],
+        ...(isMcpEdge && {
+          markerStart: { type: MarkerType.ArrowClosed },
+          markerEnd: { type: MarkerType.ArrowClosed },
+        }),
       };
 
       setGraphs({
@@ -190,39 +195,39 @@ export const FlowViewRoute = () => {
 
   return (
     <>
-      <div className='page-heading'>
-        <div className='page-toolbar'>
-          <div className='inline-wrapper'>
+      <div className="page-heading">
+        <div className="page-toolbar">
+          <div className="inline-wrapper">
             <button
-              className='btn-micro'
-              title='Back to the flow List'
+              className="btn-micro"
+              title="Back to the flow List"
               onClick={onGoBack}
             >
               <ArrowLeftToLineIcon size={18} />
             </button>
             <div
-              className='page-title'
+              className="page-title"
               title={`Editing ${currentFlow ?? 'New Flow'}`}
             >
               {currentFlow ?? 'New Flow'}
             </div>
           </div>
-          <div className='page-actions'>
+          <div className="page-actions">
             <InputField
-              id='flow-name'
-              label='Flow Name:'
+              id="flow-name"
+              label="Flow Name:"
               value={currentFlow}
               title={`Flow Name`}
               onValueChange={(value) => {
                 setCurrentFlow(value);
               }}
               $status={flowChanged && !currentFlow ? 'error' : undefined}
-              placeholder='Flow Name'
-              wrapLayout='inline'
+              placeholder="Flow Name"
+              wrapLayout="inline"
             />
             {currentFlow && (
               <button
-                className='btn-secondary'
+                className="btn-secondary"
                 onClick={onRefetch}
                 title={`Refetch ${currentFlow}`}
               >
@@ -230,9 +235,9 @@ export const FlowViewRoute = () => {
               </button>
             )}
             <button
-              className='btn'
+              className="btn"
               onClick={onSave}
-              title='Save Flow'
+              title="Save Flow"
               data-status={!isDirty ? 'disabled' : undefined}
             >
               <SaveCheckIcon size={24} />
@@ -241,7 +246,7 @@ export const FlowViewRoute = () => {
         </div>
       </div>
 
-      <div className='page-content' onDragOver={onDragOver} onDrop={onDrop}>
+      <div className="page-content" onDragOver={onDragOver} onDrop={onDrop}>
         <ReactFlow
           nodes={nodes}
           edges={edges}

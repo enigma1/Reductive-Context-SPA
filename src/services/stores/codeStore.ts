@@ -99,7 +99,6 @@ const initialBundleSession: BundleSession = {
   selectedFiles: [],
   activePaths: [],
   activePrompt: '',
-  // bundleStream: 'idle',
 };
 
 const initialState: StoreState = {
