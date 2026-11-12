@@ -8,7 +8,12 @@ import {
   messageStoreActions,
   configStoreActions,
 } from '>/services/stores';
-import { useEditor, useSimpleForm, useModal } from '>/services/hooks';
+import {
+  useEditor,
+  useSimpleForm,
+  useModal,
+  useMonacoReady,
+} from '>/services/hooks';
 import { cx } from '>/services/utils';
 import {
   DialogContent,
@@ -45,6 +50,7 @@ type RoleFormProps = {
 };
 
 export const RoleForm = ({ name, formHandlers }: RoleFormProps) => {
+  const ready = useMonacoReady();
   const [openSection, setOpenSection] = useState<EditorSectionKey>('roleMain');
   const location = useLocation();
   const navigate = useNavigate();
@@ -101,14 +107,6 @@ export const RoleForm = ({ name, formHandlers }: RoleFormProps) => {
     useEditor(), // scopePrompt
     useEditor(), // scopeRules
     useEditor(), // scopeExamples
-  ];
-  const editorValues = [
-    roleMain,
-    contentRules,
-    contentExamples,
-    scopePrompt,
-    scopeRules,
-    scopeExamples,
   ];
 
   useEffect(() => {
@@ -172,17 +170,8 @@ export const RoleForm = ({ name, formHandlers }: RoleFormProps) => {
     const { isNewSet, orgName, name, ...params } = form.values;
     if (!name) return;
 
-    const editorValues = editorSections.reduce(
-      (acc, section, idx) => ({
-        ...acc,
-        [section.key]: editors[idx].getContent() ?? params[section.key],
-      }),
-      {},
-    );
-
     const payload = {
       ...params,
-      ...editorValues,
       name,
     };
 
@@ -204,7 +193,7 @@ export const RoleForm = ({ name, formHandlers }: RoleFormProps) => {
   // No-Hooks Section
   // ----------------
   const isBusy = isFetching || isSetRolePending || isCreateRolePending;
-  if (isBusy) return <ScreenLoader />;
+  if (isBusy || !ready) return <ScreenLoader />;
 
   const handleError = () => {
     clearError();
@@ -215,13 +204,13 @@ export const RoleForm = ({ name, formHandlers }: RoleFormProps) => {
   };
 
   return (
-    <div className='area-container'>
+    <div className="area-container">
       {errorResponse && (
-        <div className='animate-top-slide overflow-hidden border-b border-t'>
+        <div className="animate-top-slide overflow-hidden border-b border-t">
           <DialogContent
-            className='animate-in zoom-in-95 duration-300'
-            classSpacer='caption error'
-            note='Reading Files to compare failed'
+            className="animate-in zoom-in-95 duration-300"
+            classSpacer="caption error"
+            note="Reading Files to compare failed"
             onClose={handleError}
           >
             <ErrorDetails error={errorResponse} />
@@ -234,14 +223,14 @@ export const RoleForm = ({ name, formHandlers }: RoleFormProps) => {
           errorResponse && 'opacity-40 pointer-events-none',
         )}
       >
-        <div className='area-spacer'>
-          <h1 className='area-title'>{`Role: ${name ?? 'New Role'}`}</h1>
-          <div className='area-actions'>
+        <div className="area-spacer">
+          <h1 className="area-title">{`Role: ${name ?? 'New Role'}`}</h1>
+          <div className="area-actions">
             <CheckboxField
-              id='newPathsSet'
-              label='New Set:'
+              id="newPathsSet"
+              label="New Set:"
               checked={form.values.isNewSet}
-              wrapClass='label-left'
+              wrapClass="label-left"
               onChange={(checked) => {
                 if (checked) {
                   form.setValue('isNewSet', true);
@@ -252,12 +241,12 @@ export const RoleForm = ({ name, formHandlers }: RoleFormProps) => {
             />
           </div>
         </div>
-        <div className='area-listing gap-0'>
-          <div className='area-item'>
-            <div className='one-line'>
+        <div className="area-listing gap-0">
+          <div className="area-item">
+            <div className="one-line">
               <InputField
-                id='role-name'
-                label='Role Name'
+                id="role-name"
+                label="Role Name"
                 value={name}
                 title={`Role Name`}
                 $status={
@@ -269,24 +258,24 @@ export const RoleForm = ({ name, formHandlers }: RoleFormProps) => {
                 onValueChange={(value) => {
                   form.setValue('name', value);
                 }}
-                placeholder='Enter Role Name'
+                placeholder="Enter Role Name"
               />
               <NumberField
-                id='sort-order'
-                label='Sort:'
+                id="sort-order"
+                label="Sort:"
                 value={form.values.sortOrder}
                 title={`Sort Order`}
                 onValueChange={(value) => {
                   form.setValue('sortOrder', value || 0);
                 }}
               />
-              <div className='h-full center'>
+              <div className="h-full center">
                 <CheckboxField
-                  id='show-role'
-                  label='Show:'
+                  id="show-role"
+                  label="Show:"
                   checked={form.values.status === 1}
-                  wrapClass='center'
-                  wrapLayout='stack'
+                  wrapClass="center"
+                  wrapLayout="stack"
                   // wrapClass='label-left'
                   onChange={(checked) => {
                     if (checked) {
@@ -311,12 +300,15 @@ export const RoleForm = ({ name, formHandlers }: RoleFormProps) => {
                 title={section.title}
                 isOpen={openSection === section.key}
                 onToggle={() => toggleSection(section.key)}
-                value={editorValues[idx]}
+                value={form.values[section.key]}
+                onChange={(v) => {
+                  if (v) form.setValue(section.key, v);
+                }}
                 onMount={editors[idx].onMount}
               />
             </div>
           ))}
-          <div className='one-line center border-t border-b p-3'>
+          <div className="one-line center border-t border-b p-3">
             <DropIconField
               value={form.values.roleIcon}
               onValueChange={(value) => {

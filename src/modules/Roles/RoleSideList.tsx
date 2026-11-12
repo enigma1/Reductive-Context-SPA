@@ -13,12 +13,12 @@ export const RoleSideList = () => {
     currentRole: state.currentRole,
     setCurrentRole: api.setCurrentRole,
   }));
-  const { roles, isFetching, refetch } = useGetRoleList(
+
+  const { getColumnValues, isFetching } = useGetRoleList(
     undefined,
-    ({ state, query }) => ({
-      roles: state.roles,
+    ({ api, query }) => ({
+      getColumnValues: api.getColumnValues,
       isFetching: query.isFetching,
-      refetch: query.refetch,
     }),
   );
 
@@ -60,41 +60,43 @@ export const RoleSideList = () => {
       }),
     });
   };
+  const roles = getColumnValues(['roleName']);
   return (
-    <div className='side-list'>
+    <div className="side-list">
       {roles.length > 0 ? (
         <>
-          {roles.map((role, idx) => {
-            const isSelected = currentRole === role.name;
+          {roles.map(([name], idx) => {
+            if (typeof name !== 'string') return 'error';
+            const isSelected = currentRole === name;
             return (
               <div
-                className='btn-group side-list-item min-w-0 gap-0.5'
-                key={`${role}-${idx}`}
+                className="btn-group side-list-item min-w-0 gap-0.5"
+                key={`${name}-${idx}`}
               >
                 <button
-                  className='btn-side field-error'
-                  onClick={() => onDeleteRole(role.name)}
+                  className="btn-side field-error"
+                  onClick={() => onDeleteRole(name)}
                 >
                   <FileXIcon size={16} />
                 </button>
                 <button
-                  className='truncate min-w-0 flex-1 text-left'
+                  className="truncate min-w-0 flex-1 text-left"
                   data-active={isSelected}
                   onClick={() => {
-                    setCurrentRole(role.name);
+                    setCurrentRole(name);
                     navigate(routes.front.roleList);
                   }}
                   draggable
-                  onDragStart={(e) => onDragStart(e, 'role', role.name)}
+                  onDragStart={(e) => onDragStart(e, 'role', name)}
                 >
-                  {role.name}
+                  {name}
                 </button>
               </div>
             );
           })}
         </>
       ) : (
-        <div className='side-list-empty'>No Roles Found</div>
+        <div className="side-list-empty">No Roles Found</div>
       )}
     </div>
   );

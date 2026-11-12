@@ -18,12 +18,14 @@ import {
   messageStoreActions,
 } from '>/services/stores';
 import { useReadFile, useWriteFile } from '>/services/queryHooks';
-import { useViewerSelection } from '>/services/hooks';
+import { useViewerSelection, useMonacoReady } from '>/services/hooks';
 import { ScreenLoader } from '>/modules';
 import { ApiError } from '>/types';
 
 export const Reader = () => {
   const navigate = useNavigate();
+  const ready = useMonacoReady();
+
   const { activeFile, addSelectedFile, setActiveFile } = useCodeStore(
     ({ api, state }) => ({
       activeFile: state.activeFile,
@@ -77,7 +79,7 @@ export const Reader = () => {
   // No-Hooks Section
   // ----------------
   const isBusy = isFetching || isPendingWriting;
-  if (isBusy || !activeFile) return <ScreenLoader />;
+  if (isBusy || !activeFile || !ready) return <ScreenLoader />;
 
   const onGoBack = () => {
     navigate(routes.front.pathsView, { replace: true });
@@ -107,43 +109,43 @@ export const Reader = () => {
 
   return (
     <>
-      <div className='page-heading'>
-        <div className='page-toolbar'>
-          <div className='inline-wrapper'>
+      <div className="page-heading">
+        <div className="page-toolbar">
+          <div className="inline-wrapper">
             <button
-              className='btn-micro'
-              title='Back to the File List'
+              className="btn-micro"
+              title="Back to the File List"
               onClick={onGoBack}
             >
               <ArrowLeftToLineIcon size={18} />
             </button>
             <div
-              className='page-title'
+              className="page-title"
               title={`${activeFile.path}/${activeFile.name}`}
             >
               Viewing: {activeFile.name}
             </div>
           </div>
-          <div className='page-actions'>
+          <div className="page-actions">
             <button
-              className='btn-secondary'
+              className="btn-secondary"
               onClick={onRefresh}
               title={`Refetch ${activeFile.name}`}
             >
               <ListRestartIcon size={24} />
             </button>
             <button
-              className='btn'
+              className="btn"
               onClick={updateCodeLines}
-              title='Include Selected Code Lines'
+              title="Include Selected Code Lines"
               data-status={!isDirty ? 'disabled' : undefined}
             >
               <CombineIcon size={24} />
             </button>
             <button
-              className='btn'
+              className="btn"
               onClick={onSaveFile}
-              title='Save File'
+              title="Save File"
               data-status={!isDirty ? 'disabled' : undefined}
             >
               <SaveCheckIcon size={24} />
@@ -151,7 +153,7 @@ export const Reader = () => {
           </div>
         </div>
       </div>
-      <div className='page-content'>
+      <div className="page-content">
         <Editor
           onMount={onMount}
           value={code}

@@ -1,4 +1,4 @@
-import Editor, { type OnMount } from '@monaco-editor/react';
+import Editor, { type OnMount, type OnChange } from '@monaco-editor/react';
 import { CircleChevronLeftIcon } from 'lucide-react';
 import { editorSimpleOptions } from '>/config';
 import { cx } from '>/services/utils';
@@ -9,6 +9,7 @@ type EditorSectionProps = {
   onToggle: () => void;
   value: string;
   onMount: OnMount;
+  onChange: OnChange;
 };
 
 export const RoleEditSection = ({
@@ -17,10 +18,11 @@ export const RoleEditSection = ({
   onToggle,
   value,
   onMount,
+  onChange,
 }: EditorSectionProps) => (
   <div className={cx(isOpen && 'active-item')}>
-    <div className='one-line' onClick={onToggle}>
-      <h4 className='area-subtitle'>{title}</h4>
+    <div className="one-line" onClick={onToggle}>
+      <h4 className="area-subtitle">{title}</h4>
       <CircleChevronLeftIcon
         size={20}
         className={`icon-muted transition-transform duration-300 ${
@@ -32,8 +34,9 @@ export const RoleEditSection = ({
       <Editor
         onMount={onMount}
         value={value}
-        language='markdown'
+        language="markdown"
         options={editorSimpleOptions}
+        onChange={onChange}
       />
     </div>
   </div>

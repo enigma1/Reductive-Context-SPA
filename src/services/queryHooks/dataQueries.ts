@@ -188,7 +188,7 @@ export const useGetBundleList = createDataQueryHook<
 export const useGetRoleList = createDataQueryHook<
   GetRoleListResponse,
   GetRoleListRequest,
-  {}
+  { getColumnValues: (colNames: string[]) => JsonArray[] }
 >({
   queryKey: () => queryKeys.roleList(),
   queryFn: async () => {
@@ -197,13 +197,16 @@ export const useGetRoleList = createDataQueryHook<
   },
   initialData: () => ({
     ...defaultResponse,
-    roles: [],
+    ...defaultExtTableResponse,
   }),
   createApi: (state) => ({
-    getObject: () => {
-      const { roles } = state;
-      const obj = roles.map((role) => [role.name, role]);
-      return Object.fromEntries([obj]);
+    getColumnValues: (colNames: string[]) => {
+      const columnValues = getOnlyColumnsFromResult({
+        rows: state.rows as unknown as JsonArray[],
+        columnsOrder: getCamelKeys(state.columnsOrder),
+        fields: colNames,
+      });
+      return columnValues;
     },
   }),
 });

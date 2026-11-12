@@ -1,8 +1,6 @@
-import { useState } from 'react';
 import { useGetMcpList } from '>/services/queryHooks';
-import { ScreenLoader, ListingPageHeader, Card } from '>/modules';
+import { ScreenLoader } from '>/modules';
 import { useConfigStore } from '>/services/stores';
-import { McpControls, McpListHeader } from './McpControls';
 import { McpCardView } from './McpCardView';
 import { McpTableView } from './McpTableView';
 

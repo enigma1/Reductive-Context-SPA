@@ -36,18 +36,20 @@ const areRangesEqual = ({ original, modified }: CodeRangesComparison) =>
     mergeRanges({ original: [], modified: modified }),
   );
 
-const useEditorBase = () => {
-  const editorRef = useRef<Parameters<OnMount>[0] | null>(null);
-  const [isDirty, setIsDirty] = useState(false);
+export const useMonacoReady = () => {
   const [ready, setReady] = useState(false);
-
   useEffect(() => {
     ensureMonaco().then(() => setReady(true));
   }, []);
+  return ready;
+};
 
+const useEditorBase = () => {
+  const editorRef = useRef<Parameters<OnMount>[0] | null>(null);
+  const [isDirty, setIsDirty] = useState(false);
+  const ready = useMonacoReady();
   const getContent = () => editorRef.current?.getValue() ?? '';
   const clearDirty = () => setIsDirty(false);
-
   return { editorRef, isDirty, setIsDirty, getContent, clearDirty, ready };
 };
 
