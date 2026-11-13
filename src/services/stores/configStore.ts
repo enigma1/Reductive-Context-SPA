@@ -31,6 +31,8 @@ export type ConfigStoreActions = {
   setSidebarWidth: (width: number) => void;
   getCurrentRole: () => string;
   setCurrentRole: (role: string) => void;
+  getCurrentPipeline: () => string | undefined;
+  setCurrentPipeline: (role: string) => void;
   setCurrentModel: (model?: string) => void;
   getCurrentMcp: () => string | undefined;
   setCurrentMcp: (mcp?: string) => void;
@@ -85,6 +87,13 @@ export const configStoreActions: ConfigStoreActions = {
   },
   setCurrentRole: (role) => {
     setAuto({ currentRole: role });
+  },
+
+  getCurrentPipeline: () => {
+    return get().currentPipeline;
+  },
+  setCurrentPipeline: (pipeline) => {
+    setAuto({ currentPipeline: pipeline });
   },
 
   setCurrentModel: (model) => {

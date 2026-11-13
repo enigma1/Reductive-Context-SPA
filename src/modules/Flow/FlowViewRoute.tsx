@@ -2,6 +2,7 @@
   landing route for a specific flow
 */
 import { useState, useCallback, type DragEvent } from 'react';
+import { useNavigate } from 'react-router';
 import {
   ReactFlow,
   Background,
@@ -25,8 +26,10 @@ import {
   SaveCheckIcon,
   ArrowLeftToLineIcon,
 } from 'lucide-react';
+import { useCreateFlow, useSetFlow, useGetFlow } from '>/services/queryHooks';
+import { routes } from '>/config';
 import { useFlowStore } from '>/services/stores';
-import { InputField } from '>/modules';
+import { InputField, ScreenLoader } from '>/modules';
 import { RoleNode } from './RoleNode';
 import { McpNode } from './McpNode';
 import { ToolEdge } from './ToolEdge';
@@ -36,6 +39,7 @@ const edgeTypes = { tool: ToolEdge };
 
 export const FlowViewRoute = () => {
   const [flowChanged, setFlowChanged] = useState<boolean>();
+  const navigate = useNavigate();
   const { currentFlow, flowGraphs, setGraphs, setCurrentFlow, getGraph } =
     useFlowStore(({ state, api }) => ({
       currentFlow: state.currentFlow,
@@ -44,6 +48,13 @@ export const FlowViewRoute = () => {
       setGraphs: api.setGraphs,
       setCurrentFlow: api.setCurrentFlow,
     }));
+
+  const { flowName } = useGetFlow(
+    { name: currentFlow ?? '' },
+    ({ state, api }) => ({
+      flowName: state.flowName,
+    }),
+  );
 
   const activeGraph = currentFlow ? flowGraphs[currentFlow] : undefined;
   const nodes = activeGraph?.nodes ?? [];
@@ -76,6 +87,10 @@ export const FlowViewRoute = () => {
   const onNodesChange = useCallback(
     (changes: NodeChange[]) => {
       if (!currentFlow) return;
+      const hasMutation = changes.some(
+        (c) => c.type === 'position' || c.type === 'remove',
+      );
+      if (hasMutation) setFlowChanged(true);
       const existing = getGraph(currentFlow) ?? { nodes: [], edges: [] };
       const updated = applyNodeChanges(changes, existing.nodes);
       setGraphs({ [currentFlow]: { nodes: updated, edges: existing.edges } });
@@ -86,6 +101,8 @@ export const FlowViewRoute = () => {
   const onEdgesChange = useCallback(
     (changes: EdgeChange[]) => {
       if (!currentFlow) return;
+
+      setFlowChanged(true);
       const existing = getGraph(currentFlow) ?? { nodes: [], edges: [] };
       const updated = applyEdgeChanges(changes, existing.edges);
       setGraphs({ [currentFlow]: { nodes: existing.nodes, edges: updated } });
@@ -116,7 +133,7 @@ export const FlowViewRoute = () => {
           markerEnd: { type: MarkerType.ArrowClosed },
         }),
       };
-
+      setFlowChanged(true);
       setGraphs({
         [currentFlow]: {
           nodes: existing.nodes,
@@ -161,10 +178,14 @@ export const FlowViewRoute = () => {
           edges: existing.edges,
         },
       });
+      setFlowChanged(true);
     },
     [currentFlow, getGraph, setGraphs, setCurrentFlow, screenToFlowPosition],
   );
 
+  // ----------------
+  // No-Hooks Section
+  // ----------------
   const onRefetch = () => {};
 
   const onSave = () => {
@@ -188,10 +209,21 @@ export const FlowViewRoute = () => {
         }),
       ),
     };
+
+    // if (isNewFlow) {
+    //   mutateCreateFlow(graph);
+    //   return;
+    // }
+
+    // if (!currentFlow) return;
+
+    // mutateUpdateFlow({ ...graph, orgName });
+    // // setFlowChanged(false);
   };
 
-  const onGoBack = () => {};
-  const isDirty = false;
+  const onGoBack = () => {
+    navigate(routes.front.flowList);
+  };
 
   return (
     <>
@@ -216,7 +248,7 @@ export const FlowViewRoute = () => {
             <InputField
               id="flow-name"
               label="Flow Name:"
-              value={currentFlow}
+              value={currentFlow ?? ''}
               title={`Flow Name`}
               onValueChange={(value) => {
                 setCurrentFlow(value);
@@ -238,7 +270,7 @@ export const FlowViewRoute = () => {
               className="btn"
               onClick={onSave}
               title="Save Flow"
-              data-status={!isDirty ? 'disabled' : undefined}
+              data-status={!flowChanged ? 'disabled' : undefined}
             >
               <SaveCheckIcon size={24} />
             </button>
@@ -261,6 +293,7 @@ export const FlowViewRoute = () => {
             markerEnd: { type: MarkerType.ArrowClosed, width: 20, height: 20 },
           }}
           connectionMode={ConnectionMode.Strict}
+          deleteKeyCode={['Backspace', 'Delete']}
         >
           <Background gap={16} size={1} />
           <Controls />

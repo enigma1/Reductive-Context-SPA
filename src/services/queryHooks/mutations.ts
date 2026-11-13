@@ -30,6 +30,8 @@ import type {
   DeleteFlowsResponse,
   CreateFlowRequest,
   CreateFlowResponse,
+  SetFlowRequest,
+  SetFlowResponse,
   ExportDatabaseRequest,
 } from '>/contracts';
 import { codeStoreActions } from '>/services/stores';
@@ -350,12 +352,38 @@ export const useActivateRole = createMutationHook<
   },
 });
 
-export const createFlow = createMutationHook<
+export const useCreateFlow = createMutationHook<
   MutationFunction<CreateFlowResponse, CreateFlowRequest>
 >({
   fn: apiPoints.createFlow,
   state: {
     ...defaultResponse,
+  },
+  options: {
+    cache: async (qc, rsp, req) => {
+      await qc.invalidateQueries({
+        queryKey: queryKeys.flowList(),
+      });
+    },
+  },
+});
+
+export const useSetFlow = createMutationHook<
+  MutationFunction<SetFlowResponse, SetFlowRequest>
+>({
+  fn: apiPoints.setFlow,
+  state: {
+    ...defaultResponse,
+  },
+  options: {
+    cache: async (qc, rsp, req) => {
+      await qc.invalidateQueries({
+        queryKey: queryKeys.flowList(),
+      });
+      await qc.invalidateQueries({
+        queryKey: queryKeys.mcps({ name: req.flowName }),
+      });
+    },
   },
 });
 

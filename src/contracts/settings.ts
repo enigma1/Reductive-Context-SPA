@@ -34,6 +34,7 @@ export const UserPrefsConfigSchema = z.object({
   conversationMode: z.enum(conversationMode),
   listMode: z.enum(listMode),
   currentRole: z.string().min(1),
+  currentPipeline: z.string().optional(), // Remove currentRole once transition is complete and use this instead
 });
 export type UserPrefs = z.infer<typeof UserPrefsConfigSchema>;
 
